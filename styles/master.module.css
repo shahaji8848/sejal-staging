@@ -1,0 +1,22 @@
+.activetabs {
+    background-color: #6164ef !important;
+    color: white !important;
+}
+
+.input_width {
+    width: 100%
+}
+
+@media screen and (max-width:576px) {
+    .input_width {
+        width: 80%
+    }
+}
+
+.master_btn {
+    font-size: 14px;
+}
+
+.actions_btn {
+    font-size: 14px !important;
+}

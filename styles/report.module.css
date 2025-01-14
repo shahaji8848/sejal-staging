@@ -1,0 +1,62 @@
+.report_filter_data_field {
+    width: 100%;
+}
+
+@media screen and (max-width:768px) {
+    .report_filter_data_field {
+        max-width: 50% !important;
+    }
+}
+
+.table_container {
+    height: 65vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    display: inline-block;
+}
+
+.report_header_btn {
+    font-size: 14px;
+}
+
+.scrollable_div {
+    max-height: 70vh;
+    overflow-x: scroll;
+    white-space: nowrap;
+    overflow-y: hidden;
+    /* overflow-y: auto; */
+    scrollbar-width: thin;
+    /* For Chrome, Edge, and Safari */
+    scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+    /* padding-bottom: 40px; */
+    /* For IE/Edge */
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    margin: 0;
+    padding: 0;
+}
+
+
+.table_responsives {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.scrollable_div::-webkit-scrollbar {
+    height: 16px;
+    /* Height of the horizontal scrollbar */
+}
+
+.scrollable_div {
+    padding-bottom: 35em;
+    /* Additional space for the scrollbar */
+}
+
+.total_row_container {
+    background-color: #4b4d9a !important;
+    color: white !important;
+}
+
+.table_header {
+    width: 120px !important;
+}
