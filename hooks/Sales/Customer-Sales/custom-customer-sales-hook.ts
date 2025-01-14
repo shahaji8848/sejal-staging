@@ -266,9 +266,16 @@ const useCustomCustomerSalesHook = () => {
 
   // Main update function
   const updateSalesTableData = (data?: any, id?: number, updateRow?: boolean) => {
-    if (id) {
+    if (id !== undefined) {
       setSalesTableData((prevSalesTableData: any) => {
-        const updatedTable = prevSalesTableData?.map((tableData: any) => {
+        // Validate `id` exists in the current rows
+        if (!prevSalesTableData.some((row: any) => row.idx === id)) {
+          console.error('Invalid id: No matching row for idx', id);
+          return prevSalesTableData;
+        }
+
+        // Update existing rows
+        const updatedTable = prevSalesTableData.map((tableData: any) => {
           if (tableData.idx === id) {
             // Calculate values
             const calculatedBbWt = calculateBbWt(data, selectedCategory);
@@ -276,6 +283,7 @@ const useCustomCustomerSalesHook = () => {
             const customNetWt = calculateNetWt(data, calculatedBbWt);
 
             // Return updated row
+            console.log({ selectedCategory })
             return {
               ...tableData,
               custom_gross_wt: roundToThreeDecimal(data?.custom_gross_wt),
@@ -306,35 +314,35 @@ const useCustomCustomerSalesHook = () => {
               warehouse: data?.custom_warehouse,
             };
           } else {
-            return tableData;
+            return tableData; // Return unchanged row
           }
         });
 
-        return updatedTable;
-      });
-
-      // Add new row if `updateRow` is true
-      if (updateRow) {
-        setSalesTableData((prevSalesTableData: any) => {
-          const lastRow = prevSalesTableData[prevSalesTableData.length - 1];
+        // Add new row if `updateRow` is true
+        if (updateRow) {
+          const lastRow = updatedTable[updatedTable.length - 1];
           const isEmpty = Object.values(lastRow).every(
             (value) => value === null || value === ""
           );
-          if (isEmpty) {
-            return prevSalesTableData;
-          } else {
-            return [
-              ...prevSalesTableData,
-              Object?.keys(clientDetails)?.length > 0
-                ? clientDetails?.tableData
-                : newRowDataForSalesTable,
-            ];
+
+          if (!isEmpty) {
+            // Generate a unique idx for the new row
+            const nextIdx =
+              Math.max(...updatedTable.map((row: any) => row.idx || 0)) + 1;
+
+            const newRow = {
+              ...newRowDataForSalesTable,
+              idx: nextIdx, // Assign unique idx
+            };
+
+            return [...updatedTable, newRow];
           }
-        });
-      }
+        }
+
+        return updatedTable;
+      });
     }
   };
-
 
   const updateBarcodeSalesTableData = (data: any, id?: number, addNewRow?: any) => {
     if (id) {
