@@ -45,7 +45,7 @@ const AddKarigar = ({
           (key === "karigar" || key === "kundanKarigar") && (
             <>
               <div className="m-1">
-                <label>Karigar Code</label>
+                <label>{key === "kundanKarigar" && "Kundan"} Karigar Code</label>
                 <span className="text-danger">*</span>
               </div>
               <div className="p-1">

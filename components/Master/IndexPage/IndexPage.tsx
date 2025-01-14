@@ -1,6 +1,7 @@
 import useKarigarHooks from '@/hooks/master/master-karigar-hook';
 import { useRouter } from 'next/router';
 import MasterSingleRecord from '../MasterSingleListing/MasterSingleRecord';
+import KarigarMaster from '../Karigar/KarigarMaster';
 
 const IndexPage = () => {
   const {
@@ -35,28 +36,9 @@ const IndexPage = () => {
   return (
     <div>
       {key === 'karigar' && (
-        <MasterSingleRecord
-          karigarData={karigarList}
-          inputValue={inputValue}
-          HandleInputValue={HandleInputValue}
-          HandleSubmit={HandleSubmit}
-          error={error}
-          setError={setError}
-          value={key}
-          placeholder={'Karigar'}
-          tab1={'Karigar List'}
-          tab2={'Create New Karigar'}
-          showDeleteModal={showDeleteModal}
-          handleShowDeleteModal={handleShowDeleteModal}
-          handleCloseDeleteModal={handleCloseDeleteModal}
-          deleteRecord={deleteRecord}
-          showAddRecord={showAddRecord}
-          handleShowAddRecord={handleShowAddRecord}
-          handleCloseAddRecord={handleCloseAddRecord}
-          setInputValue={setInputValue}
-          handleUpdate={handleUpdateKarigar}
-          handleDelete={handleDeleteKarigar}
-        />
+        <>
+          <KarigarMaster />
+        </>
       )}
       {key === 'kundanKarigar' && (
         <MasterSingleRecord

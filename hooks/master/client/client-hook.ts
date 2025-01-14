@@ -1,11 +1,9 @@
-import { useDeleteModal } from '@/hooks/DeleteModal/delete-modal-hook';
 import MasterDeleteApi from '@/services/api/Master/master-delete-api';
 import MasterUpdateApi from '@/services/api/Master/master-update-api';
 import postClientApi from '@/services/api/Master/post-client-api';
 import { get_access_token } from '@/store/slices/auth/login-slice';
-import { getClientGroupData } from '@/store/slices/Master/get-client-group-slice';
 import { get_client_name_data, getClientNameData } from '@/store/slices/Master/get-client-name-slice';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -32,12 +30,12 @@ const useClienthook = () => {
         }
     }, [clientDataFromStore])
 
-    const handleDeleteBtn = async (name: any) => {
-        if (name !== undefined && name !== '') {
+    const handleDeleteBtn = async (data: any) => {
+        if (data?.client_name !== undefined && data?.client_name !== '') {
             const apiRes = await MasterDeleteApi(
                 loginAcessToken?.token,
                 'Client',
-                name
+                data?.client_name
             );
             if (apiRes?.status === 202) {
                 toast.success('Client Deleted Successfully!');
@@ -52,8 +50,8 @@ const useClienthook = () => {
         setInputValue((prevValue: any) => ({
             ...prevValue, [fieldName]: value
         }))
-
     }
+
     const handleMaterialChange = (value: any, material: any, material_group: any, index: number) => {
 
         setMaterialInputValue((prevValue: any) => {
@@ -166,7 +164,8 @@ const useClienthook = () => {
         handleUpdateBtn,
         showModal,
         setShowModal,
-        handleUpdateRecord
+        handleUpdateRecord,
+        setMaterialInputValue
     }
 }
 

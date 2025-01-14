@@ -45,7 +45,8 @@ const useCustomCustomerSalesHook = () => {
   const [selectedItemCodeForCustomerSale, setSelectedItemCodeForCustomerSale] =
     useState<any>({ id: '', item_code: '' });
   const [clientDetails, setClientDetails] = useState<any>({})
-  const [selectedClient, setSelectedClient] = useState<string>('');
+  const [inputTable1Value, setInputTable1Value] = useState<any>({});
+
   const [salesTableData, setSalesTableData] = useState<any>([
     SalesTableInitialState,
   ]);
@@ -95,7 +96,7 @@ const useCustomCustomerSalesHook = () => {
       kunFixedAmt: 0,
       otFixedAmt: 0,
     });
-    setSelectedClient('');
+    setInputTable1Value({})
     setSalesTableData([SalesTableInitialState]);
     setSelectedItemCodeForCustomerSale({ id: '', item_code: '' });
     setStateForDocStatus(true);
@@ -103,7 +104,7 @@ const useCustomCustomerSalesHook = () => {
   };
 
   const getClientDetails: any = async () => {
-    let getClientDetails: any = await getClientDetailsApi(loginAcessToken?.token, selectedClient);
+    let getClientDetails: any = await getClientDetailsApi(loginAcessToken?.token, inputTable1Value?.custom_client_name);
     if (getClientDetails?.data?.message?.status === "success") {
       let categoryData: any = getClientDetails?.data?.message?.data;
       const selectedCategories = {
@@ -155,9 +156,7 @@ const useCustomCustomerSalesHook = () => {
 
   useEffect(() => {
     getClientDetails()
-  }, [selectedClient])
-
-
+  }, [inputTable1Value?.custom_client_name])
 
 
   // Update a row with calculated values
@@ -434,9 +433,9 @@ const useCustomCustomerSalesHook = () => {
     handleEmptyDeliveryNote,
     selectedCategory,
     setSeletedCategory,
-    setSelectedClient,
+    inputTable1Value,
+    setInputTable1Value,
     setItemCodeDropdownReset,
-    selectedClient,
     selectedItemCodeForCustomerSale,
     setSelectedItemCodeForCustomerSale,
     itemCodeDropdownReset,

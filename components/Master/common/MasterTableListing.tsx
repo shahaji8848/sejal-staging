@@ -74,9 +74,9 @@ const MasterTableListing = ({ tableData, handleDeleteBtn, handleUpdateBtn }: any
                     <table className="table table-hover table-striped w-100" style={{ borderStyle: 'none' }}>
                         <thead style={{ borderStyle: 'none' }}>
                             <tr className="table_row" style={{ borderStyle: 'none' }}>
-                                <th className="thead text-start">SR NO.</th>
+                                <th className="thead text-center">SR NO.</th>
                                 {headers?.map((header) => (
-                                    <th key={header} className="thead text-start">
+                                    <th key={header} className="thead text-center">
                                         {formatHeader(header)}
                                     </th>
                                 ))}
@@ -106,7 +106,7 @@ const MasterTableListing = ({ tableData, handleDeleteBtn, handleUpdateBtn }: any
                                         <div className="d-flex justify-space-between w-50">
                                             <button
                                                 className={`btn btn-link text-danger p-0 ${styled.actions_btn}`}
-                                                onClick={() => handleShowDeleteModal(item?.client_name)}
+                                                onClick={() => handleShowDeleteModal(item)}
                                                 disabled={item?.delete === 0 ? true : false}
                                             >
                                                 Delete

@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from '../store/store';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import { Suspense } from 'react';
 
 config.autoAddCss = false;
 
@@ -18,18 +19,20 @@ export default function App({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <ErrorBoundary>
-            <Layout>
-              <ToastContainer
-                position="top-right"
-                autoClose={2000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                draggable={false}
-                closeOnClick
-                pauseOnHover
-              />
-              <Component {...pageProps} />
-            </Layout>
+            <Suspense fallback={<div className='container'>Loading...</div>}>
+              <Layout>
+                <ToastContainer
+                  position="top-right"
+                  autoClose={2000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  draggable={false}
+                  closeOnClick
+                  pauseOnHover
+                />
+                <Component {...pageProps} />
+              </Layout>
+            </Suspense>
           </ErrorBoundary>
         </PersistGate>
       </Provider>

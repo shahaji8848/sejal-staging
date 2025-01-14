@@ -17,7 +17,7 @@ import { get_bb_category_data } from '@/store/slices/Master/get-bb-category-slic
 import { get_client_group_data } from '@/store/slices/Master/get-client-group-slice';
 import { get_client_name_data } from '@/store/slices/Master/get-client-name-slice';
 import { get_kun_category_data } from '@/store/slices/Master/get-kun-category-slice';
-import { get_warehouse_list_data } from '@/store/slices/Master/get-warehouse-list-slice';
+import { get_warehouse_list_data, getWarehouseListData } from '@/store/slices/Master/get-warehouse-list-slice';
 import { GetDetailOfDeliveryNote } from '@/store/slices/Sales/getDetailOfDeliveryNoteApi';
 import {
   btnLoadingStart,
@@ -41,9 +41,9 @@ const useCustomerSaleHook = () => {
     handleEmptyDeliveryNote,
     selectedCategory,
     setSeletedCategory,
-    setSelectedClient,
     setItemCodeDropdownReset,
-    selectedClient,
+    inputTable1Value,
+    setInputTable1Value,
     selectedItemCodeForCustomerSale,
     setSelectedItemCodeForCustomerSale,
     itemCodeDropdownReset,
@@ -84,7 +84,6 @@ const useCustomerSaleHook = () => {
     store_location: '',
   });
   const [barcodeListData, setBarcodeListData] = useState<any>();
-  const [selectedLocation, setSelectedLocation] = useState<string>('Mumbai');
   const [selectedClientGroup, setSelectedClientGroup] = useState<string>('');
   const [barcodedata, setBarcodeData] = useState<number>(0);
   const [isBarcodeChecked, setIsBarcodeChecked] = useState<boolean>(false);
@@ -104,9 +103,7 @@ const useCustomerSaleHook = () => {
     };
 
     getKunCsOTCategoryData();
-  }, []);
-  useEffect(() => {
-    setSelectedLocation('Mumbai');
+    dispatch(getWarehouseListData(loginAcessToken?.token))
   }, []);
 
   const handleSalesTableFieldChange = (
@@ -293,6 +290,12 @@ const useCustomerSaleHook = () => {
     }
   };
 
+  const handleTable1InputChange: any = (value: any, fieldName: any) => {
+    setInputTable1Value((prevValue: any) => ({
+      ...prevValue, [fieldName]: value
+    }))
+  }
+
   const handleSelectChange = (event: any) => {
     const { name, value } = event.target;
 
@@ -390,9 +393,6 @@ const useCustomerSaleHook = () => {
     setStateForDocStatus(true);
   };
 
-
-
-
   const filteredTableDataForUpdate = (tableData: any) => {
     const filteredTableData = tableData.filter((row: any) => {
       // Check if there are no values except "idx"
@@ -436,12 +436,9 @@ const useCustomerSaleHook = () => {
 
     const values = {
       ...deliveryNoteData,
-      custom_client_name: selectedClient,
+      custom_client_name: inputTable1Value?.custom_client_name,
       custom_client_group: selectedClientGroup,
-      store_location:
-        selectedLocation !== '' && selectedLocation !== undefined
-          ? selectedLocation
-          : 'Mumbai',
+      store_location: inputTable1Value?.store_location ? inputTable1Value?.store_location : "Mumbai",
       custom_is_barcode: barcodedata,
       version: 'v1',
       method: 'create_delivery_note',
@@ -452,8 +449,8 @@ const useCustomerSaleHook = () => {
       custom_ot_category: selectedCategory?.OtCategory?.name1,
       items: updatedData,
     };
-    let reqField = values.custom_client_name;
-    if (reqField === '') {
+
+    if (!values?.custom_client_name) {
       toast.error('Client Name is Mandatory');
     } else {
       dispatch(btnLoadingStart());
@@ -644,8 +641,6 @@ const useCustomerSaleHook = () => {
     handleSelectChange,
     itemList,
     handleEmptyDeliveryNote,
-    selectedClient,
-    setSelectedClient,
     handleDNCreate,
     stateForDocStatus,
     setStateForDocStatus,
@@ -661,8 +656,6 @@ const useCustomerSaleHook = () => {
     handleUpdateDocStatus,
     handleTabPressInSales,
     warehouseListData,
-    selectedLocation,
-    setSelectedLocation,
     setDeliveryNoteData,
     deliveryNoteData,
     kunCsOtFixedAmt,
@@ -681,7 +674,10 @@ const useCustomerSaleHook = () => {
     handleShowDeleteModal,
     deleteRecord,
     itemDetailApiFun,
-    itemCodeDetails
+    itemCodeDetails,
+    clientDetails,
+    handleTable1InputChange,
+    inputTable1Value
   };
 };
 

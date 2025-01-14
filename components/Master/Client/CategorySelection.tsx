@@ -1,11 +1,13 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { get_bb_category_data } from '@/store/slices/Master/get-bb-category-slice';
-import { get_cs_category_data } from '@/store/slices/Master/get-cs-category-slice';
-import { get_kun_category_data } from '@/store/slices/Master/get-kun-category-slice';
-import { get_ot_category_data } from '@/store/slices/Master/get-ot-category-slice';
+import { get_bb_category_data } from "@/store/slices/Master/get-bb-category-slice";
+import { get_cs_category_data } from "@/store/slices/Master/get-cs-category-slice";
+import { get_kun_category_data } from "@/store/slices/Master/get-kun-category-slice";
+import { get_ot_category_data } from "@/store/slices/Master/get-ot-category-slice";
+import { useSelector } from "react-redux";
 
-const CategorySelection = ({ handleNameChange, inputValue }: any) => {
+const CategorySelection = ({ handleNameChange, inputValue, isReadOnly = false }: any) => {
+  // Ensure isReadOnly is a boolean
+  const readOnly = isReadOnly === true || isReadOnly === "true";
+
   let kunCategory = useSelector(get_kun_category_data)?.data;
   let bbCategory = useSelector(get_bb_category_data)?.data;
   let csCategory = useSelector(get_cs_category_data)?.data;
@@ -23,16 +25,16 @@ const CategorySelection = ({ handleNameChange, inputValue }: any) => {
               id="kundan_category"
               name="kundan_category"
               onChange={(e: any) => {
-                const { name, value } = e.target
+                const { name, value } = e.target;
                 handleNameChange(value, name);
               }}
-              value={inputValue?.kundan_category}
-
+              value={inputValue?.kundan_category || ""}
+              disabled={readOnly}
             >
               <option selected>Select Kun Category</option>
               {kunCategory?.length > 0 &&
                 kunCategory.map((category: any, index: any) => (
-                  <option value={category.name1} defaultValue={inputValue?.kundan_category} key={index}>
+                  <option value={category.name1} key={index}>
                     {category.name1}
                   </option>
                 ))}
@@ -47,15 +49,16 @@ const CategorySelection = ({ handleNameChange, inputValue }: any) => {
               id="cs_category"
               name="cs_category"
               onChange={(e) => {
-                const { name, value } = e.target
+                const { name, value } = e.target;
                 handleNameChange(value, name);
               }}
-              value={inputValue?.cs_category}
+              value={inputValue?.cs_category || ""}
+              disabled={readOnly}
             >
               <option selected>Select CS Category</option>
               {csCategory?.length > 0 &&
                 csCategory.map((category: any, index: any) => (
-                  <option value={category.name1} defaultValue={inputValue?.cs_category} key={index}>
+                  <option value={category.name1} key={index}>
                     {category.name1}
                   </option>
                 ))}
@@ -69,15 +72,16 @@ const CategorySelection = ({ handleNameChange, inputValue }: any) => {
               id="ot_category"
               name="ot_category"
               onChange={(e) => {
-                const { name, value } = e.target
+                const { name, value } = e.target;
                 handleNameChange(value, name);
               }}
-              value={inputValue?.ot_category}
+              value={inputValue?.ot_category || ""}
+              disabled={readOnly}
             >
               <option selected>Select OT Category</option>
               {otCategory?.length > 0 &&
                 otCategory.map((category: any, index: any) => (
-                  <option value={category.name1} defaultValue={inputValue?.ot_category} key={index}>
+                  <option value={category.name1} key={index}>
                     {category.name1}
                   </option>
                 ))}
@@ -92,15 +96,16 @@ const CategorySelection = ({ handleNameChange, inputValue }: any) => {
               id="bb_category"
               name="bb_category"
               onChange={(e) => {
-                const { name, value } = e.target
+                const { name, value } = e.target;
                 handleNameChange(value, name);
               }}
-              value={inputValue?.bb_category}
+              value={inputValue?.bb_category || ""}
+              disabled={readOnly}
             >
               <option selected>Select BB Category</option>
               {bbCategory?.length > 0 &&
                 bbCategory.map((category: any, index: any) => (
-                  <option value={category.name1} defaultValue={inputValue?.bb_category} key={index}>
+                  <option value={category.name1} key={index}>
                     {category.name1}
                   </option>
                 ))}

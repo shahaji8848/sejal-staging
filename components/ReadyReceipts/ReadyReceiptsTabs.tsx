@@ -19,7 +19,7 @@ const ReadyReceiptsTabs: any = () => {
       pathcontent?.includes('Mangalsutra'));
 
   return (
-    <div className=" justify-content-center">
+    <div className="justify-content-center">
       <div className="navbar d-flex justify-content-center p-0">
         <div>
           <div className="d-flex justify-content-center">
@@ -28,15 +28,14 @@ const ReadyReceiptsTabs: any = () => {
               className="text-decoration-none btn-margin"
             >
               <button
-                className={`${styles.button} ${
-                  KundanValue ? 'activeColor' : ''
-                }`}
+                className={`${styles.button} ${KundanValue ? 'activeColor' : ''
+                  }`}
               >
                 Ready Receipts (Kundan Karigar)
                 <i className="fa-solid fa-arrow-turn-down mx-2 pt-1"></i>
               </button>
             </Link>
-            <Link
+            {/* <Link
               href="/readyReceipt/mangalsutra"
               className="text-decoration-none btn-margin"
             >
@@ -48,7 +47,7 @@ const ReadyReceiptsTabs: any = () => {
                 Ready Receipts (Mangalsutra Karigar)
                 <i className="fa-solid fa-arrow-turn-down mx-2 pt-1"></i>
               </button>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

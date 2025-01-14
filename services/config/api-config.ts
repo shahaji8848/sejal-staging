@@ -1,5 +1,6 @@
 export const CONSTANTS = {
-  API_BASE_URL: 'https://stag-shilpiantique.8848digitalerp.com',
+  // API_BASE_URL: 'https://stag-shilpiantique.8848digitalerp.com',
+  API_BASE_URL: 'https://dev-sejal.8848digitalerp.com',
 
 
 };

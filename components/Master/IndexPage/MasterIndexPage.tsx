@@ -1,8 +1,8 @@
 import useMasterHook from '@/hooks/master/master-hook';
 import { useRouter } from 'next/router';
+import ClientMaster from '../Client/ClientMaster';
 import MultipleRecordMaster from '../MasterMultipleListing/MasterMaterialMaster';
 import MasterSingleRecord from '../MasterSingleListing/MasterSingleRecord';
-import ClientMaster from '../Client/ClientMaster';
 
 const MasterIndexPage = () => {
   const {
@@ -131,48 +131,6 @@ const MasterIndexPage = () => {
       {key === 'client' && (
         <>
           <ClientMaster />
-          {/* <MultipleRecordMaster
-            value={key}
-            materialList={
-              clientList?.length > 0 &&
-              clientList !== null &&
-              clientList.map((data: any) => ({
-                material: data.client_name,
-                material_abbr: data.client_group,
-                delete: data.delete,
-                sales_group: data.sales_group,
-                kundan_category: data.kundan_category,
-                cs_category: data.cs_category,
-                ot_category: data.ot_category,
-                bb_category: data.bb_category,
-              }))
-            }
-            clientGroup={clientGroup}
-            HandleNameChange={HandleClientNameChange}
-            HandleSave={HandleClientSave}
-            nameValue={clientName}
-            error1={errorC1}
-            error2={errorC2}
-            placeholder1={'Client'}
-            placeholder2={'Client Group'}
-            tab1={'Client Name List'}
-            tab2={'Create New Client'}
-            setSearchClient={setSearchClient}
-            searchClient={searchClient}
-            salesGroup={salesGroup}
-            setSalesGroup={setSalesGroup}
-            selectDropDownReset={selectDropDownReset}
-            setSelectDropDownReset={setSelectDropDownReset}
-            showDeleteModal={showDeleteModal}
-            handleCloseDeleteModal={handleCloseDeleteModal}
-            handleShowDeleteModal={handleShowDeleteModal}
-            deleteRecord={deleteRecord}
-            showAddRecord={showAddRecord}
-            handleShowAddRecord={handleShowAddRecord}
-            handleCloseAddRecord={handleCloseAddRecord}
-            handleUpdate={handleUpdateClient}
-            handleDelete={handleDeleteClient}
-          /> */}
         </>
       )}
       {key === 'sales-group' && (
@@ -199,38 +157,6 @@ const MasterIndexPage = () => {
           handleDelete={handleDeleteSalesGroup}
         />
       )}
-      {/* {key === 'kunCsOtCategory' && (
-        <MultipleRecordMaster
-          value={key}
-          materialList={
-            KunCsOtCategory?.length > 0 &&
-            KunCsOtCategory !== null &&
-            KunCsOtCategory.map((data: any) => ({
-              material: data.name1,
-              material_abbr: data.type,
-              delete: data.delete,
-            }))
-          }
-          HandleNameChange={HandleKunCsOtChange}
-          HandleSave={HandleKunCsOtSave}
-          nameValue={clientName}
-          error1={errorC1}
-          error2={errorC2}
-          placeholder1={'Category'}
-          placeholder2={'Type'}
-          tab1={'Category'}
-          tab2={'Create New Category'}
-          showDeleteModal={showDeleteModal}
-          handleCloseDeleteModal={handleCloseDeleteModal}
-          handleShowDeleteModal={handleShowDeleteModal}
-          deleteRecord={deleteRecord}
-          showAddRecord={showAddRecord}
-          handleShowAddRecord={handleShowAddRecord}
-          handleCloseAddRecord={handleCloseAddRecord}
-          handleUpdate={handleUpdateKunCsOtCategory}
-          handleDelete={handleDeleteKunCSOtCategory}
-        />
-      )} */}
 
       {key === 'kun-category' && (
         <MultipleRecordMaster

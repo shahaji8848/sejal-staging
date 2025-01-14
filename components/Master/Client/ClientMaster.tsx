@@ -12,8 +12,9 @@ const ClientMaster = () => {
 
     const key = pathcontent[pathcontent?.length - 1];
 
-    const { clientData, handleDeleteBtn, handleInputChange, inputValue, setInputValue, handleMaterialChange, materialValue, handleSaveBtn, handleUpdateBtn, showModal, setShowModal, handleUpdateRecord } = useClienthook()
+    const { clientData, handleDeleteBtn, handleInputChange, inputValue, setInputValue, handleMaterialChange, materialValue, handleSaveBtn, handleUpdateBtn, showModal, setShowModal, handleUpdateRecord, setMaterialInputValue } = useClienthook()
 
+    console.log({ inputValue })
     return (
         <>
             <div className="container-lg">
@@ -45,7 +46,7 @@ const ClientMaster = () => {
                 </div>
             </div>
 
-            <UpdateMasterModal inputValue={inputValue} showModal={showModal} setShowModal={setShowModal} handleInputChange={handleInputChange} handleMaterialChange={handleMaterialChange} materialValue={materialValue} handleSaveBtn={handleUpdateRecord} />
+            <UpdateMasterModal inputValue={inputValue} setInputValue={setInputValue} showModal={showModal} setShowModal={setShowModal} handleInputChange={handleInputChange} handleMaterialChange={handleMaterialChange} materialValue={materialValue} setMaterialInputValue={setMaterialInputValue} handleSaveBtn={handleUpdateRecord} />
         </>
     )
 }
