@@ -1,47 +1,48 @@
 import MasterDeleteApi from '@/services/api/Master/master-delete-api';
 import MasterUpdateApi from '@/services/api/Master/master-update-api';
-import postKunKarigarApi from '@/services/api/Master/post-kundan-karigar-name';
+import postSalesGroupApi from '@/services/api/Master/sales-group/post-sales-group-api';
 import { get_access_token } from '@/store/slices/auth/login-slice';
-import { get_karigar_name_data, getKarigarNameData } from '@/store/slices/Master/karigar-name-slice';
+import { get_sales_group_data, getSalesGroupData } from '@/store/slices/Master/get-sales-group-slice';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-const useKarigarHook = () => {
+const useSalesGroupHook = () => {
 
     const dispatch = useDispatch();
     const loginAcessToken = useSelector(get_access_token);
     const [inputValue, setInputValue] = useState<any>({})
     const [prevInputValue, setPrevInputValue] = useState<any>({})
     const [showModal, setShowModal] = useState<boolean>(false)
-    const [karigarData, setKarigarData] = useState<any>([])
+    const [salesGroupData, setSalesGroupData] = useState<any>([])
 
-    const karigarDataFromStore = useSelector(get_karigar_name_data)?.data;
+    const salesGroupDataFromStore = useSelector(get_sales_group_data)?.data;
 
     useEffect(() => {
-        dispatch(getKarigarNameData(loginAcessToken.token));
+        dispatch(getSalesGroupData(loginAcessToken.token));
     }, [])
 
     useEffect(() => {
-        if (karigarDataFromStore?.length > 0) {
-            setKarigarData([...karigarDataFromStore])
+        if (salesGroupDataFromStore?.length > 0) {
+            setSalesGroupData([...salesGroupDataFromStore])
         } else {
-            setKarigarData([])
+            setSalesGroupData([])
         }
-    }, [karigarDataFromStore])
+    }, [salesGroupDataFromStore])
 
     const handleDeleteBtn = async (data: any) => {
-        if (data?.karigar_code !== undefined && data?.karigar_code !== '') {
+        if (data?.sales_group !== undefined && data?.sales_group !== '') {
             const apiRes = await MasterDeleteApi(
                 loginAcessToken?.token,
-                'Karigar',
-                data?.karigar_code
+                'Sales Group',
+                data?.sales_group
             );
             if (apiRes?.status === 202) {
-                toast.success('Karigar Deleted Successfully!');
-                dispatch(getKarigarNameData(loginAcessToken.token));
+                toast.success('Sales Group Deleted Successfully!');
+                dispatch(getSalesGroupData(loginAcessToken.token));
+
             } else {
-                toast.error('Karigar cannot be deleted');
+                toast.error('Sales Group cannot be deleted');
             }
         }
     };
@@ -53,60 +54,58 @@ const useKarigarHook = () => {
     }
 
     const handleSaveBtn: any = async () => {
-        const { karigar_name, karigar_code } = inputValue;
+        const { sales_group } = inputValue;
 
         // Validate required fields
-        if (!karigar_name || !karigar_code) {
-            toast.error('All fields marked with * are mandatory.');
+        if (!sales_group) {
+            toast.error('Sales Group is mandatory.');
             return;
         }
 
         // Prepare API payload
         const values = {
             version: 'v1',
-            method: 'create_karigar',
-            entity: 'karigar',
-            karigar_name: inputValue?.karigar_name,
-            karigar_code: inputValue?.karigar_code,
+            method: 'create_sales_group',
+            entity: 'sales_group',
+            sales_group: sales_group
         };
 
         // Call API
-        let apiRes: any = await postKunKarigarApi(loginAcessToken?.token, values);
-
-        if (apiRes?.status === 'success') {
-            toast.success('Karigar Name Created');
-            dispatch(getKarigarNameData(loginAcessToken?.token));
+        let apiRes: any = await postSalesGroupApi(loginAcessToken?.token, values);
+        console.log({ apiRes })
+        if (apiRes?.data?.message?.status === 'success') {
+            toast.success('Sales Group Created');
+            dispatch(getSalesGroupData(loginAcessToken.token));
             setInputValue({})
         } else {
-            toast.error('Karigar Name already exists');
+            toast.error(`${apiRes?.data?.message?.error}`);
         }
     }
 
     const handleUpdateRecord: any = async () => {
-        const { karigar_name, karigar_code } = inputValue;
+        const { sales_group } = inputValue;
 
         // Validate required fields
-        if (!karigar_name || !karigar_code) {
-            toast.error('All fields marked with * are mandatory.');
+        if (!sales_group) {
+            toast.error('Sales Group is mandatory.');
             return;
         }
 
         // Prepare API payload
         const values = {
             version: 'v1',
-            entity: 'karigar',
-            method: 'update_karigar_detail',
-            name: prevInputValue?.karigar_code,
-            karigar_name: inputValue?.karigar_name,
-            karigar_code: inputValue?.karigar_code,
+            entity: 'sales_group',
+            method: 'update_sales_group_detail',
+            name: prevInputValue?.sales_group,
+            sales_group: inputValue?.sales_group,
 
         };
         // Call API
         let apiRes: any = await MasterUpdateApi(loginAcessToken?.token, values);
 
         if (apiRes?.data?.message?.status === 'success') {
-            dispatch(getKarigarNameData(loginAcessToken.token));
-            toast.success('Karigar Updated');
+            dispatch(getSalesGroupData(loginAcessToken.token));
+            toast.success('Sales Group Updated');
             setShowModal(false)
             setInputValue({})
         } else {
@@ -120,7 +119,7 @@ const useKarigarHook = () => {
     }
 
     return {
-        karigarData,
+        salesGroupData,
         handleDeleteBtn,
         handleInputChange,
         inputValue,
@@ -133,4 +132,4 @@ const useKarigarHook = () => {
     }
 }
 
-export default useKarigarHook
+export default useSalesGroupHook

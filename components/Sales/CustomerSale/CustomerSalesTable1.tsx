@@ -29,13 +29,14 @@ const CustomerSalesTable1 = ({
         : [],
   };
   const locationData: any = {
-    fieldname: 'location',
+    fieldname: 'custom_warehouse',
     fieldtype: 'Link',
     link_data:
       warehouseListData?.length > 0
         ? Array.from(new Set(warehouseListData.map((data: any) => data?.name)))
         : [],
   };
+
 
   return (
     <div className=" mt-2">
@@ -99,28 +100,6 @@ const CustomerSalesTable1 = ({
                 }}
                 readOnlyFields={readOnlyFields}
               />
-              {/* <SearchSelectInputField
-                karigarData={
-                  clientNameListData?.length > 0 &&
-                  clientNameListData !== null &&
-                  clientNameListData.map((data: any) => ({
-                    karigar_name: data.client_name,
-                  }))
-                }
-                setSelectedDropdownValue={setSelectedClient}
-                selectedDropdownValue={selectedClient}
-                // defaultValue={
-                //   DetailOfDeliveryNoteFromStore?.data?.custom_client_name
-                // }
-                placeholder={'Client Name'}
-                className={'form-control input-sm border border-secondary'}
-                clientGroupList={clientGroupList}
-                readOnlyFields={readOnlyFields}
-                setStateForDocStatus={setStateForDocStatus}
-                handleSelectClientGroup={handleSelectClientGroup}
-                selectDropDownReset={itemCodeDropdownReset}
-                setSelectDropDownReset={setItemCodeDropdownReset}
-              /> */}
             </td>
 
             <td className="table_row">
@@ -128,10 +107,10 @@ const CustomerSalesTable1 = ({
                 className="form-control border border-secondary"
                 style={{ lineHeight: "20px", padding: "0px" }}
                 type="text"
-                name="remarks"
+                name="custom_remarks"
                 autoComplete="off"
                 readOnly={readOnlyFields}
-                value={inputTable1Value?.remarks}
+                value={inputTable1Value?.custom_remarks}
                 onChange={(e) => {
                   handleTable1InputChange(e.target.value, e.target.name);
                 }}
@@ -144,7 +123,7 @@ const CustomerSalesTable1 = ({
                 handleSearchInput={(value: any, fieldName: any) =>
                   handleTable1InputChange(value, fieldName)
                 }
-                value={inputTable1Value?.store_location}
+                value={inputTable1Value?.custom_warehouse}
                 styleCss={{
                   padding: "0px",
                   border: "1px solid #6c757d",
@@ -153,26 +132,7 @@ const CustomerSalesTable1 = ({
                 }}
                 readOnlyFields={readOnlyFields}
               />
-              {/* <SearchSelectInputField
-                karigarData={
-                  warehouseListData?.length > 0 &&
-                  warehouseListData !== null &&
-                  warehouseListData.map((data: any) => ({
-                    karigar_name: data.custom_store_location,
-                  }))
-                }
-                recipitData={deliveryNoteData}
-                setRecipitData={setDeliveryNoteData}
-                setSelectedDropdownValue={setSelectedLocation}
-                selectedDropdownValue={selectedLocation}
-                defaultValue="Mumbai"
-                className={'form-control input-sm border border-secondary'}
-                readOnlyFields={readOnlyFields}
-                setStateForDocStatus={setStateForDocStatus}
-                name="store_location"
-                selectDropDownReset={itemCodeDropdownReset}
-                setSelectDropDownReset={setItemCodeDropdownReset}
-              /> */}
+
             </td>
             {query?.saleId === 'customerSale' && (
               <td className="table_row">

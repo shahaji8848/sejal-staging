@@ -14,7 +14,7 @@ const useClienthook = () => {
     const [materialValue, setMaterialInputValue] = useState<any>([])
     const [showModal, setShowModal] = useState<boolean>(false)
     const [clientData, setClientData] = useState<any>([])
-
+    const [prevInputValue, setPrevInputValue] = useState<any>({})
     const clientDataFromStore = useSelector(get_client_name_data)?.data;
 
     useEffect(() => {
@@ -40,6 +40,8 @@ const useClienthook = () => {
             if (apiRes?.status === 202) {
                 toast.success('Client Deleted Successfully!');
                 dispatch(getClientNameData(loginAcessToken.token));
+                setInputValue({})
+                setMaterialInputValue([])
             } else {
                 toast.error('Client cannot be deleted');
             }
@@ -53,25 +55,26 @@ const useClienthook = () => {
     }
 
     const handleMaterialChange = (value: any, material: any, material_group: any, index: number) => {
-
         setMaterialInputValue((prevValue: any) => {
-            // Create a copy of the current array
+            // Create a copy of the array
             const updatedValues = [...prevValue];
 
             // Ensure the target object exists at the given index
             if (!updatedValues[index]) {
-                updatedValues[index] = { material: "", material_group: '', price: "" }; // Default structure
+                updatedValues[index] = { material: "", material_group: "", price: "" }; // Default structure
+            } else {
+                // Create a new object for immutability
+                updatedValues[index] = {
+                    ...updatedValues[index],
+                    material: material,
+                    material_group: material_group,
+                    price: value === "" ? "" : value, // Handle empty input
+                };
             }
-
-            // Update the specific fields with validation for empty input
-            updatedValues[index].material = material;
-            updatedValues[index].material_group = material_group;
-            updatedValues[index].price = value === "" ? "" : value; // Handle empty input
 
             return updatedValues; // Return the updated array
         });
     };
-
 
     const handleSaveBtn: any = async () => {
         const { client_name, client_group, sales_group, kundan_category, cs_category, bb_category, ot_category } = inputValue;
@@ -125,7 +128,7 @@ const useClienthook = () => {
             entity: 'client',
             method: 'update_client_detail',
             client_name: client_name,
-            name: client_name,
+            name: prevInputValue?.client_name,
             client_group: client_group,
             sales_group: sales_group,
             kundan_category: kundan_category,
@@ -142,13 +145,16 @@ const useClienthook = () => {
             dispatch(getClientNameData(loginAcessToken.token));
             toast.success('Client Updated');
             setShowModal(false)
+            setInputValue({})
+            setMaterialInputValue([])
         } else {
-            toast.error('Client Name already exists');
+            toast.error(`${apiRes?.data?.message?.message}`);
         }
     }
     const handleUpdateBtn: any = (data: any) => {
         setInputValue(data);
         setMaterialInputValue(data?.materials)
+        setPrevInputValue(data)
         setShowModal(true);
     }
 

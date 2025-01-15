@@ -1,8 +1,8 @@
 import TabSection from '@/components/TabSection';
 import useKarigarHook from '@/hooks/master/Karigar/karigar-hook';
 import { useRouter } from 'next/router';
-import MasterTableListing from '../common/MasterTableListing';
-import UpdateMasterModal from '../common/UpdateMasterModal';
+import MasterTableListing from '../Common/MasterTableListing';
+import UpdateMasterModal from '../Common/UpdateMasterModal';
 import MasterListing from '../MasterListing';
 import AddKarigarRecordForm from './AddKarigarRecordForm';
 
@@ -52,7 +52,7 @@ const KarigarMaster = () => {
                     </div>
                 </div>
 
-                <UpdateMasterModal inputValue={inputValue} showModal={showModal} setShowModal={setShowModal} handleInputChange={handleInputChange} handleSaveBtn={handleUpdateRecord} />
+                <UpdateMasterModal inputValue={inputValue} showModal={showModal} setShowModal={setShowModal} setInputValue={setInputValue} handleInputChange={handleInputChange} handleSaveBtn={handleUpdateRecord} />
             </div>
         </>
     )

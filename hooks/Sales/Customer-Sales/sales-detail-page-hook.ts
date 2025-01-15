@@ -39,8 +39,6 @@ const useCustomerSaleDetailHook = () => {
     handleSelectChange,
     itemList,
     handleEmptyDeliveryNote,
-    selectedClient,
-    setSelectedClient,
     handleDNCreate,
     stateForDocStatus,
     setStateForDocStatus,
@@ -68,6 +66,8 @@ const useCustomerSaleDetailHook = () => {
     handleShowDeleteModal,
     deleteRecord,
     itemDetailApiFun,
+    inputTable1Value,
+    setInputTable1Value
   }: any = useCustomerSaleHook();
 
   const loginAcessToken = useSelector(get_access_token);
@@ -91,6 +91,7 @@ const useCustomerSaleDetailHook = () => {
     }
   }, [query]);
 
+  console.log({ detailOfDeliveryNoteFromStore })
   useEffect(() => {
     if (detailOfDeliveryNoteFromStore?.docStatus > 0) {
       setReadOnlyFields(true);
@@ -172,10 +173,12 @@ const useCustomerSaleDetailHook = () => {
           ? true
           : false
       );
-      setSelectedClient(
-        detailOfDeliveryNoteFromStore?.data?.custom_client_name
-      );
-      setSelectedLocation(detailOfDeliveryNoteFromStore?.data?.store_location);
+      // setSelectedClient(
+      //   detailOfDeliveryNoteFromStore?.data?.custom_client_name
+      // );
+      console.log({ detailOfDeliveryNoteFromStore })
+      // setSelectedLocation(detailOfDeliveryNoteFromStore?.data?.store_location);
+      // setInputTable1Value()
       setDefaultSalesDate(detailOfDeliveryNoteFromStore?.data?.posting_date);
     } else {
       setIsLoading(false);
@@ -220,10 +223,11 @@ const useCustomerSaleDetailHook = () => {
       method: 'put_delivery_note',
       entity: 'sales',
       name: query?.deliveryNoteId,
-      custom_client_name: selectedClient,
-      store_location:
-        selectedLocation !== '' && selectedLocation !== undefined
-          ? selectedLocation
+      custom_client_name: inputTable1Value?.custom_client_name,
+      custom_remarks: inputTable1Value?.custom_remarks,
+      custom_warehouse:
+        inputTable1Value?.custom_warehouse !== '' && inputTable1Value?.custom_warehouse !== undefined
+          ? inputTable1Value?.custom_warehouse
           : 'Mumbai',
       custom_is_barcode: barcodedata,
       custom_kun_category: selectedCategory?.KunCategory?.name1,
@@ -263,7 +267,7 @@ const useCustomerSaleDetailHook = () => {
     }));
     const values = {
       amended_from: query?.deliveryNoteId,
-      custom_client_name: selectedClient,
+      custom_client_name: inputTable1Value?.custom_client_name,
       custom_kun_category: selectedCategory?.KunCategory?.name1,
       custom_cs_category: selectedCategory?.CsCategory?.name1,
       custom_bb_category: selectedCategory?.BbCategory?.name1,
@@ -342,8 +346,6 @@ const useCustomerSaleDetailHook = () => {
     handleSelectChange,
     itemList,
     handleEmptyDeliveryNote,
-    selectedClient,
-    setSelectedClient,
     handleDNCreate,
     stateForDocStatus,
     setStateForDocStatus,

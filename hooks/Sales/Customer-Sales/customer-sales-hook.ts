@@ -167,7 +167,7 @@ const useCustomerSaleHook = () => {
 
   useEffect(() => {
     setSalesTableData((prevData: any) => {
-      return prevData.map((item: any) => ({
+      return prevData?.length > 0 && prevData.map((item: any) => ({
         ...item,
         custom_net_wt: Math.max(
           0,
@@ -187,7 +187,7 @@ const useCustomerSaleHook = () => {
       }));
     });
   }, [
-    salesTableData?.map((item: any) =>
+    salesTableData && salesTableData?.map((item: any) =>
       [
         item?.custom_gross_wt,
         item?.custom_kun_wt,
@@ -438,7 +438,8 @@ const useCustomerSaleHook = () => {
       ...deliveryNoteData,
       custom_client_name: inputTable1Value?.custom_client_name,
       custom_client_group: selectedClientGroup,
-      store_location: inputTable1Value?.store_location ? inputTable1Value?.store_location : "Mumbai",
+      remarks: inputTable1Value?.remarks,
+      custom_warehouse: inputTable1Value?.custom_warehouse ? inputTable1Value?.custom_warehouse : "Mumbai",
       custom_is_barcode: barcodedata,
       version: 'v1',
       method: 'create_delivery_note',
@@ -677,7 +678,8 @@ const useCustomerSaleHook = () => {
     itemCodeDetails,
     clientDetails,
     handleTable1InputChange,
-    inputTable1Value
+    inputTable1Value,
+    setInputTable1Value
   };
 };
 

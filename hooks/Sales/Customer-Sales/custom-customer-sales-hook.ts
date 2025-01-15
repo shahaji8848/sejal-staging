@@ -27,7 +27,7 @@ const useCustomCustomerSalesHook = () => {
     custom_ot_amt: 0,
     custom_other: '',
     custom_amount: 0,
-    custom_warehouse: 'Mumbai',
+    custom_warehouse: '',
   };
   const [kunCsOtFixedAmt, setKunCsOtFixedAmt] = useState({
     csFixedAmt: 0,
@@ -76,7 +76,7 @@ const useCustomCustomerSalesHook = () => {
     custom_ot_amt: 0,
     custom_other: '',
     custom_amount: 0,
-    custom_warehouse: 'Mumbai',
+    custom_warehouse: inputTable1Value?.custom_warehouse ? inputTable1Value?.custom_warehouse : "",
   };
 
   const handleAddRowForSales: any = () => {
@@ -113,8 +113,9 @@ const useCustomCustomerSalesHook = () => {
         OtCategory: { name1: categoryData?.ot_category?.name, type: categoryData?.ot_category?.type },
         BbCategory: { name1: categoryData?.bb_category?.name, type: categoryData?.bb_category?.type },
       };
-
+      console.log({ categoryData })
       setClientDetails({
+        clientDetails: categoryData,
         tableData: {
           idx: salesTableData?.length + 1,
           custom_pr_bb_wt: '',

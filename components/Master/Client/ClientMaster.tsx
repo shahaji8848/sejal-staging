@@ -2,8 +2,8 @@ import { useRouter } from 'next/router';
 import MasterListing from '../MasterListing';
 import TabSection from '@/components/TabSection';
 import useClienthook from '@/hooks/master/client/client-hook';
-import MasterTableListing from '../common/MasterTableListing';
-import UpdateMasterModal from '../common/UpdateMasterModal';
+import MasterTableListing from '../Common/MasterTableListing';
+import UpdateMasterModal from '../Common/UpdateMasterModal';
 import AddMasterRecordForm from './AddClientRecordForm';
 
 const ClientMaster = () => {
@@ -14,7 +14,6 @@ const ClientMaster = () => {
 
     const { clientData, handleDeleteBtn, handleInputChange, inputValue, setInputValue, handleMaterialChange, materialValue, handleSaveBtn, handleUpdateBtn, showModal, setShowModal, handleUpdateRecord, setMaterialInputValue } = useClienthook()
 
-    console.log({ inputValue })
     return (
         <>
             <div className="container-lg">

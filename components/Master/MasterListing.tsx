@@ -18,18 +18,18 @@ const MasterListing: any = ({ value }: any) => {
               <i className="fa-solid fa-arrow-turn-down mx-1  pt-1"></i>
             </button>
           </Link>
-          <Link href="/master/kundanKarigar" className="text-decoration-none ">
+          <Link href="/master/kundan-karigar" className="text-decoration-none ">
             <button
-              className={`${styles.button} ${styled.master_btn} ${value === 'kundanKarigar' ? 'activeColor' : ''
+              className={`${styles.button} ${styled.master_btn} ${value === 'kundan-karigar' ? 'activeColor' : ''
                 }`}
             >
               Kundan Karigar
               <i className="fa-solid fa-arrow-turn-down mx-1 pt-1"></i>
             </button>
           </Link>
-          <Link href="/master/materialGroup" className="text-decoration-none ">
+          <Link href="/master/material-group" className="text-decoration-none ">
             <button
-              className={`${styles.button} ${styled.master_btn} ${value === 'materialGroup' ? 'activeColor' : ''
+              className={`${styles.button} ${styled.master_btn} ${value === 'material-group' ? 'activeColor' : ''
                 }`}
             >
               Material Group
@@ -45,9 +45,9 @@ const MasterListing: any = ({ value }: any) => {
               <i className="fa-solid fa-arrow-turn-down mx-1 pt-1"></i>
             </button>
           </Link>
-          <Link href="/master/clientGroup" className="text-decoration-none ">
+          <Link href="/master/client-group" className="text-decoration-none ">
             <button
-              className={`${styles.button} ${styled.master_btn} ${value === 'clientGroup' ? 'activeColor' : ''
+              className={`${styles.button} ${styled.master_btn} ${value === 'client-group' ? 'activeColor' : ''
                 }`}
             >
               Client Group
@@ -120,9 +120,9 @@ const MasterListing: any = ({ value }: any) => {
               <i className="fa-solid fa-arrow-turn-down mx-1 pt-1"></i>
             </button>
           </Link>
-          <Link href="/master/subCategory" className="text-decoration-none ">
+          <Link href="/master/sub-category" className="text-decoration-none ">
             <button
-              className={`${styles.button} ${styled.master_btn} ${value === 'subCategory' ? 'activeColor' : ''
+              className={`${styles.button} ${styled.master_btn} ${value === 'sub-category' ? 'activeColor' : ''
                 }`}
             >
               Sub-Category & Code

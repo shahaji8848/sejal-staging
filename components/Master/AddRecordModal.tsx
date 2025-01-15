@@ -267,27 +267,9 @@ const AddRecordModal = ({
                       setSelectDropDownReset={setSelectDropDownReset}
                     />
                   </div>
-                  {/* <div> {error3 && <p className="text-danger">{error3}</p>}</div> */}
+
                 </>
               )}
-            </>
-          )}
-          {value === 'material' && (
-            <>
-              <div className=" m-1">
-                <label htmlFor="">Category</label>
-              </div>
-              <input
-                type="text"
-                className="form-control border p-0 px-2 w-50"
-                name="category"
-                value={nameValue?.category}
-                onChange={(e) => {
-                  HandleNameChange(e);
-                }}
-                required
-                autoComplete="off"
-              />
             </>
           )}
         </Modal.Body>

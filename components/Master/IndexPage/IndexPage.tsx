@@ -1,32 +1,8 @@
-import useKarigarHooks from '@/hooks/master/master-karigar-hook';
 import { useRouter } from 'next/router';
-import MasterSingleRecord from '../MasterSingleListing/MasterSingleRecord';
 import KarigarMaster from '../Karigar/KarigarMaster';
+import KundanKarigarMaster from '../KundanKarigar/KundanKarigarMaster';
 
 const IndexPage = () => {
-  const {
-    karigarList,
-    kunKarigarList,
-    inputValue,
-    setInputValue,
-    HandleInputValue,
-    HandleSubmit,
-    HandleKunInputValue,
-    HandleKunSubmit,
-    error,
-    setError,
-    showAddRecord,
-    handleShowAddRecord,
-    handleCloseAddRecord,
-    showDeleteModal,
-    handleCloseDeleteModal,
-    handleShowDeleteModal,
-    deleteRecord,
-    handleUpdateKarigar,
-    handleUpdateKunKarigar,
-    handleDeleteKarigar,
-    handleDeleteKunKarigar
-  }: any = useKarigarHooks();
 
   const router = useRouter();
   const pathcontent = router?.asPath?.split('/');
@@ -36,33 +12,10 @@ const IndexPage = () => {
   return (
     <div>
       {key === 'karigar' && (
-        <>
-          <KarigarMaster />
-        </>
+        <KarigarMaster />
       )}
-      {key === 'kundanKarigar' && (
-        <MasterSingleRecord
-          karigarData={kunKarigarList}
-          inputValue={inputValue}
-          HandleInputValue={HandleKunInputValue}
-          HandleSubmit={HandleKunSubmit}
-          error={error}
-          setError={setError}
-          value={key}
-          placeholder={'Kundan Karigar'}
-          tab1={'Kundan Karigar List'}
-          tab2={'Create New Kundan Karigar'}
-          showDeleteModal={showDeleteModal}
-          handleCloseDeleteModal={handleCloseDeleteModal}
-          handleShowDeleteModal={handleShowDeleteModal}
-          deleteRecord={deleteRecord}
-          showAddRecord={showAddRecord}
-          handleShowAddRecord={handleShowAddRecord}
-          handleCloseAddRecord={handleCloseAddRecord}
-          setInputValue={setInputValue}
-          handleUpdate={handleUpdateKunKarigar}
-          handleDelete={handleDeleteKunKarigar}
-        />
+      {key === 'kundan-karigar' && (
+        <KundanKarigarMaster />
       )}
     </div>
   );

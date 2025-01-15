@@ -26,6 +26,7 @@ const ReadyReceiptTable = ({
   const pathParts = router?.asPath?.split('/');
   const lastPartOfURL = pathParts[pathParts?.length - 1];
 
+  console.log({ karigarData })
   useEffect(() => {
     if (defaultKarigarData === undefined) {
       setReadyReceiptType(
@@ -33,6 +34,11 @@ const ReadyReceiptTable = ({
       );
     }
   }, [router, setReadyReceiptType, defaultKarigarData, lastPartOfURL]);
+
+  let updatedKarigarData: any =
+    karigarData?.length > 0
+      ? karigarData.map((data: any) => ({ karigar_name: data?.karigar_code }))
+      : [];
 
   return (
     <div className="">
@@ -76,7 +82,7 @@ const ReadyReceiptTable = ({
             </td>
             <td className="table_row">
               <SearchSelectInputField
-                karigarData={karigarData}
+                karigarData={updatedKarigarData}
                 defaultValue={karigarData?.karigar_name}
                 recipitData={recieptData}
                 setRecipitData={setRecipitData}

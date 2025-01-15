@@ -1,6 +1,6 @@
 import React from 'react';
 import SearchSelectInputField from '@/components/InputDropdown/SearchSelectInputField';
-import CategorySelection from '../Client/CategorySelection';
+import CategorySelection from '../Common/CategorySelection';
 import AutoCompleteInput from '@/components/InputDropdown/AutoCompleteInput';
 import { useSelector } from 'react-redux';
 import { get_sales_group_data } from '@/store/slices/Master/get-sales-group-slice';

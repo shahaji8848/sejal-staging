@@ -90,6 +90,7 @@ const CustomerSaleMaster = () => {
   };
 
   console.log({ inputTable1Value })
+  console.log({ salesTableData })
 
   return (
     <>

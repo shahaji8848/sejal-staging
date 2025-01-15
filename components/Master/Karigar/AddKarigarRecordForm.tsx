@@ -1,5 +1,3 @@
-import React from 'react'
-import MaterialTable from '../Client/MaterialTable';
 
 const AddKarigarRecordForm = ({ handleInputChange, inputValue, handleSaveBtn }: any) => {
     return (
@@ -11,7 +9,7 @@ const AddKarigarRecordForm = ({ handleInputChange, inputValue, handleSaveBtn }: 
                         type="text"
                         className="form-control border p-0 px-2"
                         name="karigar_name"
-                        value={inputValue?.karigar_name}
+                        value={inputValue?.karigar_name || ""}
                         onChange={(e) => {
                             handleInputChange(e.target.value, e.target.name);
                         }}
@@ -26,7 +24,7 @@ const AddKarigarRecordForm = ({ handleInputChange, inputValue, handleSaveBtn }: 
                             type="text"
                             className="form-control border p-0 px-2"
                             name="karigar_code"
-                            value={inputValue?.karigar_code}
+                            value={inputValue?.karigar_code || ""}
                             onChange={(e) => {
                                 handleInputChange(e.target.value, e.target.name);
                             }}
@@ -35,12 +33,7 @@ const AddKarigarRecordForm = ({ handleInputChange, inputValue, handleSaveBtn }: 
                         />
                     </div>
                     <button type="button" className="btn btn-outline-primary btn-sm mt-3 px-3" onClick={handleSaveBtn}>Save</button>
-
                 </div>
-                {/* <div className="col-lg-6">
-                    <MaterialTable handleMaterialChange={handleMaterialChange} materialValue={materialValue} isReadOnly={false} />
-                </div> */}
-
             </div>
         </>
     )

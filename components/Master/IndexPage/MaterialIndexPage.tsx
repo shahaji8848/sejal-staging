@@ -3,6 +3,7 @@ import React from 'react';
 import MasterSingleRecord from '../MasterSingleListing/MasterSingleRecord';
 import { useRouter } from 'next/router';
 import MultipleRecordMaster from '../MasterMultipleListing/MasterMaterialMaster';
+import MaterialGroupMaster from '../MaterialGroup/MaterialGroupMaster';
 
 const MaterialIndexPage = () => {
   const {
@@ -50,29 +51,8 @@ const MaterialIndexPage = () => {
     }));
   return (
     <div>
-      {key === 'materialGroup' && (
-        <MasterSingleRecord
-          karigarData={materialGroup}
-          inputValue={inputValueM}
-          HandleInputValue={HandleMaterialGrpValue}
-          HandleSubmit={HandleMaterialGrpSubmit}
-          error={errorM}
-          setError={setErrorM}
-          value={key}
-          placeholder={'Material Group'}
-          tab1={'Material Group List'}
-          tab2={'Create New Material Group'}
-          showDeleteModal={showDeleteModal}
-          handleCloseDeleteModal={handleCloseDeleteModal}
-          handleShowDeleteModal={handleShowDeleteModal}
-          deleteRecord={deleteRecord}
-          showAddRecord={showAddRecord}
-          handleShowAddRecord={handleShowAddRecord}
-          handleCloseAddRecord={handleCloseAddRecord}
-          setInputValueM={setInputValueM}
-          handleUpdate={handleUpdateMaterialGroup}
-          handleDelete={handleDeleteMaterialGroup}
-        />
+      {key === 'material-group' && (
+        <MaterialGroupMaster />
       )}
       {key === 'material' && (
         <MultipleRecordMaster
