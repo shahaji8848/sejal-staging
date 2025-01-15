@@ -56,7 +56,7 @@ const AutoCompleteInput = ({
           onChange={(e) => handleFieldChange(e, data.fieldname)}
           onClick={handleDocumentClick}
           onMouseDown={handleShowDropdown}
-          className={`${styleCss ? "" : "bg-primary"} form-control  bg-opacity-10`}
+          className={`${styleCss ? "" : "bg-primary"} form-control bg-opacity-10`}
           style={styleCss ? { ...styleCss } : {}}
           //   className={`${
           //     bgColor?.current === true

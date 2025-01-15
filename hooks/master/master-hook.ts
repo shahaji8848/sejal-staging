@@ -216,8 +216,8 @@ const useMasterHook = () => {
 
     if (clientName?.material === '' || clientName.material === undefined) {
       setError1('Input field cannot be empty');
-    } else if (clientName?.material?.length !== 3) {
-      setError1('Subcategory name must be at least 3 letters.');
+    } else if (clientName?.material?.length < 3 || clientName?.material?.length > 5) {
+      setError1('Subcategory name must be in between 3 to 5 letters.');
     } else if (
       clientName?.material_abbr === '' ||
       clientName?.material_abbr === undefined

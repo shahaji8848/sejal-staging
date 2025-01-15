@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import styled from '../../../styles/master.module.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { OverlayTrigger, Popover } from 'react-bootstrap';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import LoadMoreTableDataInMaster from '../LoadMoreTableDataInMaster';
 import DeleteModal from '@/components/DeleteModal';
-import { useDeleteModal } from '@/hooks/DeleteModal/delete-modal-hook';
-import MasterFilters from './MasterFilters'; // Import the Filters component
 import NoRecord from '@/components/General/NoRecord';
+import { useDeleteModal } from '@/hooks/DeleteModal/delete-modal-hook';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useState } from 'react';
+import { OverlayTrigger, Popover } from 'react-bootstrap';
+import styled from '../../../styles/master.module.css';
+import LoadMoreTableDataInMaster from '../LoadMoreTableDataInMaster';
+import MasterFilters from './MasterFilters';
 
 const MasterTableListing = ({ tableData, handleDeleteBtn, handleUpdateBtn }: any) => {
     const [filters, setFilters] = useState({});
@@ -24,7 +24,7 @@ const MasterTableListing = ({ tableData, handleDeleteBtn, handleUpdateBtn }: any
     }, [tableData]);
 
     if (!tableData || tableData?.length === 0) {
-        return <p>No data available</p>;
+        return <NoRecord title="" content="Records Not Found !!" />
     }
 
     // Exclude 'materials' from headers
@@ -47,7 +47,6 @@ const MasterTableListing = ({ tableData, handleDeleteBtn, handleUpdateBtn }: any
                     : true;
             });
         });
-
         setFilteredData(newFilteredData);
     };
 
@@ -70,13 +69,13 @@ const MasterTableListing = ({ tableData, handleDeleteBtn, handleUpdateBtn }: any
                 )}
             </div>
             {filteredData?.length > 0 ? (
-                <div className="table-responsive mt-2 px-3" style={{ borderStyle: 'none' }}>
+                <div className="table-responsive mt-2" style={{ borderStyle: 'none' }}>
                     <table className="table table-hover table-striped w-100" style={{ borderStyle: 'none' }}>
                         <thead style={{ borderStyle: 'none' }}>
                             <tr className="table_row" style={{ borderStyle: 'none' }}>
-                                <th className="thead text-start">SR NO.</th>
+                                <th className="thead text-center">SR NO.</th>
                                 {headers?.map((header) => (
-                                    <th key={header} className="thead text-start">
+                                    <th key={header} className="thead text-center">
                                         {formatHeader(header)}
                                     </th>
                                 ))}
@@ -90,7 +89,7 @@ const MasterTableListing = ({ tableData, handleDeleteBtn, handleUpdateBtn }: any
                                         {rowIndex + 1}
                                     </td>
                                     {headers.map((header) => (
-                                        <td key={header} className="table-body-row cursor text-center" style={{ borderStyle: 'none' }}>
+                                        <td key={header} className="table-body-row cursor text-center text-uppercase" style={{ borderStyle: 'none' }}>
                                             {item[header]}
                                         </td>
                                     ))}
@@ -106,7 +105,7 @@ const MasterTableListing = ({ tableData, handleDeleteBtn, handleUpdateBtn }: any
                                         <div className="d-flex justify-space-between w-50">
                                             <button
                                                 className={`btn btn-link text-danger p-0 ${styled.actions_btn}`}
-                                                onClick={() => handleShowDeleteModal(item?.client_name)}
+                                                onClick={() => handleShowDeleteModal(item)}
                                                 disabled={item?.delete === 0 ? true : false}
                                             >
                                                 Delete

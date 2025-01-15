@@ -1,13 +1,9 @@
 import CurrentDate from '@/components/CurrentDate';
-import SearchSelectInputField from '@/components/InputDropdown/SearchSelectInputField';
-import { get_detail_delivery_note_data } from '@/store/slices/Sales/getDetailOfDeliveryNoteApi';
+import AutoCompleteInput from '@/components/InputDropdown/AutoCompleteInput';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
 
 const CustomerSalesTable1 = ({
   clientNameListData,
-  selectedClient,
-  setSelectedClient,
   handleSelectClientGroup,
   clientGroupList,
   readOnlyFields,
@@ -15,18 +11,32 @@ const CustomerSalesTable1 = ({
   defaultSalesDate,
   title,
   warehouseListData,
-  selectedLocation,
-  setSelectedLocation,
-  setDeliveryNoteData,
-  deliveryNoteData,
-  itemCodeDropdownReset,
-  setItemCodeDropdownReset,
   barcodedata,
   setBarcodeData,
   handleBarcodeData,
   isBarcodeChecked,
+  handleTable1InputChange,
+  inputTable1Value
 }: any) => {
   const { query } = useRouter();
+
+  const clientData: any = {
+    fieldname: 'custom_client_name',
+    fieldtype: 'Link',
+    link_data:
+      clientNameListData?.length > 0
+        ? Array.from(new Set(clientNameListData.map((data: any) => data?.client_name)))
+        : [],
+  };
+  const locationData: any = {
+    fieldname: 'custom_warehouse',
+    fieldtype: 'Link',
+    link_data:
+      warehouseListData?.length > 0
+        ? Array.from(new Set(warehouseListData.map((data: any) => data?.name)))
+        : [],
+  };
+
 
   return (
     <div className=" mt-2">
@@ -40,7 +50,10 @@ const CustomerSalesTable1 = ({
               Transaction Date
             </th>
             <th className="thead" scope="col">
-              Client
+              Client<span className='text-danger'>*</span>
+            </th>
+            <th className="thead" scope="col">
+              Remarks
             </th>
             {query?.saleId === 'saleReturns' && (
               <th className="thead " scope="col">
@@ -73,62 +86,53 @@ const CustomerSalesTable1 = ({
               <CurrentDate defaultSalesDate={defaultSalesDate} />
             </td>
             <td className="table_row">
-              <SearchSelectInputField
-                karigarData={
-                  clientNameListData?.length > 0 &&
-                  clientNameListData !== null &&
-                  clientNameListData.map((data: any) => ({
-                    karigar_name: data.client_name,
-                  }))
+              <AutoCompleteInput
+                data={clientData}
+                handleSearchInput={(value: any, fieldName: any) =>
+                  handleTable1InputChange(value, fieldName)
                 }
-                setSelectedDropdownValue={setSelectedClient}
-                selectedDropdownValue={selectedClient}
-                // defaultValue={
-                //   DetailOfDeliveryNoteFromStore?.data?.custom_client_name
-                // }
-                placeholder={'Client Name'}
-                className={'form-control input-sm border border-secondary'}
-                clientGroupList={clientGroupList}
+                value={inputTable1Value?.custom_client_name}
+                styleCss={{
+                  padding: "0px",
+                  border: "1px solid #6c757d",
+                  lineHeight: "20px",
+                  textAlign: "center"
+                }}
                 readOnlyFields={readOnlyFields}
-                setStateForDocStatus={setStateForDocStatus}
-                handleSelectClientGroup={handleSelectClientGroup}
-                selectDropDownReset={itemCodeDropdownReset}
-                setSelectDropDownReset={setItemCodeDropdownReset}
               />
             </td>
-            {query?.saleId === 'saleReturns' && (
-              <td className="table_row">
-                <input
-                  className="form-control input-sm border border-secondary"
-                  type="text"
-                  name="remarks"
-                  autoComplete="off"
-                  readOnly
-                  value="Is Return"
-                />
-              </td>
-            )}
+
             <td className="table_row">
-              <SearchSelectInputField
-                karigarData={
-                  warehouseListData?.length > 0 &&
-                  warehouseListData !== null &&
-                  warehouseListData.map((data: any) => ({
-                    karigar_name: data.custom_store_location,
-                  }))
-                }
-                recipitData={deliveryNoteData}
-                setRecipitData={setDeliveryNoteData}
-                setSelectedDropdownValue={setSelectedLocation}
-                selectedDropdownValue={selectedLocation}
-                defaultValue="Mumbai"
-                className={'form-control input-sm border border-secondary'}
-                readOnlyFields={readOnlyFields}
-                setStateForDocStatus={setStateForDocStatus}
-                name="store_location"
-                selectDropDownReset={itemCodeDropdownReset}
-                setSelectDropDownReset={setItemCodeDropdownReset}
+              <input
+                className="form-control border border-secondary"
+                style={{ lineHeight: "20px", padding: "0px" }}
+                type="text"
+                name="custom_remarks"
+                autoComplete="off"
+                readOnly={readOnlyFields}
+                value={inputTable1Value?.custom_remarks}
+                onChange={(e) => {
+                  handleTable1InputChange(e.target.value, e.target.name);
+                }}
               />
+            </td>
+
+            <td className="table_row">
+              <AutoCompleteInput
+                data={locationData}
+                handleSearchInput={(value: any, fieldName: any) =>
+                  handleTable1InputChange(value, fieldName)
+                }
+                value={inputTable1Value?.custom_warehouse}
+                styleCss={{
+                  padding: "0px",
+                  border: "1px solid #6c757d",
+                  lineHeight: "20px",
+                  textAlign: "center"
+                }}
+                readOnlyFields={readOnlyFields}
+              />
+
             </td>
             {query?.saleId === 'customerSale' && (
               <td className="table_row">

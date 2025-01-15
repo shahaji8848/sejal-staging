@@ -27,7 +27,7 @@ const useCustomCustomerSalesHook = () => {
     custom_ot_amt: 0,
     custom_other: '',
     custom_amount: 0,
-    custom_warehouse: 'Mumbai',
+    custom_warehouse: '',
   };
   const [kunCsOtFixedAmt, setKunCsOtFixedAmt] = useState({
     csFixedAmt: 0,
@@ -45,7 +45,8 @@ const useCustomCustomerSalesHook = () => {
   const [selectedItemCodeForCustomerSale, setSelectedItemCodeForCustomerSale] =
     useState<any>({ id: '', item_code: '' });
   const [clientDetails, setClientDetails] = useState<any>({})
-  const [selectedClient, setSelectedClient] = useState<string>('');
+  const [inputTable1Value, setInputTable1Value] = useState<any>({});
+
   const [salesTableData, setSalesTableData] = useState<any>([
     SalesTableInitialState,
   ]);
@@ -75,7 +76,7 @@ const useCustomCustomerSalesHook = () => {
     custom_ot_amt: 0,
     custom_other: '',
     custom_amount: 0,
-    custom_warehouse: 'Mumbai',
+    custom_warehouse: inputTable1Value?.custom_warehouse ? inputTable1Value?.custom_warehouse : "",
   };
 
   const handleAddRowForSales: any = () => {
@@ -95,7 +96,7 @@ const useCustomCustomerSalesHook = () => {
       kunFixedAmt: 0,
       otFixedAmt: 0,
     });
-    setSelectedClient('');
+    setInputTable1Value({})
     setSalesTableData([SalesTableInitialState]);
     setSelectedItemCodeForCustomerSale({ id: '', item_code: '' });
     setStateForDocStatus(true);
@@ -103,7 +104,7 @@ const useCustomCustomerSalesHook = () => {
   };
 
   const getClientDetails: any = async () => {
-    let getClientDetails: any = await getClientDetailsApi(loginAcessToken?.token, selectedClient);
+    let getClientDetails: any = await getClientDetailsApi(loginAcessToken?.token, inputTable1Value?.custom_client_name);
     if (getClientDetails?.data?.message?.status === "success") {
       let categoryData: any = getClientDetails?.data?.message?.data;
       const selectedCategories = {
@@ -112,8 +113,9 @@ const useCustomCustomerSalesHook = () => {
         OtCategory: { name1: categoryData?.ot_category?.name, type: categoryData?.ot_category?.type },
         BbCategory: { name1: categoryData?.bb_category?.name, type: categoryData?.bb_category?.type },
       };
-
+      console.log({ categoryData })
       setClientDetails({
+        clientDetails: categoryData,
         tableData: {
           idx: salesTableData?.length + 1,
           custom_pr_bb_wt: '',
@@ -155,9 +157,7 @@ const useCustomCustomerSalesHook = () => {
 
   useEffect(() => {
     getClientDetails()
-  }, [selectedClient])
-
-
+  }, [inputTable1Value?.custom_client_name])
 
 
   // Update a row with calculated values
@@ -267,9 +267,16 @@ const useCustomCustomerSalesHook = () => {
 
   // Main update function
   const updateSalesTableData = (data?: any, id?: number, updateRow?: boolean) => {
-    if (id) {
+    if (id !== undefined) {
       setSalesTableData((prevSalesTableData: any) => {
-        const updatedTable = prevSalesTableData?.map((tableData: any) => {
+        // Validate `id` exists in the current rows
+        if (!prevSalesTableData.some((row: any) => row.idx === id)) {
+          console.error('Invalid id: No matching row for idx', id);
+          return prevSalesTableData;
+        }
+
+        // Update existing rows
+        const updatedTable = prevSalesTableData.map((tableData: any) => {
           if (tableData.idx === id) {
             // Calculate values
             const calculatedBbWt = calculateBbWt(data, selectedCategory);
@@ -277,6 +284,7 @@ const useCustomCustomerSalesHook = () => {
             const customNetWt = calculateNetWt(data, calculatedBbWt);
 
             // Return updated row
+            console.log({ selectedCategory })
             return {
               ...tableData,
               custom_gross_wt: roundToThreeDecimal(data?.custom_gross_wt),
@@ -307,35 +315,35 @@ const useCustomCustomerSalesHook = () => {
               warehouse: data?.custom_warehouse,
             };
           } else {
-            return tableData;
+            return tableData; // Return unchanged row
           }
         });
 
-        return updatedTable;
-      });
-
-      // Add new row if `updateRow` is true
-      if (updateRow) {
-        setSalesTableData((prevSalesTableData: any) => {
-          const lastRow = prevSalesTableData[prevSalesTableData.length - 1];
+        // Add new row if `updateRow` is true
+        if (updateRow) {
+          const lastRow = updatedTable[updatedTable.length - 1];
           const isEmpty = Object.values(lastRow).every(
             (value) => value === null || value === ""
           );
-          if (isEmpty) {
-            return prevSalesTableData;
-          } else {
-            return [
-              ...prevSalesTableData,
-              Object?.keys(clientDetails)?.length > 0
-                ? clientDetails?.tableData
-                : newRowDataForSalesTable,
-            ];
+
+          if (!isEmpty) {
+            // Generate a unique idx for the new row
+            const nextIdx =
+              Math.max(...updatedTable.map((row: any) => row.idx || 0)) + 1;
+
+            const newRow = {
+              ...newRowDataForSalesTable,
+              idx: nextIdx, // Assign unique idx
+            };
+
+            return [...updatedTable, newRow];
           }
-        });
-      }
+        }
+
+        return updatedTable;
+      });
     }
   };
-
 
   const updateBarcodeSalesTableData = (data: any, id?: number, addNewRow?: any) => {
     if (id) {
@@ -434,9 +442,9 @@ const useCustomCustomerSalesHook = () => {
     handleEmptyDeliveryNote,
     selectedCategory,
     setSeletedCategory,
-    setSelectedClient,
+    inputTable1Value,
+    setInputTable1Value,
     setItemCodeDropdownReset,
-    selectedClient,
     selectedItemCodeForCustomerSale,
     setSelectedItemCodeForCustomerSale,
     itemCodeDropdownReset,

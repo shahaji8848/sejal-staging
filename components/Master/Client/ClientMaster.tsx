@@ -2,8 +2,8 @@ import { useRouter } from 'next/router';
 import MasterListing from '../MasterListing';
 import TabSection from '@/components/TabSection';
 import useClienthook from '@/hooks/master/client/client-hook';
-import MasterTableListing from '../common/MasterTableListing';
-import UpdateMasterModal from '../common/UpdateMasterModal';
+import MasterTableListing from '../Common/MasterTableListing';
+import UpdateMasterModal from '../Common/UpdateMasterModal';
 import AddMasterRecordForm from './AddClientRecordForm';
 
 const ClientMaster = () => {
@@ -12,7 +12,7 @@ const ClientMaster = () => {
 
     const key = pathcontent[pathcontent?.length - 1];
 
-    const { clientData, handleDeleteBtn, handleInputChange, inputValue, setInputValue, handleMaterialChange, materialValue, handleSaveBtn, handleUpdateBtn, showModal, setShowModal, handleUpdateRecord } = useClienthook()
+    const { clientData, handleDeleteBtn, handleInputChange, inputValue, setInputValue, handleMaterialChange, materialValue, handleSaveBtn, handleUpdateBtn, showModal, setShowModal, handleUpdateRecord, setMaterialInputValue } = useClienthook()
 
     return (
         <>
@@ -45,7 +45,7 @@ const ClientMaster = () => {
                 </div>
             </div>
 
-            <UpdateMasterModal inputValue={inputValue} showModal={showModal} setShowModal={setShowModal} handleInputChange={handleInputChange} handleMaterialChange={handleMaterialChange} materialValue={materialValue} handleSaveBtn={handleUpdateRecord} />
+            <UpdateMasterModal inputValue={inputValue} setInputValue={setInputValue} showModal={showModal} setShowModal={setShowModal} handleInputChange={handleInputChange} handleMaterialChange={handleMaterialChange} materialValue={materialValue} setMaterialInputValue={setMaterialInputValue} handleSaveBtn={handleUpdateRecord} />
         </>
     )
 }
