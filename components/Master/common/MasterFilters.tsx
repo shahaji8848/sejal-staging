@@ -17,8 +17,8 @@ const MasterFilters = ({ headers, filters, onFiltersChange }: any) => {
     return (
         <div className="row mb-1">
             {headers?.length > 0 && headers.map((header: any) => (
-                <div key={header} className="col me-1 mt-1" style={{ maxWidth: "300px" }}>
-                    <label className="form-label my-0" style={{ fontSize: "14px" }}>{capitalizeWords(header)}</label>
+                <div key={header} className="col me-1 mt-2" style={{ maxWidth: "300px" }}>
+                    {/* <label className="form-label my-0" style={{ fontSize: "14px" }}>{capitalizeWords(header)}</label> */}
                     <input
                         type="text"
                         className="form-control p-1 "

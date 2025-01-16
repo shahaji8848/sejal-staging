@@ -12,11 +12,14 @@ const ReadyReceiptMasterTableHeader = () => {
         <th className="thead" scope="col">
           Product Code<span className="text-danger">*</span>
         </th>
-        {(query?.receipt === 'kundan' || query?.receipt === 'Kundan') && (
+        <th className="thead" scope="col">
+          Counter
+        </th>
+        {/* {(query?.receipt === 'kundan' || query?.receipt === 'Kundan') && (
           <th className="thead" scope="col">
             Kun Karigar
           </th>
-        )}
+        )} */}
         <th className="thead" scope="col">
           Net Wt<span className="text-danger">*</span>
         </th>
@@ -32,7 +35,7 @@ const ReadyReceiptMasterTableHeader = () => {
           Gross Wt
         </th>
         {query?.receipt === 'mangalsutra' ||
-        query?.receipt === 'Mangalsutra' ? (
+          query?.receipt === 'Mangalsutra' ? (
           <th className="thead" scope="col">
             BB Pcs
           </th>

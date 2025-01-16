@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import TotalReadOnlyRow from './TotalReadOnlyRow';
 import ReadyReceiptMasterTableHeader from './ReadyReceiptMasterTableHeader';
+import { useSelector } from 'react-redux';
+import { get_sub_category_data } from '@/store/slices/Master/get-sub-category-slice';
 
 const ReadyReceiptMasterTable = ({
   handleFieldChange,
@@ -33,6 +35,20 @@ const ReadyReceiptMasterTable = ({
   tabDisabled
 }: any) => {
   const { query } = useRouter();
+  // Access data from the store
+  const subCategoryDataFromStore: any = useSelector(get_sub_category_data)?.data;
+
+  const getProductcode: any = subCategoryDataFromStore?.length > 0 &&
+    subCategoryDataFromStore.filter((categoryData: any) =>
+      tableData?.length > 0 &&
+      tableData?.some((data: any) => categoryData?.code === data.product_code)
+    );
+  const productCounter: any = getProductcode.length > 0
+    ? getProductcode.map((data: any) => data.counter)
+    : [];
+
+  const productCounterValue = productCounter?.length > 0 && productCounter.map((counter: number) => Number(counter) + 1).join(", ");
+
   const [calculationRow, setCalculationRow] = useState({
     custom_net_wt: 0,
     custom_few_wt: 0,
@@ -98,7 +114,7 @@ const ReadyReceiptMasterTable = ({
         lastInputRef?.current?.focus();
       }
     }, 0);
-  
+
     return () => clearTimeout(timer);
   }, [specificDataFromStore, firstInputRef, lastInputRef, tableData?.length]);
 
@@ -129,7 +145,15 @@ const ReadyReceiptMasterTable = ({
                       readOnly={readOnlyFields}
                     />
                   </td>
-                  {(query?.receipt === 'kundan' ||
+                  <td className="table_row">
+                    <input
+                      className={`${styles.input_field} text-end`}
+                      type="number"
+                      value={productCounterValue < 10 ? "0" + productCounterValue : productCounterValue || ""}
+                      readOnly
+                    />
+                  </td>
+                  {/* {(query?.receipt === 'kundan' ||
                     query?.receipt === 'Kundan') && (
                       <td className="table_row">
                         <SelectInputKunKarigar
@@ -149,11 +173,11 @@ const ReadyReceiptMasterTable = ({
                           fieldName={'custom_kun_karigar'}
                         />
                       </td>
-                    )}
+                    )} */}
 
                   <td className="table_row">
                     <input
-                      className={` ${styles.input_field} text-end`}
+                      className={`${styles.input_field} text-end`}
                       type="number"
                       min={0}
                       value={parseFloat(item.custom_net_wt)}

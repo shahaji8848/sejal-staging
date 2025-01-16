@@ -31,11 +31,11 @@ const useCategoryHook = () => {
     }, [categoryDataFromStore])
 
     const handleDeleteBtn = async (data: any) => {
-        if (data?.category_name !== undefined && data?.category_name !== '') {
+        if (data?.category !== undefined && data?.category !== '') {
             const apiRes = await MasterDeleteApi(
                 loginAcessToken?.token,
                 'Category',
-                data?.category_name
+                data?.category
             );
             if (apiRes?.status === 202) {
                 toast.success('Category Deleted Successfully!');
@@ -53,10 +53,10 @@ const useCategoryHook = () => {
     }
 
     const handleSaveBtn: any = async () => {
-        const { category_name } = inputValue;
+        const { category } = inputValue;
 
         // Validate required fields
-        if (!category_name) {
+        if (!category) {
             toast.error('Category is mandatory.');
             return;
         }
@@ -66,7 +66,7 @@ const useCategoryHook = () => {
             version: 'v1',
             method: 'create_category',
             entity: 'category',
-            category_name: inputValue?.category_name
+            category: inputValue?.category
         };
 
         // Call API
@@ -82,10 +82,10 @@ const useCategoryHook = () => {
     }
 
     const handleUpdateRecord: any = async () => {
-        const { category_name } = inputValue;
+        const { category } = inputValue;
 
         // Validate required fields
-        if (!category_name) {
+        if (!category) {
             toast.error('Category is mandatory.');
             return;
         }
@@ -95,8 +95,8 @@ const useCategoryHook = () => {
             version: 'v1',
             entity: 'category',
             method: 'update_category_details',
-            name: prevInputValue?.category_name,
-            category_name: inputValue?.category_name
+            name: prevInputValue?.category,
+            category: inputValue?.category
         };
         // Call API
         let apiRes: any = await MasterUpdateApi(loginAcessToken?.token, values);
