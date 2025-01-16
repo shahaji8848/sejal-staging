@@ -1,3 +1,4 @@
+
 FROM node:20 AS build
 # Set the working directory in the container
 WORKDIR /app
@@ -12,5 +13,5 @@ COPY . .
 RUN npm run build
 # Exposethe port Next.js will run on
 EXPOSE 3000
-# Start the Next.js application
+# Start the Next.js application 
 CMD ["npm", "start"]
