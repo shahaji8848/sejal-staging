@@ -26,7 +26,6 @@ const ReadyReceiptTable = ({
   const pathParts = router?.asPath?.split('/');
   const lastPartOfURL = pathParts[pathParts?.length - 1];
 
-  console.log({ karigarData })
   useEffect(() => {
     if (defaultKarigarData === undefined) {
       setReadyReceiptType(
