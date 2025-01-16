@@ -16,6 +16,7 @@ import {
   btnLoadingStart,
   btnLoadingStop,
 } from '@/store/slices/btn-loading-slice';
+import { getSubCategoryData } from '@/store/slices/Master/get-sub-category-slice';
 
 const useCustomReadyReceiptHook: any = () => {
   const {
@@ -107,6 +108,8 @@ const useCustomReadyReceiptHook: any = () => {
       }));
       return updatedTable;
     });
+    dispatch(getSubCategoryData(loginAcessToken.token));
+
   }, [query]);
 
   const purchasRecieptListParams = {
@@ -432,8 +435,8 @@ const useCustomReadyReceiptHook: any = () => {
             field === 'custom_add_photo'
               ? filePath
               : field === 'product_code'
-              ? newValue.toUpperCase() // Convert to uppercase for 'product code'
-              : formatInput(newValue),
+                ? newValue.toUpperCase() // Convert to uppercase for 'product code'
+                : formatInput(newValue),
           custom_gross_wt,
         };
       }

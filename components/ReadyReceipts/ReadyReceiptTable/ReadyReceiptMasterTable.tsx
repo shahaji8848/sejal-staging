@@ -1,14 +1,13 @@
+import { get_sub_category_data } from '@/store/slices/Master/get-sub-category-slice';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import styles from '../../../styles/readyReceipts.module.css';
-import SelectInputKunKarigar from '../../InputDropdown/SelectInputKunKarigar';
-import PurchaseReceiptFileUploadMaster from './ReadyReceiptFileUpload/ReadyReceiptFileUploadMaster';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import TotalReadOnlyRow from './TotalReadOnlyRow';
-import ReadyReceiptMasterTableHeader from './ReadyReceiptMasterTableHeader';
 import { useSelector } from 'react-redux';
-import { get_sub_category_data } from '@/store/slices/Master/get-sub-category-slice';
+import styles from '../../../styles/readyReceipts.module.css';
+import PurchaseReceiptFileUploadMaster from './ReadyReceiptFileUpload/ReadyReceiptFileUploadMaster';
+import ReadyReceiptMasterTableHeader from './ReadyReceiptMasterTableHeader';
+import TotalReadOnlyRow from './TotalReadOnlyRow';
 
 const ReadyReceiptMasterTable = ({
   handleFieldChange,
