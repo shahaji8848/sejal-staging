@@ -1,5 +1,5 @@
 import { CONSTANTS } from '@/services/config/api-config';
-import { callPutAPI } from '../utils';
+import { callPutAPI } from '../../utils';
 
 const MasterUpdateApi: any = async (token: any, body: any) => {
   let response: any;

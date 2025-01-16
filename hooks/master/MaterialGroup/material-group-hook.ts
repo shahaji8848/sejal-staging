@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import MasterDeleteApi from '@/services/api/Master/master-delete-api';
-import MasterUpdateApi from '@/services/api/Master/master-update-api';
 import postGroupDataApi from '@/services/api/Master/post-client-group-api';
 import { get_access_token } from '@/store/slices/auth/login-slice';
 import { get_material_group_data, getMaterialGroupData } from '@/store/slices/Master/get-material-group-slice';
+import MasterDeleteApi from '@/services/api/Master/common/master-delete-api';
+import MasterUpdateApi from '@/services/api/Master/common/master-update-api';
 
 const useMaterialGroupHook = () => {
     const dispatch = useDispatch();

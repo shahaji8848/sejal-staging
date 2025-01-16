@@ -1,5 +1,6 @@
-import MasterDeleteApi from '@/services/api/Master/master-delete-api';
-import MasterUpdateApi from '@/services/api/Master/master-update-api';
+
+import MasterDeleteApi from '@/services/api/Master/common/master-delete-api';
+import MasterUpdateApi from '@/services/api/Master/common/master-update-api';
 import postKunKarigarApi from '@/services/api/Master/post-kundan-karigar-name';
 import { get_access_token } from '@/store/slices/auth/login-slice';
 import { get_karigar_name_data, getKarigarNameData } from '@/store/slices/Master/karigar-name-slice';

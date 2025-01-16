@@ -13,8 +13,9 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useDeleteModal } from '../DeleteModal/delete-modal-hook';
-import MasterUpdateApi from '@/services/api/Master/master-update-api';
-import MasterDeleteApi from '@/services/api/Master/master-delete-api';
+import MasterDeleteApi from '@/services/api/Master/common/master-delete-api';
+import MasterUpdateApi from '@/services/api/Master/common/master-update-api';
+
 
 const useMaterialHook = () => {
   const {

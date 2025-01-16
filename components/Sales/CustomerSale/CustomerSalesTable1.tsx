@@ -117,6 +117,17 @@ const CustomerSalesTable1 = ({
               />
             </td>
 
+            {query?.saleId === 'saleReturns' && (
+              <td className="table_row">
+                <input
+                  type="test"
+                  className=" form-control input-sm border border-secondary light-background"
+                  value={"Is Return"}
+                  readOnly
+                />
+              </td>
+            )}
+
             <td className="table_row">
               <AutoCompleteInput
                 data={locationData}

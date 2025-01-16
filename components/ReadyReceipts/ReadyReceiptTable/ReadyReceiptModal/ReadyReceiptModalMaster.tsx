@@ -13,8 +13,6 @@ const ReadyReceiptModalMaster = ({
   calculateRowValue,
   handleDeleteChildTableRow,
   readOnlyFields,
-  selectedDropdownValue,
-  setSelectedDropdownValue,
   handleTabPressOnModal,
 }: any) => {
   // Use an array to store the selected material for each row
@@ -125,7 +123,7 @@ const ReadyReceiptModalMaster = ({
                             className={` ${styles.input_field} text-end`}
                             type="number"
                             min={0}
-                            value={element.piece_}
+                            value={element.piece_ === '' ? 0 : element.piece_}
                             onChange={(e) =>
                               handleModalFieldChange(
                                 i,
@@ -160,7 +158,7 @@ const ReadyReceiptModalMaster = ({
                             className={` ${styles.input_field}  text-end`}
                             type="number"
                             min={0}
-                            value={element.gm_}
+                            value={element?.gm_ === '' ? 0 : element?.gm_}
                             onChange={(e) =>
                               handleModalFieldChange(
                                 i,
@@ -202,7 +200,7 @@ const ReadyReceiptModalMaster = ({
                             <FontAwesomeIcon
                               icon={faTrash}
                               className="text-danger"
-                            // style={{ color: 'red', fontSize: 20 }}
+
                             />
                           </button>
                         </td>

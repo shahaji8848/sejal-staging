@@ -1,5 +1,6 @@
-import MasterDeleteApi from '@/services/api/Master/master-delete-api';
-import MasterUpdateApi from '@/services/api/Master/master-update-api';
+
+import MasterDeleteApi from '@/services/api/Master/common/master-delete-api';
+import MasterUpdateApi from '@/services/api/Master/common/master-update-api';
 import postGroupDataApi from '@/services/api/Master/post-client-group-api';
 import { get_access_token } from '@/store/slices/auth/login-slice';
 import { get_client_group_data, getClientGroupData } from '@/store/slices/Master/get-client-group-slice';

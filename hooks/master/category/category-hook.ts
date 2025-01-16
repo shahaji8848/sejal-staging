@@ -1,5 +1,6 @@
-import MasterDeleteApi from "@/services/api/Master/master-delete-api";
-import MasterUpdateApi from "@/services/api/Master/master-update-api";
+
+import MasterDeleteApi from "@/services/api/Master/common/master-delete-api";
+import MasterUpdateApi from "@/services/api/Master/common/master-update-api";
 import postCategoryApi from "@/services/api/Master/post-category-api";
 import { get_access_token } from "@/store/slices/auth/login-slice";
 import { get_category_data, getCategoryData } from "@/store/slices/Master/get-category-slice";

@@ -71,7 +71,7 @@ const UseKundanKarigarDetailHook = () => {
     showDeleteModal,
     handleCloseDeleteModal,
     handleShowDeleteModal,
-    deleteRecord,
+    deleteRecord
   } = useReadyReceipt();
 
   const [readOnlyFields, setReadOnlyFields] = useState<any>(false);

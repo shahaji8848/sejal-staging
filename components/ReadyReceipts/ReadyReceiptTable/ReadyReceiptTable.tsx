@@ -109,7 +109,7 @@ const ReadyReceiptTable = ({
                 handleSearchInput={(value: any, fieldName: any) =>
                   handleTable1InputChange(value, fieldName)
                 }
-                value={inputTable1Value?.custom_warehouse}
+                value={inputTable1Value?.custom_karigar}
                 styleCss={{
                   padding: "0px",
                   border: "1px solid #6c757d",

@@ -1,3 +1,4 @@
+import AutoCompleteInput from '@/components/InputDropdown/AutoCompleteInput';
 import { get_sub_category_data } from '@/store/slices/Master/get-sub-category-slice';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,8 +8,6 @@ import { useSelector } from 'react-redux';
 import styles from '../../../styles/readyReceipts.module.css';
 import ReadyReceiptMasterTableHeader from './ReadyReceiptMasterTableHeader';
 import TotalReadOnlyRow from './TotalReadOnlyRow';
-import AutoCompleteInput from '@/components/InputDropdown/AutoCompleteInput';
-import { get_category_data } from '@/store/slices/Master/get-category-slice';
 
 const ReadyReceiptMasterTable = ({
   handleFieldChange,
@@ -155,7 +154,8 @@ const ReadyReceiptMasterTable = ({
                         border: "1px solid #6c757d",
                         fontSize: "10px",
                         borderRadius: "0px",
-                        textAlign: "center"
+                        textAlign: "center",
+                        boxShadow: "none"
                       }}
                       // placeholder={"Select Code"}
                       readOnlyFields={readOnlyFields}
@@ -216,10 +216,6 @@ const ReadyReceiptMasterTable = ({
                       className={` ${styles.input_field} text-end`}
                       type="number"
                       min={0}
-                      // value={
-                      //   // Number(tableData[i]?.totalModalWeight) ||
-                      //   item.custom_mat_wt
-                      // }
                       value={item?.custom_mat_wt}
                       defaultValue={
                         item.custom_mat_wt && item.custom_mat_wt?.toFixed(3)
@@ -248,7 +244,6 @@ const ReadyReceiptMasterTable = ({
                       readOnly
                       disabled
                       name={`sum-${i + 1}`}
-                      // value={calculateGrossWt(i)?.toFixed(3)}
                       value={
                         item.custom_gross_wt && item.custom_gross_wt?.toFixed(3)
                       }
@@ -260,7 +255,6 @@ const ReadyReceiptMasterTable = ({
                       className={` ${styles.input_field} text-end`}
                       type="number"
                       min={0}
-                      // value={item.custom_pcs}
                       defaultValue={item?.table[0]?.pcs}
                       value={item?.table[0]?.pcs}
                       onChange={(e) => {
