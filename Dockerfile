@@ -8,6 +8,8 @@ RUN npm install
 RUN npm i sharp
 # Copy the rest of the application code
 COPY . .
+# Pause for 1 minute before starting the build
+RUN sleep 60
 # Build the Next.js app
 RUN npm run build
 # Exposethe port Next.js will run on
