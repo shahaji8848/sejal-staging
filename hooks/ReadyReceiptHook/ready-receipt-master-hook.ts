@@ -18,6 +18,7 @@ import {
   btnLoadingStart,
   btnLoadingStop,
 } from '@/store/slices/btn-loading-slice';
+import { getCategoryData } from '@/store/slices/Master/get-category-slice';
 
 const useReadyReceipt = () => {
   const { query } = useRouter();
@@ -31,13 +32,13 @@ const useReadyReceipt = () => {
   const [readyReceiptType, setReadyReceiptType] = useState<any>('');
   const todayDate: any = new Date()?.toISOString()?.split('T')[0];
 
-  const [recipitData, setRecipitData] = useState<any>({
-    custom_karigar: ' ',
-    remarks: '',
-    custom_ready_receipt_type: readyReceiptType,
-    posting_date: '',
-    set_warehouse: '',
-  });
+  // const [recipitData, setRecipitData] = useState<any>({
+  //   custom_karigar: ' ',
+  //   remarks: '',
+  //   custom_ready_receipt_type: readyReceiptType,
+  //   posting_date: '',
+  //   set_warehouse: '',
+  // });
 
   const karigarData = useSelector(get_karigar_name_data).data;
   const kundanKarigarData = useSelector(get_kun_karigar_name_data).data;
@@ -47,19 +48,23 @@ const useReadyReceipt = () => {
     useState<any>(false);
   const loginAcessToken = useSelector(get_access_token);
   const [selectedDropdownValue, setSelectedDropdownValue] = useState<any>('');
-  const [selectedLocation, setSelectedLocation] = useState<any>();
+  const [inputTable1Value, setInputTable1Value] = useState<any>({});
+
   const [tabDisabled, setTabDisabled] = useState<boolean>(false);
+
   let disabledValue: any;
-  useEffect(() => {
-    setRecipitData({
-      ...recipitData,
-      custom_ready_receipt_type: readyReceiptType,
-      set_warehouse:
-        selectedLocation !== '' && selectedLocation !== undefined
-          ? selectedLocation
-          : 'Mumbai',
-    });
-  }, [readyReceiptType, selectedLocation]);
+  // useEffect(() => {
+  //   setRecipitData({
+  //     ...recipitData,
+  //     custom_ready_receipt_type: readyReceiptType,
+  //     set_warehouse:
+  //       selectedLocation !== '' && selectedLocation !== undefined
+  //         ? selectedLocation
+  //         : 'Mumbai',
+  //   });
+  // }, [readyReceiptType, selectedLocation]);
+
+
 
   const {
     HandleDeleteReceipt,
@@ -140,6 +145,7 @@ const useReadyReceipt = () => {
     };
     getPurchaseList();
     dispatch(getWarehouseListData(loginAcessToken?.token))
+    dispatch(getCategoryData(loginAcessToken.token));
   }, [router]);
 
   const handleSaveModal = async (id: any) => {
@@ -195,11 +201,6 @@ const useReadyReceipt = () => {
     setShowModal(false);
   };
 
-  const handleRecipietChange = (e: any) => {
-    setRecipitData({ ...recipitData, [e.target.name]: e.target.value });
-    setStateForDocStatus(true);
-  };
-
   const handleTabPressOnModal = (event: any, id: any) => {
     if (event.key === 'Tab') {
       handleAddRow('modalRow');
@@ -214,6 +215,15 @@ const useReadyReceipt = () => {
     setStateForDocStatus(true);
     firstInputRef?.current?.focus();
   };
+
+
+  const handleTable1InputChange: any = (value: any, fieldName: any) => {
+    setInputTable1Value((prevValue: any) => ({
+      ...prevValue, [fieldName]: value
+    }))
+    setStateForDocStatus(true);
+
+  }
 
   const handleCreate = async () => {
     if (tabDisabled) {
@@ -236,23 +246,25 @@ const useReadyReceipt = () => {
       version: 'v1',
       method: 'create_purchase_receipt',
       entity: 'purchase_receipt',
-      ...recipitData,
+      ...inputTable1Value,
       items: modalValue,
     };
 
     const isEmptyProductCode = values?.items?.some(
       (obj: any) => obj.product_code === ''
     );
-    const isEmptyNetWt = values?.items?.some(
-      (obj: any) => obj.custom_net_wt === 0
-    );
+    console.log({ inputTable1Value })
+    const isEmptyNetWt =
+      inputTable1Value?.karigar_name !== "null" &&
+      values?.items?.some((obj: any) => obj.custom_net_wt === 0);
     const productVal = values.custom_karigar;
 
+    console.log({ isEmptyNetWt })
     if (isEmptyProductCode) {
       toast.error('Please fill all the required fields');
       setTabDisabled(false);
     } else if (isEmptyNetWt) {
-      toast.error('Please fill all the required fields');
+      toast.error('Please fill all the required fields kun');
       setTabDisabled(false);
     } else if (productVal === ' ') {
       toast.error('Mandatory field Karigar');
@@ -280,13 +292,7 @@ const useReadyReceipt = () => {
   };
 
   const HandleEmptyReadyReceiptForm: any = () => {
-    setRecipitData({
-      custom_karigar: ' ',
-      remarks: '',
-      custom_ready_receipt_type: readyReceiptType,
-      posting_date: '',
-      set_warehouse: '',
-    });
+    setInputTable1Value({})
     setTableData([initialTableState]);
     setSelectedDropdownValue('');
     setSelectedKundanKarigarDropdownValue('');
@@ -314,7 +320,7 @@ const useReadyReceipt = () => {
       version: 'v1',
       method: 'put_purchase_receipt',
       entity: 'purchase_receipt',
-      ...recipitData,
+      ...inputTable1Value,
       items: updatedMergedList,
     };
 
@@ -363,7 +369,7 @@ const useReadyReceipt = () => {
     // List of keys to be excluded from the API request
     const keyToExclude = ['docstatus'];
 
-    const updatedReceiptData: any = { ...recipitData };
+    const updatedReceiptData: any = { ...inputTable1Value };
     keyToExclude?.forEach((key: any) => delete updatedReceiptData[key]);
 
     const values = {
@@ -391,14 +397,13 @@ const useReadyReceipt = () => {
     } catch (error) { }
   };
 
+  console.log({ inputTable1Value })
+
   return {
     kundanListing,
     handleCreate,
-    handleRecipietChange,
     handleAddRow,
-    recipitData,
     karigarData,
-    setRecipitData,
     handleFieldChange,
     tableData,
     handleDeleteRow,
@@ -445,14 +450,15 @@ const useReadyReceipt = () => {
     firstInputRef,
     setMatWt,
     warehouseListData,
-    selectedLocation,
-    setSelectedLocation,
     specificDataFromStore,
     tabDisabled,
     showDeleteModal,
     handleCloseDeleteModal,
     handleShowDeleteModal,
     deleteRecord,
+    inputTable1Value,
+    setInputTable1Value,
+    handleTable1InputChange
   };
 };
 

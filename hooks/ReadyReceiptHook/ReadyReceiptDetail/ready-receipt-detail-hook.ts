@@ -23,10 +23,8 @@ const UseKundanKarigarDetailHook = () => {
     UseCustomReceiptHook();
 
   const {
-    handleRecipietChange,
     handleAddRow,
     karigarData,
-    setRecipitData,
     handleFieldChange,
     tableData,
     handleDeleteRow,
@@ -39,7 +37,7 @@ const UseKundanKarigarDetailHook = () => {
     materialListData,
     calculateRowValue,
     handleDeleteChildTableRow,
-    recipitData,
+
     setMaterialWeight,
     closeModal,
     handleSaveModal,
@@ -66,8 +64,9 @@ const UseKundanKarigarDetailHook = () => {
     handleTabPressOnModal,
     setKunKarigarDropdownReset,
     warehouseListData,
-    selectedLocation,
-    setSelectedLocation,
+    inputTable1Value,
+    setInputTable1Value,
+    handleTable1InputChange,
     tabDisabled,
     showDeleteModal,
     handleCloseDeleteModal,
@@ -146,10 +145,8 @@ const UseKundanKarigarDetailHook = () => {
     setReadOnlyFields,
     isLoading,
     handlePrintApi,
-    handleRecipietChange,
     handleAddRow,
     karigarData,
-    setRecipitData,
     handleFieldChange,
     tableData,
     handleDeleteRow,
@@ -162,7 +159,6 @@ const UseKundanKarigarDetailHook = () => {
     materialListData,
     calculateRowValue,
     handleDeleteChildTableRow,
-    recipitData,
     setMaterialWeight,
     closeModal,
     handleSaveModal,
@@ -189,14 +185,15 @@ const UseKundanKarigarDetailHook = () => {
     handleTabPressOnModal,
     setKunKarigarDropdownReset,
     warehouseListData,
-    selectedLocation,
-    setSelectedLocation,
     tabDisabled,
     showDeleteModal,
     handleCloseDeleteModal,
     handleShowDeleteModal,
     deleteRecord,
     specificDataFromStore,
+    inputTable1Value,
+    setInputTable1Value,
+    handleTable1InputChange,
   };
 };
 

@@ -13,8 +13,6 @@ const ReadyReceiptModal = ({
   materialListData,
   calculateRowValue,
   handleDeleteChildTableRow,
-  setRecipitData,
-  recipitData,
   selectedDropdownValue,
   setSelectedDropdownValue,
   handleSaveModal,
@@ -69,8 +67,6 @@ const ReadyReceiptModal = ({
               materialListData={materialListData}
               calculateRowValue={calculateRowValue}
               handleDeleteChildTableRow={handleDeleteChildTableRow}
-              setRecipitData={setRecipitData}
-              recipitData={recipitData}
               selectedDropdownValue={selectedDropdownValue}
               setSelectedDropdownValue={setSelectedDropdownValue}
               readOnlyFields={readOnlyFields}

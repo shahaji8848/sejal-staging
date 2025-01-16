@@ -1,27 +1,29 @@
-
-.nav{
+.nav {
     display: flex;
-    justify-content:center;
+    justify-content: center;
     width: 100%;
 }
-.button{
+
+.button {
     display: inline-flex;
-    justify-content: space-between ;
-    width:max-content;
+    justify-content: space-between;
+    width: max-content;
     background-color: #FFF;
     color: #000;
     margin: 5px;
-    padding: 5px 8px;
+    padding: 3px 6px;
     border: 1px solid #CDAB6E;
     border-radius: 9px;
     text-decoration-line: none;
 }
-.button:hover{
-    color: #6164ef ;
+
+.button:hover {
+    color: #6164ef;
 }
-.button_active{
+
+.button_active {
     display: inline-flex;
-    justify-content: space-between ;
+    justify-content: space-between;
     background-color: #6164ef;
     color: #FFF;
     margin: 5px;
@@ -38,8 +40,9 @@
     margin-left: 20%;
     margin-right: 20%;
 }
+
 @media screen and (max-width:1024px) {
-/* .button{
+    /* .button{
     padding: 2px 3px !important;
     margin: 1px;
     border-radius: 5px;
@@ -51,15 +54,17 @@
     margin-right: 0;
 } */
 }
+
 @media screen and (max-width:576px) {
-/* .button{
+
+    /* .button{
     padding: 2px 3px !important;
     margin: 3px;
     border-radius: 5px;
 
 } */
-.button_container{
-    margin-left: 0;
-    margin-right: 0;
-}
+    .button_container {
+        margin-left: 0;
+        margin-right: 0;
+    }
 }

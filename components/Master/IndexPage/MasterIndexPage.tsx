@@ -9,6 +9,7 @@ import SalesGroupMaster from '../SalesGroup/SalesGroupMaster';
 import CategoryMaster from '../Category/CategoryMaster';
 import KarigarMaster from '../Karigar/KarigarMaster';
 import KundanKarigarMaster from '../KundanKarigar/KundanKarigarMaster';
+import FewWtMaster from '../FewWt/FewWtMaster';
 
 const MasterIndexPage = () => {
   const {
@@ -99,6 +100,9 @@ const MasterIndexPage = () => {
       )}
       {key === 'client-group' && (
         <ClientGroupMaster />
+      )}
+      {key === 'few' && (
+        <FewWtMaster />
       )}
       {key === 'client' && (
         <>

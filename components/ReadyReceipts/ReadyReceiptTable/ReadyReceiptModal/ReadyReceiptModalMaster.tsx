@@ -58,16 +58,10 @@ const ReadyReceiptModalMaster = ({
                     Piece @
                   </th>
                   <th className="thead" scope="col">
-                    Carat
-                  </th>
-                  <th className="thead" scope="col">
-                    Carat @
-                  </th>
-                  <th className="thead" scope="col">
                     Weight
                   </th>
                   <th className="thead" scope="col">
-                    Gm @
+                    Wt @
                   </th>
                   <th className="thead" scope="col">
                     Total
@@ -83,7 +77,7 @@ const ReadyReceiptModalMaster = ({
                         <td className="table_row">{i + 1}</td>
                         <td className="table_row">
                           <input
-                            className={` ${styles.input_field} modal-input text-center`}
+                            className={` ${styles.input_field} text-center`}
                             type="text"
                             defaultValue={element.material_abbr}
                             value={element.material_abbr}
@@ -111,7 +105,7 @@ const ReadyReceiptModalMaster = ({
                         </td>
                         <td className="table_row">
                           <input
-                            className={` ${styles.input_field} modal-input text-end`}
+                            className={` ${styles.input_field} text-end`}
                             type="number"
                             min={0}
                             value={element.pcs === '' ? 0 : element.pcs}
@@ -128,7 +122,7 @@ const ReadyReceiptModalMaster = ({
                         </td>
                         <td className="table_row">
                           <input
-                            className={` ${styles.input_field} modal-input text-end`}
+                            className={` ${styles.input_field} text-end`}
                             type="number"
                             min={0}
                             value={element.piece_}
@@ -143,43 +137,10 @@ const ReadyReceiptModalMaster = ({
                             readOnly={readOnlyFields}
                           />
                         </td>
+
                         <td className="table_row">
                           <input
-                            className={` ${styles.input_field} modal-input text-end`}
-                            type="number"
-                            min={0}
-                            value={element.carat}
-                            onChange={(e) =>
-                              handleModalFieldChange(
-                                i,
-                                'modalRow',
-                                'carat',
-                                e.target.value
-                              )
-                            }
-                            readOnly={readOnlyFields}
-                          />
-                        </td>
-                        <td className="table_row">
-                          <input
-                            className={` ${styles.input_field} modal-input text-end`}
-                            type="number"
-                            min={0}
-                            value={element.carat_}
-                            onChange={(e) =>
-                              handleModalFieldChange(
-                                i,
-                                'modalRow',
-                                'carat_',
-                                e.target.value
-                              )
-                            }
-                            readOnly={readOnlyFields}
-                          />
-                        </td>
-                        <td className="table_row">
-                          <input
-                            className={` ${styles.input_field} modal-input text-end`}
+                            className={` ${styles.input_field} text-end`}
                             type="number"
                             min={0}
                             value={element.weight === '' ? 0 : element.weight}
@@ -196,7 +157,7 @@ const ReadyReceiptModalMaster = ({
                         </td>
                         <td className="table_row">
                           <input
-                            className={` ${styles.input_field} modal-input text-end`}
+                            className={` ${styles.input_field}  text-end`}
                             type="number"
                             min={0}
                             value={element.gm_}
@@ -213,7 +174,7 @@ const ReadyReceiptModalMaster = ({
                         </td>
                         <td className="table_row">
                           <input
-                            className={`${styles.input_field} modal-input text-end`}
+                            className={`${styles.input_field} text-end`}
                             type="number"
                             min={0}
                             readOnly
@@ -241,7 +202,7 @@ const ReadyReceiptModalMaster = ({
                             <FontAwesomeIcon
                               icon={faTrash}
                               className="text-danger"
-                              // style={{ color: 'red', fontSize: 20 }}
+                            // style={{ color: 'red', fontSize: 20 }}
                             />
                           </button>
                         </td>

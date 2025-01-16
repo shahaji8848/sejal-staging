@@ -18,10 +18,8 @@ const ReadyReceiptMaster = () => {
     kundanListing,
     setKundanListing,
     handleCreate,
-    handleRecipietChange,
     handleAddRow,
     karigarData,
-    setRecipitData,
     handleFieldChange,
     tableData,
     handleDeleteRow,
@@ -34,7 +32,6 @@ const ReadyReceiptMaster = () => {
     materialListData,
     calculateRowValue,
     handleDeleteChildTableRow,
-    recipitData,
     setMaterialWeight,
     closeModal,
     handleSaveModal,
@@ -43,8 +40,6 @@ const ReadyReceiptMaster = () => {
     HandleDeleteReceipt,
     selectedDropdownValue,
     setSelectedDropdownValue,
-    readyReceiptType,
-    setReadyReceiptType,
     stateForDocStatus,
     setStateForDocStatus,
     readOnlyFields,
@@ -52,8 +47,6 @@ const ReadyReceiptMaster = () => {
     HandleUpdateDocStatus,
     handleTabPressOnModal,
     HandleEmptyReadyReceiptForm,
-    selectedKundanKarigarDropdownValue,
-    setSelectedKundanKarigarDropdownValue,
     kunKarigarDropdownReset,
     setKunKarigarDropdownReset,
     calculateEditTotal,
@@ -61,8 +54,8 @@ const ReadyReceiptMaster = () => {
     handleClearFileUploadInput,
     setMatWt,
     warehouseListData,
-    selectedLocation,
-    setSelectedLocation,
+    inputTable1Value,
+    handleTable1InputChange,
     firstInputRef,
     lastInputRef,
     specificDataFromStore,
@@ -86,8 +79,8 @@ const ReadyReceiptMaster = () => {
         <ReadyReceiptsTabs />
         <div className="d-flex justify-content-center">
           <TabSection
-            firstTabHeading={`Ready Receipts ${receiptName} Karigar`}
-            secondTabHeading="Create New Ready Receipt"
+            firstTabHeading={`Ready Receipts ${receiptName === "Return" ? "Return" : ""}`}
+            secondTabHeading={`Create New Ready Receipt ${receiptName === "Return" ? "Return" : ""}`}
           />
         </div>
         <div className="tab-content " id="pills-tabContent">
@@ -162,23 +155,14 @@ const ReadyReceiptMaster = () => {
                 </div>
                 <div>
                   <ReadyReceiptTable
-                    handleRecipietChange={handleRecipietChange}
-                    recieptData={recipitData}
                     karigarData={karigarData}
-                    setRecipitData={setRecipitData}
-                    selectedDropdownValue={selectedDropdownValue}
-                    setSelectedDropdownValue={setSelectedDropdownValue}
-                    readyReceiptType={readyReceiptType}
-                    setReadyReceiptType={setReadyReceiptType}
                     stateForDocStatus={stateForDocStatus}
                     setStateForDocStatus={setStateForDocStatus}
                     readOnlyFields={readOnlyFields}
                     setReadOnlyFields={setReadOnlyFields}
                     warehouseListData={warehouseListData}
-                    selectedLocation={selectedLocation}
-                    setSelectedLocation={setSelectedLocation}
-                    kunKarigarDropdownReset={kunKarigarDropdownReset}
-                    setKunKarigarDropdownReset={setKunKarigarDropdownReset}
+                    inputTable1Value={inputTable1Value}
+                    handleTable1InputChange={handleTable1InputChange}
                   />
                 </div>
                 <div className="container d-flex justify-content-end p-o">
@@ -200,12 +184,6 @@ const ReadyReceiptMaster = () => {
                     handleDeleteRow={handleDeleteRow}
                     handleTabPress={handleTabPress}
                     setTableData={setTableData}
-                    selectedKundanKarigarDropdownValue={
-                      selectedKundanKarigarDropdownValue
-                    }
-                    setSelectedKundanKarigarDropdownValue={
-                      setSelectedKundanKarigarDropdownValue
-                    }
                     kundanKarigarData={kundanKarigarData}
                     handleModal={handleModal}
                     selectedDropdownValue={selectedDropdownValue}
@@ -225,6 +203,7 @@ const ReadyReceiptMaster = () => {
                     lastInputRef={lastInputRef}
                     specificDataFromStore={specificDataFromStore}
                     tabDisabled={tabDisabled}
+                    inputTable1Value={inputTable1Value}
                   />
                 </div>
               </div>
@@ -243,8 +222,6 @@ const ReadyReceiptMaster = () => {
           materialListData={materialListData}
           calculateRowValue={calculateRowValue}
           handleDeleteChildTableRow={handleDeleteChildTableRow}
-          setRecipitData={setRecipitData}
-          recipitData={recipitData}
           selectedDropdownValue={selectedDropdownValue}
           setSelectedDropdownValue={setSelectedDropdownValue}
           handleSaveModal={handleSaveModal}
