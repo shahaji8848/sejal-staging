@@ -338,7 +338,7 @@ const ReadyReceiptMasterTable = ({
                     />
                   </td>
 
-                  <td className="table_row">
+                  {/* <td className="table_row">
                     <PurchaseReceiptFileUploadMaster
                       handleFieldChange={handleFieldChange}
                       item={item}
@@ -349,7 +349,7 @@ const ReadyReceiptMasterTable = ({
                       handleAmendButtonForDuplicateChitti={handleAmendButtonForDuplicateChitti}
                       tabDisabled={tabDisabled}
                     />
-                  </td>
+                  </td> */}
                   <td className="table_row d-flex justify-content-center">
                     <button
                       className="d-flex align-items-center delete-link p-1 border-0"

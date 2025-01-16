@@ -50,9 +50,9 @@ const ReadyReceiptMasterTableHeader = () => {
         <th className="thead" scope="col">
           Total
         </th>
-        <th className="thead" scope="col">
+        {/* <th className="thead" scope="col">
           Add Photo
-        </th>
+        </th> */}
         <th className="thead" scope="col"></th>
         <th className="thead" scope="col"></th>
       </tr>

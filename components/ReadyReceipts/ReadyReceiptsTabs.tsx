@@ -31,23 +31,22 @@ const ReadyReceiptsTabs: any = () => {
                 className={`${styles.button} ${KundanValue ? 'activeColor' : ''
                   }`}
               >
-                Ready Receipts (Kundan Karigar)
+                Ready Receipts
                 <i className="fa-solid fa-arrow-turn-down mx-2 pt-1"></i>
               </button>
             </Link>
-            {/* <Link
+            <Link
               href="/readyReceipt/mangalsutra"
               className="text-decoration-none btn-margin"
             >
               <button
-                className={`${styles.button} ${
-                  mangalsutraValue ? 'activeColor' : ''
-                } `}
+                className={`${styles.button} ${mangalsutraValue ? 'activeColor' : ''
+                  } `}
               >
-                Ready Receipts (Mangalsutra Karigar)
+                Ready Receipts Return
                 <i className="fa-solid fa-arrow-turn-down mx-2 pt-1"></i>
               </button>
-            </Link> */}
+            </Link>
           </div>
         </div>
       </div>
