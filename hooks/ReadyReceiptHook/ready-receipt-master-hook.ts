@@ -285,7 +285,7 @@ const useReadyReceipt = () => {
       remarks: '',
       custom_ready_receipt_type: readyReceiptType,
       posting_date: '',
-      set_warehouse: 'Mumbai',
+      set_warehouse: '',
     });
     setTableData([initialTableState]);
     setSelectedDropdownValue('');
