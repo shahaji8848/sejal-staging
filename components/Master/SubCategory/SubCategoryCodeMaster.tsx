@@ -26,7 +26,6 @@ const SubCategoryCodeMaster = () => {
         materialValue
     }: any = useSubCategoryCodeHook();
 
-    console.log({ inputValue })
     return (
         <div className="container-lg">
             <MasterListing value={key} />

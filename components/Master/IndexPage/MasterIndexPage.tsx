@@ -7,6 +7,8 @@ import SubCategoryCodeMaster from '../SubCategory/SubCategoryCodeMaster';
 import ClientGroupMaster from '../ClientGroup/ClientGroupMaster';
 import SalesGroupMaster from '../SalesGroup/SalesGroupMaster';
 import CategoryMaster from '../Category/CategoryMaster';
+import KarigarMaster from '../Karigar/KarigarMaster';
+import KundanKarigarMaster from '../KundanKarigar/KundanKarigarMaster';
 
 const MasterIndexPage = () => {
   const {
@@ -85,29 +87,16 @@ const MasterIndexPage = () => {
   const pathcontent = router?.asPath?.split('/');
 
   const key = pathcontent[pathcontent?.length - 1];
-  let salesGroupData: any =
-    salesGroupListData?.length > 0 &&
-    salesGroupListData !== null &&
-    salesGroupListData.map((data: any) => ({
-      karigar_name: data.sales_group,
-      delete: data.delete,
-    }));
-  let clientGroup: any =
-    clientGroupList?.length > 0 &&
-    clientGroupList !== null &&
-    clientGroupList.map((data: any) => ({
-      karigar_name: data.client_group,
-      delete: data.delete,
-    }));
 
-  let categoryName: any =
-    category?.length > 0 &&
-    category.map((data: any) => ({
-      karigar_name: data?.category,
-      delete: data?.delete,
-    }));
   return (
     <div>
+
+      {key === 'karigar' && (
+        <KarigarMaster />
+      )}
+      {key === 'kundan-karigar' && (
+        <KundanKarigarMaster />
+      )}
       {key === 'client-group' && (
         <ClientGroupMaster />
       )}

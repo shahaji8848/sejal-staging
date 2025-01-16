@@ -8,8 +8,8 @@ const AddCategoryRecordForm = ({ handleInputChange, inputValue, handleSaveBtn }:
                 <input
                     type="text"
                     className="form-control border p-0 px-2"
-                    name="category_name"
-                    value={inputValue?.category_name || ""}
+                    name="category"
+                    value={inputValue?.category || ""}
                     onChange={(e) => {
                         handleInputChange(e.target.value, e.target.name);
                     }}
