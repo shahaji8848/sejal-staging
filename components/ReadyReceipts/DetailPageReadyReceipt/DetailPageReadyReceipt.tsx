@@ -81,8 +81,6 @@ const DetailPageReadyReceipt = () => {
     setTableData,
   ]);
 
-  console.log({ inputTable1Value })
-
   return (
     <div className="container" style={{ position: 'relative' }}>
       {isLoading ? (

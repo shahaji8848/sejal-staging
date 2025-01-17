@@ -60,7 +60,7 @@ const MasterTableListing = ({ tableData, handleDeleteBtn, handleUpdateBtn }: any
 
             <div className="d-flex align-items-end justify-content-end">
                 {filteredData?.length > 0 && (
-                    <div className="text-end pe-3 text-gray small m-0">
+                    <div className="text-end text-gray small m-0">
                         {filteredData?.slice(0, tableViewData)?.length} of{' '}
                         {filteredData?.length < 10
                             ? '0' + filteredData?.length
@@ -69,7 +69,7 @@ const MasterTableListing = ({ tableData, handleDeleteBtn, handleUpdateBtn }: any
                 )}
             </div>
             {filteredData?.length > 0 ? (
-                <div className="table-responsive mt-2" style={{ borderStyle: 'none' }}>
+                <div className="table-responsive" style={{ borderStyle: 'none' }}>
                     <table className="table table-hover table-striped w-100" style={{ borderStyle: 'none' }}>
                         <thead style={{ borderStyle: 'none' }}>
                             <tr className="table_row" style={{ borderStyle: 'none' }}>

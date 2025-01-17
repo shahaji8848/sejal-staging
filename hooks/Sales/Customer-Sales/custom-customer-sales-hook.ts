@@ -113,7 +113,7 @@ const useCustomCustomerSalesHook = () => {
         OtCategory: { name1: categoryData?.ot_category?.name, type: categoryData?.ot_category?.type },
         BbCategory: { name1: categoryData?.bb_category?.name, type: categoryData?.bb_category?.type },
       };
-      console.log({ categoryData })
+
       setClientDetails({
         clientDetails: categoryData,
         tableData: {
@@ -271,7 +271,6 @@ const useCustomCustomerSalesHook = () => {
       setSalesTableData((prevSalesTableData: any) => {
         // Validate `id` exists in the current rows
         if (!prevSalesTableData.some((row: any) => row.idx === id)) {
-          console.error('Invalid id: No matching row for idx', id);
           return prevSalesTableData;
         }
 
@@ -284,7 +283,6 @@ const useCustomCustomerSalesHook = () => {
             const customNetWt = calculateNetWt(data, calculatedBbWt);
 
             // Return updated row
-            console.log({ selectedCategory })
             return {
               ...tableData,
               custom_gross_wt: roundToThreeDecimal(data?.custom_gross_wt),

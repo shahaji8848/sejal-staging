@@ -91,7 +91,6 @@ const useCustomerSaleDetailHook = () => {
     }
   }, [query]);
 
-  console.log({ detailOfDeliveryNoteFromStore })
   useEffect(() => {
     if (detailOfDeliveryNoteFromStore?.docStatus > 0) {
       setReadOnlyFields(true);
@@ -176,7 +175,7 @@ const useCustomerSaleDetailHook = () => {
       // setSelectedClient(
       //   detailOfDeliveryNoteFromStore?.data?.custom_client_name
       // );
-      console.log({ detailOfDeliveryNoteFromStore })
+
       // setSelectedLocation(detailOfDeliveryNoteFromStore?.data?.store_location);
       // setInputTable1Value()
       setDefaultSalesDate(detailOfDeliveryNoteFromStore?.data?.posting_date);

@@ -90,7 +90,7 @@ const useCategoryHook = () => {
             toast.error('Category is mandatory.');
             return;
         }
-        console.log({ prevInputValue })
+
         // Prepare API payload
         const values = {
             version: 'v1',

@@ -193,7 +193,7 @@ const ReadyReceiptModalMaster = ({
                             className="d-flex align-items-center delete-link p-1 border-0 w-25 "
                             onClick={() => handleDeleteChildTableRow(i)}
                             onKeyDown={(e) =>
-                              handleTabPressOnModal(e, element.idx)
+                              handleTabPressOnModal(e, "modalRow")
                             }
                             disabled={readOnlyFields}
                           >

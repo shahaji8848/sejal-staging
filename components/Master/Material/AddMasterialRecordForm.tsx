@@ -3,7 +3,7 @@ import { get_material_group_data } from '@/store/slices/Master/get-material-grou
 import React from 'react'
 import { useSelector } from 'react-redux';
 
-const AddFewRecordForm = ({ handleInputChange, inputValue, handleSaveBtn }: any) => {
+const AddMaterialRecordForm = ({ handleInputChange, inputValue, handleSaveBtn }: any) => {
     let materialGroupDataFromStore = useSelector(get_material_group_data).data;
 
     const materialGroupData: any = {
@@ -17,12 +17,12 @@ const AddFewRecordForm = ({ handleInputChange, inputValue, handleSaveBtn }: any)
     return (
         <div className='row'>
             <div className="col-lg-6 mt-1">
-                <label htmlFor="">Few<span className='text-danger'>*</span></label>
+                <label htmlFor="">Material<span className='text-danger'>*</span></label>
                 <input
                     type="text"
                     className="form-control border p-0 px-2"
-                    name="few"
-                    value={inputValue?.few || ""}
+                    name="material"
+                    value={inputValue?.material || ""}
                     onChange={(e) => {
                         handleInputChange(e.target.value, e.target.name);
                     }}
@@ -30,12 +30,12 @@ const AddFewRecordForm = ({ handleInputChange, inputValue, handleSaveBtn }: any)
                     autoComplete="off"
 
                 />
-                <label htmlFor="">Few Abbr<span className='text-danger'>*</span></label>
+                <label htmlFor="">Material Abbr<span className='text-danger'>*</span></label>
                 <input
                     type="text"
                     className="form-control border p-0 px-2"
-                    name="few_abbr"
-                    value={inputValue?.few_abbr || ""}
+                    name="material_abbr"
+                    value={inputValue?.material_abbr || ""}
                     onChange={(e) => {
                         handleInputChange(e.target.value, e.target.name);
                     }}
@@ -61,4 +61,4 @@ const AddFewRecordForm = ({ handleInputChange, inputValue, handleSaveBtn }: any)
     )
 }
 
-export default AddFewRecordForm
+export default AddMaterialRecordForm

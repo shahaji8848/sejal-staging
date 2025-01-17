@@ -62,7 +62,7 @@ const useSubCategoryCodeHook = () => {
             toast.error('All fields marked with * are mandatory.');
             return;
         }
-        console.log({ code })
+
         if (code?.length < 3 || code?.length > 5) {
             toast.error('Subcategory name must be in between 3 to 5 letters.');
             return

@@ -17,6 +17,8 @@ import {
   btnLoadingStop,
 } from '@/store/slices/btn-loading-slice';
 import { getSubCategoryData } from '@/store/slices/Master/get-sub-category-slice';
+import { get_few_data } from '@/store/slices/Master/get-few-slice';
+import { get_warehouse_list_data } from '@/store/slices/Master/get-warehouse-list-slice';
 
 const useCustomReadyReceiptHook: any = () => {
   const {
@@ -38,6 +40,9 @@ const useCustomReadyReceiptHook: any = () => {
   const [indexVal, setIndexVal] = useState<any>();
   const [stateForDocStatus, setStateForDocStatus] = useState<any>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showFewModal, setShowFewModal] = useState<boolean>(false);
+  const fewDataFromStore: any = useSelector(get_few_data)?.data;
+
   const [matWt, setMatWt] = useState<any>({
     tableMatWt: '',
     bbPcs: '',
@@ -48,6 +53,8 @@ const useCustomReadyReceiptHook: any = () => {
   ] = useState<any>('');
   const [showSaveButtonForAmendFlow, setShowSaveButtonForAmendFlow] =
     useState<any>(false);
+  const [inputTable1Value, setInputTable1Value] = useState<any>({});
+
   const [materialWeight, setMaterialWeight] = useState<any>([
     {
       idx: 1,
@@ -62,6 +69,17 @@ const useCustomReadyReceiptHook: any = () => {
       amount: '',
     },
   ]);
+  const [fewWeight, setFewWeight] = useState<any>([
+    {
+      idx: 1,
+      few_abbr: "",
+      few: "",
+      kundan_karigar: "",
+      few_weight: "",
+      purity: "",
+      new_weight: "",
+    }
+  ]);
 
   const initialTableState: any = {
     idx: 1,
@@ -74,10 +92,10 @@ const useCustomReadyReceiptHook: any = () => {
     custom_mat_wt: 0,
     custom_other: 0,
     custom_total: '',
-    custom_add_photo: '',
     totalModalWeight: 0,
     totalModalPcs: 0,
     totalAmount: 0,
+    custom_warehouse: inputTable1Value?.set_warehouse,
     table: [
       {
         idx: materialWeight === undefined ? materialWeight?.length : 1,
@@ -87,14 +105,39 @@ const useCustomReadyReceiptHook: any = () => {
         piece_: '',
         carat: '',
         carat_: '',
-        weight: 0,
+        weight: "",
         gm_: '',
         amount: '',
       },
     ],
+    tables: [
+      {
+        idx: fewWeight === undefined ? fewWeight?.length : 1,
+        few_abbr: "",
+        few: "",
+        kundan_karigar: "",
+        few_weight: "",
+        purity: "",
+        new_weight: "",
+      }
+    ]
   };
 
   const [tableData, setTableData] = useState<any>([initialTableState]);
+  const warehouseListData = useSelector(get_warehouse_list_data).data;
+
+  useEffect(() => {
+    let updatedWarehouseId: any = warehouseListData?.length > 0 && warehouseListData.filter((warehouse: any) => warehouse.location === inputTable1Value?.set_warehouse)
+
+
+    setTableData((prevData: any) =>
+
+      prevData.map((table: any) => ({
+        ...table,
+        custom_warehouse: updatedWarehouseId?.length > 0 && updatedWarehouseId[0]?.name, // Update the custom_warehouse
+      }))
+    );
+  }, [inputTable1Value]);
 
   useEffect(() => {
     setTableData((prevTableData: any) => {
@@ -309,12 +352,16 @@ const useCustomReadyReceiptHook: any = () => {
     );
   };
 
-  const handleModal = (event: any, id: any, data: any) => {
+  const handleModal = (event: any, id: any, data: any, fieldName: any) => {
     setIndexVal(id);
     const dataVal = tableData?.filter((item: any) => {
-      if (item.idx === id && event.key === 'F2') {
+      if (item.idx === id && event.key === 'F2' && fieldName === "mat") {
         setShowModal(true);
         setMaterialWeight(item?.table);
+      }
+      if (item.idx === id && event.key === 'F2' && fieldName === "few") {
+        setShowFewModal(true);
+        setFewWeight(item?.tables);
       }
     });
   };
@@ -470,29 +517,58 @@ const useCustomReadyReceiptHook: any = () => {
     id: number,
     val: any,
     field: string,
-    newValue: any
+    newValue: any,
   ) => {
-    const formatInput = (value: any) => {
+    const formatInput = (value: any, decimalPlaces: number) => {
+      if (value === "") return ""; // Allow empty input
       const floatValue = parseFloat(value);
       if (!isNaN(floatValue)) {
-        if (field === 'piece_' || field === 'carat_' || field === 'gm_') {
-          return parseFloat(floatValue.toFixed(2)); // Format to 2 decimal places for custom_total
-        } else {
-          return parseFloat(floatValue.toFixed(3)); // Format to 3 decimal places for other fields
-        }
+        return parseFloat(floatValue.toFixed(decimalPlaces));
       }
-      return null;
+      return 0; // Default to 0 if the input is invalid
     };
-    const updatedModalData =
-      materialWeight?.length > 0 &&
-      materialWeight?.map((item: any, i: any) => {
-        if (i === id) {
-          return { ...item, [field]: 0 || formatInput(newValue) };
-        }
-        return item;
-      });
 
-    setMaterialWeight(updatedModalData);
+    if (val === "modalRow") {
+      const updatedModalData =
+        materialWeight?.length > 0 &&
+        materialWeight.map((item: any, i: any) => {
+          if (i === id) {
+            return { ...item, [field]: formatInput(newValue, 3) };
+          }
+          return item;
+        });
+
+      setMaterialWeight(updatedModalData);
+    } else {
+      const updatedFewModalData =
+        fewWeight?.length > 0 &&
+        fewWeight.map((item: any, i: any) => {
+          if (i === id) {
+            let updatedItem = { ...item, [field]: formatInput(newValue, 3) };
+
+            if (field === "few") {
+              const fewAbbrData = fewDataFromStore.find((fewItem: any) => fewItem.few === newValue);
+              updatedItem = {
+                ...updatedItem,
+                few_abbr: fewAbbrData?.few_abbr || "",
+              };
+            }
+
+            const few_weight = parseFloat(updatedItem.few_weight) || 0;
+            const purity = parseFloat(updatedItem.purity) || 0;
+            updatedItem = {
+              ...updatedItem,
+              new_weight: few_weight + purity,
+            };
+
+            return updatedItem;
+          }
+          return item;
+        });
+
+      setFewWeight(updatedFewModalData);
+    }
+
     setStateForDocStatus(true);
   };
 
@@ -508,6 +584,7 @@ const useCustomReadyReceiptHook: any = () => {
       custom_other: 0,
       custom_total: 0,
       custom_add_photo: '',
+      custom_warehouse: inputTable1Value?.set_warehouse,
       table: [
         {
           // idx: materialWeight !== undefined ? materialWeight?.length : 1,
@@ -518,10 +595,21 @@ const useCustomReadyReceiptHook: any = () => {
           piece_: '',
           carat: '',
           carat_: '',
-          weight: 0,
+          weight: "",
           gm_: '',
           amount: '',
         },
+      ],
+      tables: [
+        {
+          idx: value === 'fewModalRow' ? fewWeight?.length + 1 : 1,
+          few_abbr: "",
+          few: "",
+          kundan_karigar: "",
+          few_weight: "",
+          purity: "",
+          new_weight: "",
+        }
       ],
     };
     if (value === 'tableRow') {
@@ -544,8 +632,15 @@ const useCustomReadyReceiptHook: any = () => {
       ]);
 
       setMatWt({ tableMatWt: '', bbPcs: '' });
+
     } else {
-      setMaterialWeight([...materialWeight, ...newRow.table]);
+      if (value === "fewModalRow") {
+        setFewWeight([...fewWeight, ...newRow?.tables]);
+
+      }
+      if (value === "modalRow") {
+        setMaterialWeight([...materialWeight, ...newRow.table]);
+      }
     }
     setStateForDocStatus(true);
   };
@@ -574,6 +669,8 @@ const useCustomReadyReceiptHook: any = () => {
     calculateRowValue,
     handleModal,
     setShowModal,
+    showFewModal,
+    setShowFewModal,
     indexVal,
     showModal,
     handleFieldChange,
@@ -590,6 +687,10 @@ const useCustomReadyReceiptHook: any = () => {
     handleCloseDeleteModal,
     handleShowDeleteModal,
     deleteRecord,
+    inputTable1Value,
+    setInputTable1Value,
+    fewWeight,
+    setFewWeight
   };
 };
 

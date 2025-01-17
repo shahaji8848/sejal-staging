@@ -73,7 +73,7 @@ const useSalesGroupHook = () => {
 
         // Call API
         let apiRes: any = await postSalesGroupApi(loginAcessToken?.token, values);
-        console.log({ apiRes })
+
         if (apiRes?.data?.message?.status === 'success') {
             toast.success('Sales Group Created');
             dispatch(getSalesGroupData(loginAcessToken.token));

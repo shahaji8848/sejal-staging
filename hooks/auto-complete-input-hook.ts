@@ -88,8 +88,6 @@ const useAutoCompleteInputHook = ({
     handleSearchInput(data, fieldname);
     setShowDropdown(false);
     setSelectedIndex(i !== undefined ? i : -1);
-    console.log({ data })
-    console.log("dat1", inputRef?.current)
     if (data !== null) {
       if (inputRef?.current) {
         inputRef.current.value = data; // Set the selected value in the input field

@@ -1,17 +1,18 @@
 import TabSection from '@/components/TabSection';
-import useFewHook from '@/hooks/master/fewWt/few-hook';
+
 import { useRouter } from 'next/router';
 import MasterTableListing from '../Common/MasterTableListing';
 import UpdateMasterModal from '../Common/UpdateMasterModal';
 import MasterListing from '../MasterListing';
-import AddFewRecordForm from './AddFewRecordForm';
+import AddMaterialRecordForm from './AddMasterialRecordForm';
+import useMaterialHook from '@/hooks/master/material/material-hook';
 
-const FewWtMaster = () => {
+const MaterialMaster = () => {
     const router = useRouter();
     const pathcontent = router?.asPath?.split('/');
     const key = pathcontent[pathcontent?.length - 1];
 
-    const { fewData,
+    const { materialData,
         handleDeleteBtn,
         handleInputChange,
         inputValue,
@@ -20,12 +21,12 @@ const FewWtMaster = () => {
         handleUpdateBtn,
         showModal,
         setShowModal,
-        handleUpdateRecord }: any = useFewHook();
+        handleUpdateRecord }: any = useMaterialHook();
     return (
         <div className="container-lg">
             <MasterListing value={key} />
             <div className="d-flex justify-content-center">
-                <TabSection firstTabHeading={"Few List"} secondTabHeading={"Create New Few"} />
+                <TabSection firstTabHeading={"Material List"} secondTabHeading={"Create New Material"} />
             </div>
             <div
                 className="tab-content d-flex justify-content-center"
@@ -37,7 +38,7 @@ const FewWtMaster = () => {
                     role="tabpanel"
                     aria-labelledby="pills-home-tab"
                 >
-                    <MasterTableListing tableData={fewData} handleDeleteBtn={handleDeleteBtn} inputValue={inputValue} seInputValue={setInputValue} handleUpdateBtn={handleUpdateBtn} />
+                    <MasterTableListing tableData={materialData} handleDeleteBtn={handleDeleteBtn} inputValue={inputValue} seInputValue={setInputValue} handleUpdateBtn={handleUpdateBtn} />
                 </div>
 
                 <div
@@ -46,7 +47,7 @@ const FewWtMaster = () => {
                     role="tabpanel"
                     aria-labelledby="pills-home-tab"
                 >
-                    <AddFewRecordForm handleInputChange={handleInputChange} inputValue={inputValue} seInputValue={setInputValue} handleSaveBtn={handleSaveBtn} />
+                    <AddMaterialRecordForm handleInputChange={handleInputChange} inputValue={inputValue} seInputValue={setInputValue} handleSaveBtn={handleSaveBtn} />
                 </div>
             </div>
 
@@ -55,4 +56,4 @@ const FewWtMaster = () => {
     )
 }
 
-export default FewWtMaster
+export default MaterialMaster

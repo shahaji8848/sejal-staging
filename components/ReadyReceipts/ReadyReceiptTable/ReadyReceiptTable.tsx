@@ -1,9 +1,11 @@
 import AutoCompleteInput from '@/components/InputDropdown/AutoCompleteInput';
 import { get_category_data } from '@/store/slices/Master/get-category-slice';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CurrentDate from '../../CurrentDate';
+import { get_access_token } from '@/store/slices/auth/login-slice';
+import getReadyReceiptTypeData from '@/services/api/PurchaseReceipt/get-ready-receipt-type-api';
 
 const ReadyReceiptTable = ({
   karigarData,
@@ -19,11 +21,26 @@ const ReadyReceiptTable = ({
   const { query } = useRouter();
   const pathParts = router?.asPath?.split('/');
   const lastPartOfURL = pathParts[pathParts?.length - 1];
-  const categoryDataFromStore: any = useSelector(get_category_data)?.data;
 
+  const categoryDataFromStore: any = useSelector(get_category_data)?.data;
+  const loginAcessToken = useSelector(get_access_token);
+  const [readyReceiptTypeData, setReadyReceiptTypeData] = useState([])
+
+  const getReadyReceiptTypeDataFromApi: any = async () => {
+    let readyReceiptDataFromApi: any = await getReadyReceiptTypeData(loginAcessToken?.token)
+    if (readyReceiptDataFromApi?.data?.message?.status === "success") {
+      setReadyReceiptTypeData(readyReceiptDataFromApi?.data?.message?.data)
+    } else {
+      setReadyReceiptTypeData([])
+    }
+
+  }
+  useEffect(() => {
+    getReadyReceiptTypeDataFromApi()
+  }, [])
 
   const karigarCodeData: any = {
-    fieldname: 'karigar_name',
+    fieldname: 'custom_karigar',
     fieldtype: 'Link',
     link_data:
       karigarData?.length > 0
@@ -31,7 +48,7 @@ const ReadyReceiptTable = ({
         : [],
   };
   const categoryData: any = {
-    fieldname: 'category',
+    fieldname: 'custom_category',
     fieldtype: 'Link',
     link_data:
       categoryDataFromStore?.length > 0
@@ -39,23 +56,21 @@ const ReadyReceiptTable = ({
         : [],
   };
 
-  const receiptData: any = ["Kundan", "Mangalsutra", "Plain"];
-
-  const readyReceiptData: any = {
+  const readyReceiptTypeDataFromDropdown: any = {
     fieldname: 'custom_ready_receipt_type',
     fieldtype: 'Link',
     link_data:
-      receiptData?.length > 0
-        ? Array.from(new Set(receiptData.map((data: any) => data)))
+      readyReceiptTypeData?.length > 0
+        ? Array.from(new Set(readyReceiptTypeData.map((data: any) => data.name)))
         : [],
   };
 
   const locationData: any = {
-    fieldname: 'custom_warehouse',
+    fieldname: 'set_warehouse',
     fieldtype: 'Link',
     link_data:
       warehouseListData?.length > 0
-        ? Array.from(new Set(warehouseListData.map((data: any) => data?.name)))
+        ? Array.from(new Set(warehouseListData.map((data: any) => data?.location)))
         : [],
   };
 
@@ -81,7 +96,7 @@ const ReadyReceiptTable = ({
               Remarks
             </th>
             <th className="thead" scope="col">
-              Ready Receipt Type
+              {query?.receipt === "return" ? "Return" : "Ready"}  Receipt Type
             </th>
             <th className="thead" scope="col">
               Location
@@ -119,20 +134,6 @@ const ReadyReceiptTable = ({
                 placeholder={"Select Karigar Code"}
                 readOnlyFields={readOnlyFields}
               />
-              {/* <SearchSelectInputField
-                karigarData={updatedKarigarData}
-                defaultValue={karigarData?.karigar_name}
-                recipitData={recieptData}
-                setRecipitData={setRecipitData}
-                selectedDropdownValue={selectedDropdownValue}
-                setSelectedDropdownValue={setSelectedDropdownValue}
-                setStateForDocStatus={setStateForDocStatus}
-                placeholder={'Karigar Code'}
-                className={'form-control input-sm border border-secondary'}
-                readOnlyFields={readOnlyFields}
-                name="custom_karigar"
-                setSelectDropDownReset={setKunKarigarDropdownReset}
-              /> */}
             </td>
             <td className="table_row">
               <AutoCompleteInput
@@ -140,7 +141,7 @@ const ReadyReceiptTable = ({
                 handleSearchInput={(value: any, fieldName: any) =>
                   handleTable1InputChange(value, fieldName)
                 }
-                value={inputTable1Value?.category}
+                value={inputTable1Value?.custom_category}
                 styleCss={{
                   padding: "0px",
                   border: "1px solid #6c757d",
@@ -168,7 +169,7 @@ const ReadyReceiptTable = ({
             </td>
             <td className="table_row">
               <AutoCompleteInput
-                data={readyReceiptData}
+                data={readyReceiptTypeDataFromDropdown}
                 handleSearchInput={(value: any, fieldName: any) =>
                   handleTable1InputChange(value, fieldName)
                 }
@@ -203,7 +204,7 @@ const ReadyReceiptTable = ({
                 handleSearchInput={(value: any, fieldName: any) =>
                   handleTable1InputChange(value, fieldName)
                 }
-                value={inputTable1Value?.custom_warehouse}
+                value={inputTable1Value?.set_warehouse}
                 styleCss={{
                   padding: "0px",
                   border: "1px solid #6c757d",

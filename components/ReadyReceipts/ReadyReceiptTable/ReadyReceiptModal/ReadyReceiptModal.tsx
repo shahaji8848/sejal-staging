@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import ModalMaster from './ReadyReceiptModalMaster';
 import { Button, Modal } from 'react-bootstrap';
+import ReadyReceiptFewModal from './ReadyReceiptFewModal';
 
 const ReadyReceiptModal = ({
   tableData,
@@ -19,6 +20,10 @@ const ReadyReceiptModal = ({
   readOnlyFields,
   setReadOnlyFields,
   handleTabPressOnModal,
+  showFewModal,
+  setShowFewModal,
+  fewWeight,
+  setFewWeight
 }: any) => {
   useEffect(() => {
     // Function to handle keydown event
@@ -45,46 +50,94 @@ const ReadyReceiptModal = ({
       {tableData?.length > 0 &&
         tableData !== null &&
         tableData.map((item: any, index: any) => (
-          <Modal
-            size="xl"
-            fullscreen="lg-down"
-            // scrollable={true}
-            // className="h-50"
-            show={showModal}
-            onHide={closeModal}
-            key={index}
-          >
-            <Modal.Header closeButton>
-              <Modal.Title id="example-modal-sizes-title-lg">
-                Material
-              </Modal.Title>
-            </Modal.Header>
-            <ModalMaster
-              handleModalFieldChange={handleModalFieldChange}
-              handleAddRow={handleAddRow}
-              materialWeight={materialWeight}
-              setMaterialWeight={setMaterialWeight}
-              materialListData={materialListData}
-              calculateRowValue={calculateRowValue}
-              handleDeleteChildTableRow={handleDeleteChildTableRow}
-              selectedDropdownValue={selectedDropdownValue}
-              setSelectedDropdownValue={setSelectedDropdownValue}
-              readOnlyFields={readOnlyFields}
-              setReadOnlyFields={setReadOnlyFields}
-              handleTabPressOnModal={handleTabPressOnModal}
-            />
-            <Modal.Footer>
-              <Button variant="secondary" onClick={closeModal}>
-                Close
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => handleSaveModal(item.idx)}
-              >
-                Save
-              </Button>
-            </Modal.Footer>
-          </Modal>
+          <>
+            <Modal
+              size="xl"
+              fullscreen="lg-down"
+              // scrollable={true}
+              // className="h-50"
+              show={showModal}
+              onHide={closeModal}
+              key={index}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title id="example-modal-sizes-title-lg">
+                  Material
+                </Modal.Title>
+              </Modal.Header>
+              <ModalMaster
+                handleModalFieldChange={handleModalFieldChange}
+                handleAddRow={handleAddRow}
+                materialWeight={materialWeight}
+                setMaterialWeight={setMaterialWeight}
+                materialListData={materialListData}
+                calculateRowValue={calculateRowValue}
+                handleDeleteChildTableRow={handleDeleteChildTableRow}
+                selectedDropdownValue={selectedDropdownValue}
+                setSelectedDropdownValue={setSelectedDropdownValue}
+                readOnlyFields={readOnlyFields}
+                setReadOnlyFields={setReadOnlyFields}
+                handleTabPressOnModal={handleTabPressOnModal}
+              />
+              <Modal.Footer>
+                <Button variant="secondary" onClick={closeModal}>
+                  Close
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => handleSaveModal(item.idx, "mat")}
+                >
+                  Save
+                </Button>
+              </Modal.Footer>
+            </Modal>
+
+
+
+
+
+            <Modal
+              size="xl"
+              fullscreen="lg-down"
+              // scrollable={true}
+              // className="h-50"
+              show={showFewModal}
+              onHide={closeModal}
+              key={index}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title id="example-modal-sizes-title-lg">
+                  Few
+                </Modal.Title>
+              </Modal.Header>
+              <ReadyReceiptFewModal
+                handleModalFieldChange={handleModalFieldChange}
+                handleAddRow={handleAddRow}
+                fewWeight={fewWeight}
+                setFewWeight={setFewWeight}
+                materialListData={materialListData}
+                calculateRowValue={calculateRowValue}
+                handleDeleteChildTableRow={handleDeleteChildTableRow}
+                selectedDropdownValue={selectedDropdownValue}
+                setSelectedDropdownValue={setSelectedDropdownValue}
+                readOnlyFields={readOnlyFields}
+                setReadOnlyFields={setReadOnlyFields}
+                handleTabPressOnModal={handleTabPressOnModal}
+              />
+              <Modal.Footer>
+                <Button variant="secondary" onClick={closeModal}>
+                  Close
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => handleSaveModal(item.idx, "few")}
+                >
+                  Save
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          </>
+
         ))}
     </div>
   );

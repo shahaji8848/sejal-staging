@@ -64,6 +64,9 @@ const ReadyReceiptMaster = () => {
     handleCloseDeleteModal,
     handleShowDeleteModal,
     deleteRecord,
+    fewWeight, setFewWeight,
+    showFewModal,
+    setShowFewModal,
   } = useReadyReceipt();
 
   const capitalizeWords: any = (word: any) => {
@@ -229,6 +232,10 @@ const ReadyReceiptMaster = () => {
           readOnlyFields={readOnlyFields}
           setReadOnlyFields={setReadOnlyFields}
           handleTabPressOnModal={handleTabPressOnModal}
+          showFewModal={showFewModal}
+          setShowFewModal={setShowFewModal}
+          fewWeight={fewWeight}
+          setFewWeight={setFewWeight}
         />
       </div>
     </>

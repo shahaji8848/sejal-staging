@@ -32,40 +32,18 @@ const useReadyReceipt = () => {
   const [readyReceiptType, setReadyReceiptType] = useState<any>('');
   const todayDate: any = new Date()?.toISOString()?.split('T')[0];
 
-  // const [recipitData, setRecipitData] = useState<any>({
-  //   custom_karigar: ' ',
-  //   remarks: '',
-  //   custom_ready_receipt_type: readyReceiptType,
-  //   posting_date: '',
-  //   set_warehouse: '',
-  // });
-
   const karigarData = useSelector(get_karigar_name_data).data;
   const kundanKarigarData = useSelector(get_kun_karigar_name_data).data;
   const materialListData = useSelector(get_material_data).data;
-  const warehouseListData = useSelector(get_warehouse_list_data).data;
+  const warehouseListData = useSelector(get_warehouse_list_data)?.data;
   const [kunKarigarDropdownReset, setKunKarigarDropdownReset] =
     useState<any>(false);
   const loginAcessToken = useSelector(get_access_token);
   const [selectedDropdownValue, setSelectedDropdownValue] = useState<any>('');
-  const [inputTable1Value, setInputTable1Value] = useState<any>({});
 
   const [tabDisabled, setTabDisabled] = useState<boolean>(false);
 
   let disabledValue: any;
-  // useEffect(() => {
-  //   setRecipitData({
-  //     ...recipitData,
-  //     custom_ready_receipt_type: readyReceiptType,
-  //     set_warehouse:
-  //       selectedLocation !== '' && selectedLocation !== undefined
-  //         ? selectedLocation
-  //         : 'Mumbai',
-  //   });
-  // }, [readyReceiptType, selectedLocation]);
-
-
-
   const {
     HandleDeleteReceipt,
     setKundanListing,
@@ -90,6 +68,8 @@ const useReadyReceipt = () => {
     indexVal,
     showModal,
     setShowModal,
+    showFewModal,
+    setShowFewModal,
     handleFieldChange,
     purchasRecieptListParams,
     initialTableState,
@@ -103,6 +83,9 @@ const useReadyReceipt = () => {
     handleCloseDeleteModal,
     handleShowDeleteModal,
     deleteRecord,
+    inputTable1Value,
+    setInputTable1Value,
+    fewWeight, setFewWeight
   }: any = useCustomReadyReceiptHook();
 
   const {
@@ -148,62 +131,95 @@ const useReadyReceipt = () => {
     dispatch(getCategoryData(loginAcessToken.token));
   }, [router]);
 
-  const handleSaveModal = async (id: any) => {
-    const modalValue = materialWeight.map(
-      ({
-        pcs,
-        piece_,
-        carat,
-        carat_,
-        weight,
-        gm_,
-        amount,
-        id,
-        ...rest
-      }: any) => ({
-        ...rest,
-      })
-    );
+  const handleSaveModal = async (id: any, fieldName: any) => {
+    if (fieldName === "mat") {
+      const modalValue = materialWeight.map(
+        ({
+          pcs,
+          piece_,
+          carat,
+          carat_,
+          weight,
+          gm_,
+          amount,
+          id,
+          ...rest
+        }: any) => ({
+          ...rest,
+        })
+      );
 
-    if (inputRef?.current) {
-      disabledValue = inputRef.current.value;
+      if (inputRef?.current) {
+        disabledValue = inputRef.current.value;
+      } else {
+      }
+
+      const totalAmmount = materialWeight.map(
+        ({
+          pcs,
+          piece_,
+          carat,
+          carat_,
+          gm_,
+          id,
+          material_abbr,
+          material,
+          weight,
+          ...rest
+        }: any) => ({ ...rest })
+      );
+
+      const { updatedDataVal }: any = calculateReadyReceiptModalData({
+        materialWeight,
+        tableData,
+        indexVal,
+      });
+
+      setTableData(updatedDataVal);
     } else {
+      const fewWtValue =
+        fewWeight &&
+        fewWeight.map(
+          ({
+            few_abbr,
+            few,
+            kundan_karigar,
+            few_weight,
+            purity,
+            new_weight,
+            ...rest
+          }: any) => ({
+            few_abbr,
+            few,
+            kundan_karigar,
+            few_weight,
+            purity,
+            new_weight,
+          })
+        );
+
+      // Update the tableData's tables field with fewWtValue
+      const updatedTableData = tableData.map((table: any) => ({
+        ...table,
+        tables: fewWtValue, // Assign mapped fewWtValue to tables
+      }));
+      setTableData(updatedTableData)
     }
 
-    const totalAmmount = materialWeight.map(
-      ({
-        pcs,
-        piece_,
-        carat,
-        carat_,
-        gm_,
-        id,
-        material_abbr,
-        material,
-        weight,
-        ...rest
-      }: any) => ({ ...rest })
-    );
-
-    const { updatedDataVal }: any = calculateReadyReceiptModalData({
-      materialWeight,
-      tableData,
-      indexVal,
-    });
-
-    setTableData(updatedDataVal);
     setShowModal(false);
+    setShowFewModal(false);
     setStateForDocStatus(true);
     setMatWt('');
   };
 
   const closeModal = () => {
     setShowModal(false);
+    setShowFewModal(false);
   };
 
-  const handleTabPressOnModal = (event: any, id: any) => {
+  const handleTabPressOnModal = (event: any, fieldName: any) => {
     if (event.key === 'Tab') {
-      handleAddRow('modalRow');
+      handleAddRow(fieldName === "modalRow" ? 'modalRow' : "fewModalRow");
     }
     setStateForDocStatus(true);
   };
@@ -225,6 +241,7 @@ const useReadyReceipt = () => {
 
   }
 
+
   const handleCreate = async () => {
     if (tabDisabled) {
       return;
@@ -244,8 +261,8 @@ const useReadyReceipt = () => {
     );
     const values = {
       version: 'v1',
-      method: 'create_purchase_receipt',
-      entity: 'purchase_receipt',
+      method: `${query?.receipt === "kundan" ? "create_purchase_receipt" : "create_purchase_receipt_return"} `,
+      entity: `${query?.receipt === "kundan" ? "purchase_receipt" : "purchase_receipt_return"}`,
       ...inputTable1Value,
       items: modalValue,
     };
@@ -253,13 +270,13 @@ const useReadyReceipt = () => {
     const isEmptyProductCode = values?.items?.some(
       (obj: any) => obj.product_code === ''
     );
-    console.log({ inputTable1Value })
+
     const isEmptyNetWt =
       inputTable1Value?.karigar_name !== "null" &&
       values?.items?.some((obj: any) => obj.custom_net_wt === 0);
     const productVal = values.custom_karigar;
 
-    console.log({ isEmptyNetWt })
+
     if (isEmptyProductCode) {
       toast.error('Please fill all the required fields');
       setTabDisabled(false);
@@ -275,9 +292,10 @@ const useReadyReceipt = () => {
         loginAcessToken.token,
         values
       );
+
       if (purchaseReceipt?.data?.message?.status === 'success') {
         router.push(
-          `${readyReceiptType?.toLowerCase()}/${purchaseReceipt?.data?.message
+          `${query?.receipt}/${purchaseReceipt?.data?.message
             ?.message}`
         );
         dispatch(btnLoadingStop());
@@ -397,7 +415,6 @@ const useReadyReceipt = () => {
     } catch (error) { }
   };
 
-  console.log({ inputTable1Value })
 
   return {
     kundanListing,
@@ -458,7 +475,11 @@ const useReadyReceipt = () => {
     deleteRecord,
     inputTable1Value,
     setInputTable1Value,
-    handleTable1InputChange
+    handleTable1InputChange,
+    fewWeight,
+    setFewWeight,
+    showFewModal,
+    setShowFewModal,
   };
 };
 

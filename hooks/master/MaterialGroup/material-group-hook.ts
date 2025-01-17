@@ -99,7 +99,7 @@ const useMaterialGroupHook = () => {
         };
         // Call API
         let apiRes: any = await MasterUpdateApi(loginAcessToken?.token, values);
-        console.log({ apiRes })
+
         if (apiRes?.data?.message?.status === 'success') {
             dispatch(getMaterialGroupData(loginAcessToken.token));
             toast.success('Material Group Updated');

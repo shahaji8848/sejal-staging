@@ -207,8 +207,10 @@ const ReadyReceiptMasterTable = ({
                           e.target.value
                         )
                       }
+                      onKeyDown={(e: any) => handleModal(e, item.idx, item, "few")}
                       readOnly={readOnlyFields}
                     />
+
                   </td>
 
                   <td className="table_row">
@@ -233,7 +235,7 @@ const ReadyReceiptMasterTable = ({
                           tableMatWt: e.target.value,
                         }));
                       }}
-                      onKeyDown={(e) => handleModal(e, item.idx, item)}
+                      onKeyDown={(e) => handleModal(e, item.idx, item, "mat")}
                     />
                   </td>
                   <td className="table_row">
