@@ -12,6 +12,7 @@ import ReadyReceiptTable from './ReadyReceiptTable/ReadyReceiptTable';
 import ReadyReceiptsTabs from './ReadyReceiptsTabs';
 import Loader from '../General/Loader';
 import { buttonLoadingState } from '@/store/slices/btn-loading-slice';
+import useReadyReceiptReturnHook from '@/hooks/ReadyReceiptHook/readyReceiptReturn/ready-receipt-return-hook';
 
 const ReadyReceiptMaster = () => {
   const {
@@ -36,6 +37,7 @@ const ReadyReceiptMaster = () => {
     closeModal,
     handleSaveModal,
     showModal,
+    showFewModal,
     lastPartOfURL,
     HandleDeleteReceipt,
     selectedDropdownValue,
@@ -65,9 +67,9 @@ const ReadyReceiptMaster = () => {
     handleShowDeleteModal,
     deleteRecord,
     fewWeight, setFewWeight,
-    showFewModal,
-    setShowFewModal,
   } = useReadyReceipt();
+
+  const { readyReceiptItemWithStock } = useReadyReceiptReturnHook()
 
   const capitalizeWords: any = (word: any) => {
     return word?.replace(/\b\w/g, (char: any) => char?.toUpperCase());
@@ -76,6 +78,7 @@ const ReadyReceiptMaster = () => {
   const buttonLoadingStateFromStore: any = useSelector(buttonLoadingState);
 
 
+  console.log({ showModal })
   return (
     <>
       <div className="container-lg ">
@@ -166,6 +169,7 @@ const ReadyReceiptMaster = () => {
                     warehouseListData={warehouseListData}
                     inputTable1Value={inputTable1Value}
                     handleTable1InputChange={handleTable1InputChange}
+                    readyReceiptItemWithStock={readyReceiptItemWithStock}
                   />
                 </div>
                 <div className="container d-flex justify-content-end p-o">
@@ -207,6 +211,7 @@ const ReadyReceiptMaster = () => {
                     specificDataFromStore={specificDataFromStore}
                     tabDisabled={tabDisabled}
                     inputTable1Value={inputTable1Value}
+                    readyReceiptItemWithStock={readyReceiptItemWithStock}
                   />
                 </div>
               </div>
@@ -233,7 +238,6 @@ const ReadyReceiptMaster = () => {
           setReadOnlyFields={setReadOnlyFields}
           handleTabPressOnModal={handleTabPressOnModal}
           showFewModal={showFewModal}
-          setShowFewModal={setShowFewModal}
           fewWeight={fewWeight}
           setFewWeight={setFewWeight}
         />

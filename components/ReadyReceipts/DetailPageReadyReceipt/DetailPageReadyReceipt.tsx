@@ -66,7 +66,10 @@ const DetailPageReadyReceipt = () => {
     specificDataFromStore,
     inputTable1Value,
     setInputTable1Value,
-    handleTable1InputChange
+    handleTable1InputChange,
+    showFewModal,
+    fewWeight,
+    setFewWeight
   } = useReadyReceiptDetailHook();
 
   useEffect(() => {
@@ -151,6 +154,7 @@ const DetailPageReadyReceipt = () => {
                       setReadOnlyFields={setReadOnlyFields}
                       warehouseListData={warehouseListData}
                       inputTable1Value={inputTable1Value}
+                      handleTable1InputChange={handleTable1InputChange}
                     />
                   </div>
                   <div className="container d-flex justify-content-end p-o">
@@ -208,7 +212,9 @@ const DetailPageReadyReceipt = () => {
                     materialListData={materialListData}
                     calculateRowValue={calculateRowValue}
                     handleDeleteChildTableRow={handleDeleteChildTableRow}
-
+                    showFewModal={showFewModal}
+                    fewWeight={fewWeight}
+                    setFewWeight={setFewWeight}
                     selectedDropdownValue={selectedDropdownValue}
                     setSelectedDropdownValue={setSelectedDropdownValue}
                     handleSaveModal={handleSaveModal}

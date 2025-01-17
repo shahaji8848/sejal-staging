@@ -42,6 +42,8 @@ const ReadyReceiptFewModal = ({ handleModalFieldChange,
                 : [],
     };
 
+    console.log({ fewWeight })
+
     return (
         <>
             <Modal.Body className="h-50">
@@ -81,7 +83,8 @@ const ReadyReceiptFewModal = ({ handleModalFieldChange,
                                         Purity
                                     </th>
                                     <th className="thead" scope="col">
-                                        New Weight                                    </th>
+                                        New Weight
+                                    </th>
                                     <th className="thead" scope="col"></th>
                                 </tr>
                             </thead>
@@ -95,7 +98,7 @@ const ReadyReceiptFewModal = ({ handleModalFieldChange,
                                                     <input
                                                         className={` ${styles.input_field} text-center`}
                                                         type="text"
-                                                        value={element.few_abbr}
+                                                        value={element?.few_abbr}
                                                         readOnly={readOnlyFields}
                                                     />
                                                 </td>
@@ -109,7 +112,7 @@ const ReadyReceiptFewModal = ({ handleModalFieldChange,
                                                         styleCss={{
                                                             padding: "0px",
                                                             border: "1px solid #6c757d",
-                                                            fontSize: "x-small",
+                                                            // fontSize: "x-small",
                                                             lineHeight: "17px",
                                                             borderRadius: "0px",
                                                             textAlign: "center"
@@ -130,7 +133,7 @@ const ReadyReceiptFewModal = ({ handleModalFieldChange,
                                                         styleCss={{
                                                             padding: "0px",
                                                             border: "1px solid #6c757d",
-                                                            fontSize: "x-small",
+                                                            // fontSize: "x-small",
                                                             lineHeight: "17px",
                                                             borderRadius: "0px",
                                                             textAlign: "center"
@@ -212,7 +215,7 @@ const ReadyReceiptFewModal = ({ handleModalFieldChange,
                                                 <td className="table_row">
                                                     <button
                                                         className="d-flex align-items-center delete-link p-1 border-0 w-25 "
-                                                        onClick={() => handleDeleteChildTableRow(i)}
+                                                        onClick={() => handleDeleteChildTableRow(i, "few")}
                                                         onKeyDown={(e) =>
                                                             handleTabPressOnModal(e, "fewModalRow")
                                                         }

@@ -58,6 +58,8 @@ const useSalesReturnDetailHook = () => {
     handleShowDeleteModal,
     deleteRecord,
     itemDetailFunction,
+    inputTable1Value, setInputTable1Value,
+    handleTable1InputChange
   }: any = useSalesReturnMasterHook();
 
   const loginAcessToken = useSelector(get_access_token);
@@ -125,9 +127,9 @@ const useSalesReturnDetailHook = () => {
           custom_ot_amt: Number(data.custom_other_wt) * Number(data.custom_ot_),
           custom_amount: Number(
             Number(Number(data.custom_kun_pc) * Number(data?.custom_kun)) +
-              Number(Number(data?.custom_cs_wt) * Number(data?.custom_cs)) +
-              Number(Number(data.custom_other_wt) * Number(data.custom_ot_)) +
-              Number(data?.custom_other)
+            Number(Number(data?.custom_cs_wt) * Number(data?.custom_cs)) +
+            Number(Number(data.custom_other_wt) * Number(data.custom_ot_)) +
+            Number(data?.custom_other)
           )?.toFixed(2),
         };
       });
@@ -263,6 +265,8 @@ const useSalesReturnDetailHook = () => {
     handleShowDeleteModal,
     deleteRecord,
     itemDetailFunction,
+    inputTable1Value, setInputTable1Value,
+    handleTable1InputChange
   };
 };
 

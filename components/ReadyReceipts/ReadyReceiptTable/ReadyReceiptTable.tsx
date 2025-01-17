@@ -15,7 +15,7 @@ const ReadyReceiptTable = ({
   readOnlyFields,
   warehouseListData,
   inputTable1Value,
-  handleTable1InputChange
+  handleTable1InputChange,
 }: any) => {
   const router = useRouter();
   const { query } = useRouter();
@@ -33,7 +33,6 @@ const ReadyReceiptTable = ({
     } else {
       setReadyReceiptTypeData([])
     }
-
   }
   useEffect(() => {
     getReadyReceiptTypeDataFromApi()
@@ -73,6 +72,7 @@ const ReadyReceiptTable = ({
         ? Array.from(new Set(warehouseListData.map((data: any) => data?.location)))
         : [],
   };
+
 
 
   return (

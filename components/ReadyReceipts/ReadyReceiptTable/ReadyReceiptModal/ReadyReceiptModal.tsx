@@ -21,7 +21,6 @@ const ReadyReceiptModal = ({
   setReadOnlyFields,
   handleTabPressOnModal,
   showFewModal,
-  setShowFewModal,
   fewWeight,
   setFewWeight
 }: any) => {
@@ -45,6 +44,9 @@ const ReadyReceiptModal = ({
     };
   }, [handleSaveModal]);
 
+  console.log({ showFewModal })
+
+  console.log({ showModal })
   return (
     <div>
       {tableData?.length > 0 &&
@@ -91,8 +93,6 @@ const ReadyReceiptModal = ({
                 </Button>
               </Modal.Footer>
             </Modal>
-
-
 
 
 

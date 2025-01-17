@@ -20,7 +20,6 @@ const ReadyReceiptMasterTable = ({
   readOnlyFields,
   setStateForDocStatus,
   calculateEditTotal,
-  handleClearFileUploadInput,
   handleCreate,
   handleUpdateReceipt,
   lastInputRef,
@@ -29,7 +28,8 @@ const ReadyReceiptMasterTable = ({
   specificDataFromStore,
   handleAmendButtonForDuplicateChitti,
   tabDisabled,
-  inputTable1Value
+  inputTable1Value,
+  readyReceiptItemWithStock
 }: any) => {
   const { query } = useRouter();
   // Access data from the store
@@ -45,6 +45,7 @@ const ReadyReceiptMasterTable = ({
     : [];
 
   const productCounterValue = productCounter?.length > 0 && productCounter.map((data: any) => data?.code + "-" + Number(Number(data?.counter) + 1)).join(", ");
+
 
   const [calculationRow, setCalculationRow] = useState({
     custom_net_wt: 0,
@@ -131,6 +132,18 @@ const ReadyReceiptMasterTable = ({
         ? Array.from(new Set(productData.map((data: any) => data?.code)))
         : [],
   };
+
+  const itemCodeData: any = {
+    fieldname: 'product_code',
+    fieldtype: 'Link',
+    link_data:
+      readyReceiptItemWithStock?.length > 0
+        ? Array.from(new Set(readyReceiptItemWithStock.map((data: any) => data?.item_code)))
+        : [],
+  };
+
+
+
   return (
     <div className="table responsive">
       <table className="table table-hover table-bordered">
@@ -143,7 +156,7 @@ const ReadyReceiptMasterTable = ({
                   <td className="table_row">{item.idx}</td>
                   <td className="table_row" >
                     <AutoCompleteInput
-                      data={productCodeData}
+                      data={itemCodeData?.link_data?.length > 0 ? itemCodeData : productCodeData}
                       handleSearchInput={(value: any, fieldName: any) =>
                         handleFieldChange(item.idx, 'tableRow', fieldName, value)
                       }
@@ -196,9 +209,10 @@ const ReadyReceiptMasterTable = ({
                       type="number"
                       min={0}
                       value={item.custom_few_wt}
-                      defaultValue={
-                        item.custom_few_wt && item.custom_few_wt?.toFixed(3)
-                      }
+                      // defaultValue={
+                      //   item.custom_few_wt && item.custom_few_wt?.toFixed(3)
+                      // }
+                      readOnly={readOnlyFields}
                       onChange={(e) =>
                         handleFieldChange(
                           item.idx,
@@ -208,7 +222,6 @@ const ReadyReceiptMasterTable = ({
                         )
                       }
                       onKeyDown={(e: any) => handleModal(e, item.idx, item, "few")}
-                      readOnly={readOnlyFields}
                     />
 
                   </td>

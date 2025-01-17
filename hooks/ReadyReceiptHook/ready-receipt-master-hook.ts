@@ -67,8 +67,8 @@ const useReadyReceipt = () => {
     handleModal,
     indexVal,
     showModal,
-    setShowModal,
     showFewModal,
+    setShowModal,
     setShowFewModal,
     handleFieldChange,
     purchasRecieptListParams,
@@ -176,11 +176,12 @@ const useReadyReceipt = () => {
       });
 
       setTableData(updatedDataVal);
-    } else {
+    } else if (fieldName === "few") {
       const fewWtValue =
         fewWeight &&
         fewWeight.map(
           ({
+            idx,
             few_abbr,
             few,
             kundan_karigar,
@@ -189,6 +190,7 @@ const useReadyReceipt = () => {
             new_weight,
             ...rest
           }: any) => ({
+            idx,
             few_abbr,
             few,
             kundan_karigar,
@@ -238,7 +240,6 @@ const useReadyReceipt = () => {
       ...prevValue, [fieldName]: value
     }))
     setStateForDocStatus(true);
-
   }
 
 
@@ -261,7 +262,7 @@ const useReadyReceipt = () => {
     );
     const values = {
       version: 'v1',
-      method: `${query?.receipt === "kundan" ? "create_purchase_receipt" : "create_purchase_receipt_return"} `,
+      method: `${query?.receipt === "kundan" ? "create_purchase_receipt" : "create_purchase_receipt_return"}`,
       entity: `${query?.receipt === "kundan" ? "purchase_receipt" : "purchase_receipt_return"}`,
       ...inputTable1Value,
       items: modalValue,
@@ -415,7 +416,6 @@ const useReadyReceipt = () => {
     } catch (error) { }
   };
 
-
   return {
     kundanListing,
     handleCreate,
@@ -437,6 +437,7 @@ const useReadyReceipt = () => {
     closeModal,
     handleSaveModal,
     showModal,
+    showFewModal,
     lastPartOfURL,
     HandleDeleteReceipt,
     selectedDropdownValue,
@@ -477,9 +478,7 @@ const useReadyReceipt = () => {
     setInputTable1Value,
     handleTable1InputChange,
     fewWeight,
-    setFewWeight,
-    showFewModal,
-    setShowFewModal,
+    setFewWeight
   };
 };
 

@@ -334,12 +334,17 @@ const useCustomReadyReceiptHook: any = () => {
     setStateForDocStatus(true);
   };
 
-  const handleDeleteChildTableRow = (id: any) => {
-    if (materialWeight?.length > 1) {
+  const handleDeleteChildTableRow = (id: any, fieldName: any) => {
+    if (materialWeight?.length > 1 && fieldName === "mat") {
       const updatedData = materialWeight?.filter(
         (item: any, i: any) => i !== id
       );
       setMaterialWeight(updatedData);
+    } else if (fewWeight?.length > 0 && fieldName === "few") {
+      const updatedData = fewWeight?.filter(
+        (item: any, i: any) => i !== id
+      );
+      setFewWeight(updatedData);
     }
     setStateForDocStatus(true);
   };
@@ -358,8 +363,7 @@ const useCustomReadyReceiptHook: any = () => {
       if (item.idx === id && event.key === 'F2' && fieldName === "mat") {
         setShowModal(true);
         setMaterialWeight(item?.table);
-      }
-      if (item.idx === id && event.key === 'F2' && fieldName === "few") {
+      } else if (item.idx === id && event.key === 'F2' && fieldName === "few") {
         setShowFewModal(true);
         setFewWeight(item?.tables);
       }
@@ -519,13 +523,14 @@ const useCustomReadyReceiptHook: any = () => {
     field: string,
     newValue: any,
   ) => {
+
     const formatInput = (value: any, decimalPlaces: number) => {
       if (value === "") return ""; // Allow empty input
       const floatValue = parseFloat(value);
       if (!isNaN(floatValue)) {
         return parseFloat(floatValue.toFixed(decimalPlaces));
       }
-      return 0; // Default to 0 if the input is invalid
+      return 0;
     };
 
     if (val === "modalRow") {
@@ -540,26 +545,30 @@ const useCustomReadyReceiptHook: any = () => {
 
       setMaterialWeight(updatedModalData);
     } else {
+      console.log("value", id, val, field, newValue)
       const updatedFewModalData =
         fewWeight?.length > 0 &&
         fewWeight.map((item: any, i: any) => {
           if (i === id) {
-            let updatedItem = { ...item, [field]: formatInput(newValue, 3) };
+            console.log({ item })
+            let updatedItem = { ...item };
+
+            console.log({ updatedItem })
 
             if (field === "few") {
-              const fewAbbrData = fewDataFromStore.find((fewItem: any) => fewItem.few === newValue);
-              updatedItem = {
-                ...updatedItem,
-                few_abbr: fewAbbrData?.few_abbr || "",
-              };
+              if (newValue !== 0) {
+                updatedItem[field] = newValue
+
+                const fewAbbrData = fewDataFromStore.find((fewItem: any) => fewItem.few === newValue);
+                updatedItem.few_abbr = fewAbbrData?.few_abbr || "";
+              }
+            } else {
+              updatedItem[field] = field === "kundan_karigar" ? newValue : formatInput(newValue, 3);
             }
 
             const few_weight = parseFloat(updatedItem.few_weight) || 0;
             const purity = parseFloat(updatedItem.purity) || 0;
-            updatedItem = {
-              ...updatedItem,
-              new_weight: few_weight + purity,
-            };
+            updatedItem.new_weight = few_weight + purity;
 
             return updatedItem;
           }
@@ -571,6 +580,9 @@ const useCustomReadyReceiptHook: any = () => {
 
     setStateForDocStatus(true);
   };
+
+  console.log({ fewWeight })
+  console.log({ tableData })
 
   const handleAddRow = (value: any) => {
     const newRow = {
@@ -644,6 +656,7 @@ const useCustomReadyReceiptHook: any = () => {
     }
     setStateForDocStatus(true);
   };
+
 
   return {
     setKundanListing,

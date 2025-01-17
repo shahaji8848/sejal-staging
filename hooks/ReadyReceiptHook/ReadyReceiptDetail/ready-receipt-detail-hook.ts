@@ -71,7 +71,8 @@ const UseKundanKarigarDetailHook = () => {
     handleCloseDeleteModal,
     handleShowDeleteModal,
     deleteRecord,
-    fewWeight, setFewWeight
+    fewWeight, setFewWeight,
+    showFewModal,
   } = useReadyReceipt();
 
   const [readOnlyFields, setReadOnlyFields] = useState<any>(false);
@@ -193,8 +194,10 @@ const UseKundanKarigarDetailHook = () => {
     specificDataFromStore,
     inputTable1Value,
     setInputTable1Value,
-    handleTable1InputChange, fewWeight,
-    setFewWeight
+    handleTable1InputChange,
+    fewWeight,
+    setFewWeight,
+    showFewModal
   };
 };
 
