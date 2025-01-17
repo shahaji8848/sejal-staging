@@ -9,6 +9,8 @@ import AddSubCategoryForm from '../SubCategory/AddSubCategoryForm';
 import AddClientGroupRecordForm from '../ClientGroup/AddClientGroupRecordForm';
 import AddSalesGroupForm from '../SalesGroup/AddSalesGroupForm';
 import AddCategoryRecordForm from '../Category/AddCategoryRecordForm';
+import AddMaterialRecordForm from '../Material/AddMasterialRecordForm';
+import AddFewRecordForm from '../FewWt/AddFewRecordForm';
 
 const UpdateMasterModal = ({ showModal, setShowModal, handleInputChange, inputValue, setInputValue, setMaterialInputValue, handleMaterialChange, materialValue, handleSaveBtn }: any) => {
     const router = useRouter();
@@ -20,7 +22,7 @@ const UpdateMasterModal = ({ showModal, setShowModal, handleInputChange, inputVa
         if (inputValue) {
             setInputValue({})
         }
-        console.log({ materialValue })
+
         if (materialValue?.length > 0) {
             setMaterialInputValue([])
         }
@@ -47,6 +49,12 @@ const UpdateMasterModal = ({ showModal, setShowModal, handleInputChange, inputVa
                     )}
                     {key === "material-group" && (
                         <AddMaterialGroupForm handleInputChange={handleInputChange} inputValue={inputValue} handleMaterialChange={handleMaterialChange} materialValue={materialValue} handleSaveBtn={handleSaveBtn} />
+                    )}
+                    {key === "material" && (
+                        <AddMaterialRecordForm handleInputChange={handleInputChange} inputValue={inputValue} handleMaterialChange={handleMaterialChange} materialValue={materialValue} handleSaveBtn={handleSaveBtn} />
+                    )}
+                    {key === "few" && (
+                        <AddFewRecordForm handleInputChange={handleInputChange} inputValue={inputValue} handleMaterialChange={handleMaterialChange} materialValue={materialValue} handleSaveBtn={handleSaveBtn} />
                     )}
                     {key === "sub-category" && (
                         <AddSubCategoryForm handleInputChange={handleInputChange} inputValue={inputValue} handleSaveBtn={handleSaveBtn} />

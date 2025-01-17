@@ -19,6 +19,7 @@ import GetSpecificReceiptDataReducer from './slices/PurchaseReceipt/getSpecificP
 import GetItemStatusReportReducer from './slices/Report/item-status-report-slice';
 import GetWarehouseListReducer from './slices/Master/get-warehouse-list-slice';
 import buttonLoadingReducer from './slices/btn-loading-slice';
+import GetFewReducer from './slices/Master/get-few-slice';
 
 const appReducer = combineReducers({
   GetAccessTokenScreen: GetAccessTokenScreen,
@@ -37,6 +38,7 @@ const appReducer = combineReducers({
   GetCsCategoryScreen: GetCsCategoryReducer,
   GetOtCategoryScreen: GetOtCategoryReducer,
   GetBBCategoryScreen: GetBBCategoryReducer,
+  GetFewScreen: GetFewReducer,
   GetCategoryScreen: GetCategoryReducer,
   GetSubCategoryScreen: GetSubCategoryReducer,
   GetWarehouseListScreen: GetWarehouseListReducer,

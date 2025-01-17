@@ -1,48 +1,49 @@
 
 import MasterDeleteApi from '@/services/api/Master/common/master-delete-api';
 import MasterUpdateApi from '@/services/api/Master/common/master-update-api';
+// import postFewApi from '@/services/api/Master/few/post-few-api';
 import postGroupDataApi from '@/services/api/Master/post-client-group-api';
+import postMaterialMasterApi from '@/services/api/Master/post-material-name';
 import { get_access_token } from '@/store/slices/auth/login-slice';
-import { get_client_group_data, getClientGroupData } from '@/store/slices/Master/get-client-group-slice';
+import { get_material_data, getMaterialData } from '@/store/slices/Master/get-material-slice';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-const useClientGroupHook = () => {
-
+const useMaterialHook = () => {
     const dispatch = useDispatch();
     const loginAcessToken = useSelector(get_access_token);
     const [inputValue, setInputValue] = useState<any>({})
     const [prevInputValue, setPrevInputValue] = useState<any>({})
     const [showModal, setShowModal] = useState<boolean>(false)
-    const [clientGroupData, setClientGroupData] = useState<any>([])
+    const [materialData, setMaterialData] = useState<any>([])
 
-    const clientDataFromStore: any = useSelector(get_client_group_data)?.data;
+    const getMaterialDataFromStore: any = useSelector(get_material_data)?.data;
 
     useEffect(() => {
-        dispatch(getClientGroupData(loginAcessToken.token));
+        dispatch(getMaterialData(loginAcessToken.token));
     }, [])
 
     useEffect(() => {
-        if (clientDataFromStore?.length > 0) {
-            setClientGroupData([...clientDataFromStore])
+        if (getMaterialDataFromStore?.length > 0) {
+            setMaterialData([...getMaterialDataFromStore])
         } else {
-            setClientGroupData([])
+            setMaterialData([])
         }
-    }, [clientDataFromStore])
+    }, [getMaterialDataFromStore])
 
     const handleDeleteBtn = async (data: any) => {
-        if (data?.client_group !== undefined && data?.client_group !== '') {
+        if (data?.material !== undefined && data?.material !== '') {
             const apiRes = await MasterDeleteApi(
                 loginAcessToken?.token,
-                'Client Group',
-                data?.client_group
+                'Material',
+                data?.material
             );
             if (apiRes?.status === 202) {
-                toast.success('Client Group Deleted Successfully!');
-                dispatch(getClientGroupData(loginAcessToken.token));
+                toast.success('Material Deleted Successfully!');
+                dispatch(getMaterialData(loginAcessToken.token));
             } else {
-                toast.error('Client Group cannot be deleted');
+                toast.error('Material cannot be deleted');
             }
         }
     };
@@ -54,57 +55,64 @@ const useClientGroupHook = () => {
     }
 
     const handleSaveBtn: any = async () => {
-        const { client_group } = inputValue;
+        const { material, material_abbr, material_group } = inputValue;
 
         // Validate required fields
-        if (!client_group) {
-            toast.error('Client Group is mandatory.');
+        if (!material || !material_abbr || !material_group) {
+            toast.error('All fields marked with * are mandatory.');
             return;
         }
 
         // Prepare API payload
         const values = {
             version: 'v1',
-            method: 'create_client_group',
-            entity: 'client_group',
-            client_group: inputValue?.client_group
+            method: 'create_material',
+            entity: 'material',
+            data: [{
+                material: inputValue?.material,
+                material_abbr: inputValue?.material_abbr,
+                material_group: inputValue?.material_group
+            }],
         };
 
         // Call API
-        let apiRes: any = await postGroupDataApi(loginAcessToken?.token, values);
+        let apiRes: any = await postMaterialMasterApi(loginAcessToken?.token, values);
 
         if (apiRes?.status === 'success') {
-            toast.success('Client Group is Created');
-            dispatch(getClientGroupData(loginAcessToken.token));
+            toast.success('Material Created');
+            dispatch(getMaterialData(loginAcessToken.token));
             setInputValue({})
         } else {
-            toast.error('Client Group already exists');
+            toast.error('Material already exists');
         }
     }
 
     const handleUpdateRecord: any = async () => {
-        const { client_group } = inputValue;
+        const { material, material_abbr, material_group } = inputValue;
 
         // Validate required fields
-        if (!client_group) {
-            toast.error('Client Group is mandatory.');
+        if (!material || !material_abbr || !material_group) {
+            toast.error('All fields marked with * are mandatory.');
             return;
         }
+
 
         // Prepare API payload
         const values = {
             version: 'v1',
-            entity: 'client_group',
-            method: 'update_client_group_detail',
-            name: prevInputValue?.client_group,
-            client_group: inputValue?.client_group
+            entity: 'material',
+            method: 'update_material_detail',
+            name: prevInputValue?.material,
+            material_name: inputValue?.material,
+            material_abbr: inputValue?.material_abbr,
+            material_group: inputValue?.material_group,
         };
         // Call API
         let apiRes: any = await MasterUpdateApi(loginAcessToken?.token, values);
 
         if (apiRes?.data?.message?.status === 'success') {
-            dispatch(getClientGroupData(loginAcessToken.token));
-            toast.success('Client Group Updated');
+            dispatch(getMaterialData(loginAcessToken.token));
+            toast.success('Material Updated');
             setShowModal(false)
             setInputValue({})
         } else {
@@ -118,7 +126,7 @@ const useClientGroupHook = () => {
     }
 
     return {
-        clientGroupData,
+        materialData,
         handleDeleteBtn,
         handleInputChange,
         inputValue,
@@ -131,4 +139,4 @@ const useClientGroupHook = () => {
     }
 }
 
-export default useClientGroupHook;
+export default useMaterialHook;

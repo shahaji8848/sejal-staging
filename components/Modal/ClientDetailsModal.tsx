@@ -25,8 +25,6 @@ const ClientDetailsModal = ({ showModal, setShowModal, clientDetails }: any) => 
     }, [clientDetails])
 
 
-
-    console.log({ clientDetails, inputValue })
     const handleCloseModal: any = () => {
         setShowModal(false);
     }

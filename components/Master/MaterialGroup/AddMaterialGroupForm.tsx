@@ -1,7 +1,7 @@
 import React from 'react'
 
 const AddMaterialGroupForm = ({ inputValue, handleInputChange, handleSaveBtn }: any) => {
-    console.log({ inputValue })
+
     return (
         <div className='row'>
             <div className="col-lg-6 mt-1">

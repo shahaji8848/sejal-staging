@@ -1,48 +1,47 @@
-
-import MasterDeleteApi from '@/services/api/Master/common/master-delete-api';
-import MasterUpdateApi from '@/services/api/Master/common/master-update-api';
-import postKunKarigarApi from '@/services/api/Master/post-kundan-karigar-name';
-import { get_access_token } from '@/store/slices/auth/login-slice';
-import { get_karigar_name_data, getKarigarNameData } from '@/store/slices/Master/karigar-name-slice';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import MasterDeleteApi from '@/services/api/Master/common/master-delete-api';
+import MasterUpdateApi from '@/services/api/Master/common/master-update-api';
+import postFewApi from '@/services/api/Master/few/post-few-api';
+import { get_access_token } from '@/store/slices/auth/login-slice';
+import { get_few_data, getFewData } from '@/store/slices/Master/get-few-slice';
 
-const useKarigarHook = () => {
+const useFewHook = () => {
 
     const dispatch = useDispatch();
     const loginAcessToken = useSelector(get_access_token);
     const [inputValue, setInputValue] = useState<any>({})
     const [prevInputValue, setPrevInputValue] = useState<any>({})
     const [showModal, setShowModal] = useState<boolean>(false)
-    const [karigarData, setKarigarData] = useState<any>([])
+    const [fewData, setFewData] = useState<any>([])
 
-    const karigarDataFromStore = useSelector(get_karigar_name_data)?.data;
+    const fewDataFromStore: any = useSelector(get_few_data)?.data;
 
     useEffect(() => {
-        dispatch(getKarigarNameData(loginAcessToken.token));
+        dispatch(getFewData(loginAcessToken.token));
     }, [])
 
     useEffect(() => {
-        if (karigarDataFromStore?.length > 0) {
-            setKarigarData([...karigarDataFromStore])
+        if (fewDataFromStore?.length > 0) {
+            setFewData([...fewDataFromStore])
         } else {
-            setKarigarData([])
+            setFewData([])
         }
-    }, [karigarDataFromStore])
+    }, [fewDataFromStore])
 
     const handleDeleteBtn = async (data: any) => {
-        if (data?.karigar_code !== undefined && data?.karigar_code !== '') {
+        if (data?.few !== undefined && data?.few !== '') {
             const apiRes = await MasterDeleteApi(
                 loginAcessToken?.token,
-                'Karigar',
-                data?.karigar_code
+                'Few Master',
+                data?.few
             );
             if (apiRes?.status === 202) {
-                toast.success('Karigar Deleted Successfully!');
-                dispatch(getKarigarNameData(loginAcessToken.token));
+                toast.success('Few Master Deleted Successfully!');
+                dispatch(getFewData(loginAcessToken.token));
             } else {
-                toast.error('Karigar cannot be deleted');
+                toast.error('Few Master cannot be deleted');
             }
         }
     };
@@ -54,10 +53,10 @@ const useKarigarHook = () => {
     }
 
     const handleSaveBtn: any = async () => {
-        const { karigar_name, karigar_code } = inputValue;
+        const { few, few_abbr, material_group } = inputValue;
 
         // Validate required fields
-        if (!karigar_name || !karigar_code) {
+        if (!few || !few_abbr || !material_group) {
             toast.error('All fields marked with * are mandatory.');
             return;
         }
@@ -65,29 +64,32 @@ const useKarigarHook = () => {
         // Prepare API payload
         const values = {
             version: 'v1',
-            method: 'create_karigar',
-            entity: 'karigar',
-            karigar_name: inputValue?.karigar_name,
-            karigar_code: inputValue?.karigar_code,
+            method: 'create_few',
+            entity: 'few_master',
+            data: [{
+                few: inputValue?.few,
+                few_abbr: inputValue?.few_abbr,
+                material_group: inputValue?.material_group
+            }],
         };
 
         // Call API
-        let apiRes: any = await postKunKarigarApi(loginAcessToken?.token, values);
+        let apiRes: any = await postFewApi(loginAcessToken?.token, values);
 
-        if (apiRes?.status === 'success') {
-            toast.success('Karigar Name Created');
-            dispatch(getKarigarNameData(loginAcessToken?.token));
+        if (apiRes?.data?.message?.status === 'success') {
+            toast.success('Few Master Created');
+            dispatch(getFewData(loginAcessToken.token));
             setInputValue({})
         } else {
-            toast.error('Karigar Name already exists');
+            toast.error('Few Master already exists');
         }
     }
 
     const handleUpdateRecord: any = async () => {
-        const { karigar_name, karigar_code } = inputValue;
+        const { few, few_abbr, material_group } = inputValue;
 
         // Validate required fields
-        if (!karigar_name || !karigar_code) {
+        if (!few || !few_abbr || !material_group) {
             toast.error('All fields marked with * are mandatory.');
             return;
         }
@@ -95,19 +97,20 @@ const useKarigarHook = () => {
         // Prepare API payload
         const values = {
             version: 'v1',
-            entity: 'karigar',
-            method: 'update_karigar_detail',
-            name: prevInputValue?.karigar_code,
-            karigar_name: inputValue?.karigar_name,
-            karigar_code: inputValue?.karigar_code,
+            entity: 'few_master',
+            method: 'update_few_detail',
+            name: prevInputValue?.few,
+            few: inputValue?.few,
+            few_abbr: inputValue?.few_abbr,
+            material_group: inputValue?.material_group
 
         };
         // Call API
         let apiRes: any = await MasterUpdateApi(loginAcessToken?.token, values);
 
         if (apiRes?.data?.message?.status === 'success') {
-            dispatch(getKarigarNameData(loginAcessToken.token));
-            toast.success('Karigar Updated');
+            dispatch(getFewData(loginAcessToken.token));
+            toast.success('Few Updated');
             setShowModal(false)
             setInputValue({})
         } else {
@@ -121,7 +124,7 @@ const useKarigarHook = () => {
     }
 
     return {
-        karigarData,
+        fewData,
         handleDeleteBtn,
         handleInputChange,
         inputValue,
@@ -134,4 +137,4 @@ const useKarigarHook = () => {
     }
 }
 
-export default useKarigarHook
+export default useFewHook;

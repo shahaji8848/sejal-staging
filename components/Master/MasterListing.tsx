@@ -27,7 +27,7 @@ const MasterListing: any = ({ value }: any) => {
               <i className="fa-solid fa-arrow-turn-down mx-1 pt-1"></i>
             </button>
           </Link>
-          <Link href="/master/material-group" className="text-decoration-none ">
+          <Link href="/master/material-group" className="text-decoration-none">
             <button
               className={`${styles.button} ${styled.master_btn} ${value === 'material-group' ? 'activeColor' : ''
                 }`}
@@ -42,6 +42,15 @@ const MasterListing: any = ({ value }: any) => {
                 }`}
             >
               Material
+              <i className="fa-solid fa-arrow-turn-down mx-1 pt-1"></i>
+            </button>
+          </Link>
+          <Link href="/master/few" className="text-decoration-none ">
+            <button
+              className={`${styles.button} ${styled.master_btn} ${value === 'few' ? 'activeColor' : ''
+                }`}
+            >
+              Few
               <i className="fa-solid fa-arrow-turn-down mx-1 pt-1"></i>
             </button>
           </Link>
@@ -73,7 +82,26 @@ const MasterListing: any = ({ value }: any) => {
               <i className="fa-solid fa-arrow-turn-down mx-1 pt-1"></i>
             </button>
           </Link>
-
+          <Link href="/master/category" className="text-decoration-none ">
+            <button
+              className={`${styles.button} ${styled.master_btn} ${value === 'category' ? 'activeColor' : ''
+                }`}
+            >
+              Category
+              <i className="fa-solid fa-arrow-turn-down mx-1 pt-1"></i>
+            </button>
+          </Link>
+          <Link href="/master/sub-category" className="text-decoration-none ">
+            <button
+              className={`${styles.button} ${styled.master_btn} ${value === 'sub-category' ? 'activeColor' : ''
+                }`}
+            >
+              Sub-Category & Code
+              <i className="fa-solid fa-arrow-turn-down mx-1 pt-1"></i>
+            </button>
+          </Link>
+        </div>
+        <div className="d-flex flex-wrap justify-content-center">
           <Link href="/master/kun-category" className="text-decoration-none ">
             <button
               className={`${styles.button} ${styled.master_btn} ${value === 'kun-category' ? 'activeColor' : ''
@@ -111,27 +139,10 @@ const MasterListing: any = ({ value }: any) => {
               <i className="fa-solid fa-arrow-turn-down mx-1 pt-1"></i>
             </button>
           </Link>
-          <Link href="/master/category" className="text-decoration-none ">
-            <button
-              className={`${styles.button} ${styled.master_btn} ${value === 'category' ? 'activeColor' : ''
-                }`}
-            >
-              Category
-              <i className="fa-solid fa-arrow-turn-down mx-1 pt-1"></i>
-            </button>
-          </Link>
-          <Link href="/master/sub-category" className="text-decoration-none ">
-            <button
-              className={`${styles.button} ${styled.master_btn} ${value === 'sub-category' ? 'activeColor' : ''
-                }`}
-            >
-              Sub-Category & Code
-              <i className="fa-solid fa-arrow-turn-down mx-1 pt-1"></i>
-            </button>
-          </Link>
+
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

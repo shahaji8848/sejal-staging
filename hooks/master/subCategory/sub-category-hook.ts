@@ -1,9 +1,10 @@
-import MasterDeleteApi from '@/services/api/Master/master-delete-api';
-import MasterUpdateApi from '@/services/api/Master/master-update-api';
+
+import MasterDeleteApi from '@/services/api/Master/common/master-delete-api';
+import MasterUpdateApi from '@/services/api/Master/common/master-update-api';
 import postSubCategoryApi from '@/services/api/Master/post-sub-category-api';
 import { get_access_token } from '@/store/slices/auth/login-slice';
 import { get_sub_category_data, getSubCategoryData } from '@/store/slices/Master/get-sub-category-slice';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -61,7 +62,7 @@ const useSubCategoryCodeHook = () => {
             toast.error('All fields marked with * are mandatory.');
             return;
         }
-        console.log({ code })
+
         if (code?.length < 3 || code?.length > 5) {
             toast.error('Subcategory name must be in between 3 to 5 letters.');
             return

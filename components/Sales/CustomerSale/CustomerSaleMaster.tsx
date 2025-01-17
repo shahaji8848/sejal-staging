@@ -89,9 +89,6 @@ const CustomerSaleMaster = () => {
     setShowModal(true);
   };
 
-  console.log({ inputTable1Value })
-  console.log({ salesTableData })
-
   return (
     <>
       <div className="container-lg px-0">

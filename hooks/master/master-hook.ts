@@ -1,14 +1,15 @@
-import MasterDeleteApi from '@/services/api/Master/master-delete-api';
-import MasterUpdateApi from '@/services/api/Master/master-update-api';
+
+import MasterDeleteApi from '@/services/api/Master/common/master-delete-api';
+import MasterUpdateApi from '@/services/api/Master/common/master-update-api';
 import postBBCategoryApi from '@/services/api/Master/post-bbCategory-api';
 import postCategoryApi from '@/services/api/Master/post-category-api';
-import postClientApi from '@/services/api/Master/post-client-api';
 import postGroupDataApi from '@/services/api/Master/post-client-group-api';
+import postCsCategoryApi from '@/services/api/Master/post-cs-category-api';
 import {
-  default as postKunCategoryApi,
-  default as postKunCsOtCategoryApi,
+  default as postKunCategoryApi
 } from '@/services/api/Master/post-kun-category-api';
-import postSubCategoryApi from '@/services/api/Master/post-sub-category-api';
+import postOtCategoryApi from '@/services/api/Master/post-ot-category-api';
+import postSalesGroupApi from '@/services/api/Master/sales-group/post-sales-group-api';
 import {
   getBBCategoryData,
   get_bb_category_data,
@@ -22,28 +23,23 @@ import {
   get_client_group_data,
 } from '@/store/slices/Master/get-client-group-slice';
 import {
-  getClientNameData,
-  get_client_name_data,
+  get_client_name_data
 } from '@/store/slices/Master/get-client-name-slice';
+import { getCsCategoryData, get_cs_category_data } from '@/store/slices/Master/get-cs-category-slice';
 import {
   getKunCategoryData,
   get_kun_category_data,
 } from '@/store/slices/Master/get-kun-category-slice';
+import { getOtCategoryData, get_ot_category_data } from '@/store/slices/Master/get-ot-category-slice';
+import { getSalesGroupData, get_sales_group_data } from '@/store/slices/Master/get-sales-group-slice';
 import {
-  getSubCategoryData,
-  get_sub_category_data,
+  get_sub_category_data
 } from '@/store/slices/Master/get-sub-category-slice';
 import { get_access_token } from '@/store/slices/auth/login-slice';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useDeleteModal } from '../DeleteModal/delete-modal-hook';
-import postCsCategoryApi from '@/services/api/Master/post-cs-category-api';
-import postOtCategoryApi from '@/services/api/Master/post-ot-category-api';
-import { get_ot_category_data, getOtCategoryData } from '@/store/slices/Master/get-ot-category-slice';
-import { get_cs_category_data, getCsCategoryData } from '@/store/slices/Master/get-cs-category-slice';
-import { get_sales_group_data, getSalesGroupData } from '@/store/slices/Master/get-sales-group-slice';
-import postSalesGroupApi from '@/services/api/Master/sales-group/post-sales-group-api';
 
 const useMasterHook = () => {
   const {
@@ -90,224 +86,7 @@ const useMasterHook = () => {
 
   const [originalName, setOriginalName] = useState();
 
-  const HandleClientNameChange = (e: any) => {
-    const { value, name } = e.target;
-    setClientNameValue((prevClientName: any) => ({
-      ...prevClientName, // Preserve existing keys
-      material_abbr: searchClient, // Ensure material_abbr is updated correctly
-      [name]: value // Dynamically update the key corresponding to the input's name
-    }));
-    setError1('');
-    setError2('');
-  };
 
-  const HandleClientSave = async () => {
-
-    const values = {
-      version: 'v1',
-      method: 'create_client',
-      entity: 'client',
-      client_name: clientName?.material,
-      client_group: searchClient,
-      sales_group: salesGroup,
-      kundan_category: clientName?.kundan_category,
-      cs_category: clientName?.cs_category,
-      ot_category: clientName?.ot_category,
-      bb_category: clientName?.bb_category
-    };
-
-    if (clientName?.material === '' || clientName.material === undefined) {
-      setError1('Input field cannot be empty');
-    } else if (searchClient === '' || searchClient === undefined) {
-      setError2('Input field cannot be empty');
-    } else {
-      let apiRes: any = await postClientApi(loginAcessToken?.token, values);
-      if (apiRes?.status === 'success') {
-        toast.success('Client Name Created');
-        dispatch(getClientNameData(loginAcessToken.token));
-      } else {
-        toast.error('Client Name already exist');
-      }
-      setError1('');
-      setClientNameValue({
-        material: '',
-        material_abbr: '',
-        kundan_category: '',
-        cs_category: '',
-        ot_category: '',
-        bb_category: '',
-      });
-      setSelectDropDownReset(true);
-    }
-  };
-  const handleUpdateClient = async () => {
-    const body = {
-      version: 'v1',
-      entity: 'client',
-      method: 'update_client_detail',
-      name: originalName,
-      client_group: searchClient,
-      client_name: clientName?.material,
-      sales_group: salesGroup,
-      kundan_category: clientName?.kundan_category,
-      cs_category: clientName?.cs_category,
-      ot_category: clientName?.ot_category,
-      bb_category: clientName?.bb_category
-    };
-    if (clientName?.material === '' || clientName.material === undefined) {
-      setError1('Input field cannot be empty');
-    } else if (searchClient === '' || searchClient === undefined) {
-      setError2('Input field cannot be empty');
-    } else {
-      let apiRes: any = await MasterUpdateApi(loginAcessToken?.token, body);
-      if (apiRes?.data?.message?.status === 'success') {
-        toast.success('Client Name Created');
-        dispatch(getClientNameData(loginAcessToken.token));
-      } else {
-        toast.error('Client Name already exist');
-      }
-      setError1('');
-      setClientNameValue({
-        material: '',
-        material_abbr: '',
-        kundan_category: '',
-        cs_category: '',
-        ot_category: '',
-        bb_category: '',
-      });
-      setSelectDropDownReset(true);
-      setSearchClient('');
-      setShowAddRecord(false);
-    }
-  };
-  const handleDeleteClient = async (name: any) => {
-    if (name !== undefined && name !== '') {
-      const apiRes = await MasterDeleteApi(
-        loginAcessToken?.token,
-        'Client',
-        name
-      );
-      if (apiRes?.status === 202) {
-        toast.success('Client Deleted Successfully!');
-        dispatch(getClientNameData(loginAcessToken.token));
-      } else {
-        toast.error('Client cannot be deleted');
-      }
-      setShowDeleteModal(false);
-    }
-  };
-
-  // Sub-category post API
-  const HandleSubCategoryChange = (e: any) => {
-    const { name, value } = e.target;
-    setClientNameValue({ ...clientName, [name]: value });
-    setError1('');
-    setError2('');
-  };
-  const HandleSubCategorySave = async () => {
-    const values = {
-      version: 'v1',
-      method: 'create_subcategory',
-      entity: 'category',
-      category_name: searchCategory,
-      code: clientName?.material,
-      subcategory_name: clientName?.material_abbr,
-    };
-
-    if (clientName?.material === '' || clientName.material === undefined) {
-      setError1('Input field cannot be empty');
-    } else if (clientName?.material?.length < 3 || clientName?.material?.length > 5) {
-      setError1('Subcategory name must be in between 3 to 5 letters.');
-    } else if (
-      clientName?.material_abbr === '' ||
-      clientName?.material_abbr === undefined
-    ) {
-      setError2('Input field cannot be empty');
-    } else if (searchCategory === '' || searchCategory === undefined) {
-      setError3('Input field cannot be empty');
-    } else {
-      let apiRes: any = await postSubCategoryApi(
-        loginAcessToken?.token,
-        values
-      );
-
-      if (apiRes?.status === 'success') {
-        toast.success('Sub-category Name Created');
-        dispatch(getSubCategoryData(loginAcessToken.token));
-      } else {
-        toast.error(`${apiRes?.message}`);
-      }
-      setError1('');
-      setClientNameValue({
-        material: '',
-        material_abbr: '',
-        kundan_category: '',
-        cs_category: '',
-        ot_category: '',
-        bb_category: '',
-      });
-      setSearchCategory('')
-      setSelectDropDownReset(true);
-    }
-  };
-  const handleUpdateSubCategory = async () => {
-    const body = {
-      version: 'v1',
-      entity: 'category',
-      method: 'update_sub_category_details',
-      // name: originalName,
-      subcategory_name: clientName?.material_abbr,
-      name: clientName?.material,
-      category: searchCategory,
-    };
-    if (clientName?.material === '' || clientName.material === undefined) {
-      setError1('Input field cannot be empty');
-    } else if (clientName?.material?.length !== 3) {
-      setError1('Subcategory name must be at least 3 letters.');
-    } else if (
-      clientName?.material_abbr === '' ||
-      clientName?.material_abbr === undefined
-    ) {
-      setError2('Input field cannot be empty');
-    } else if (searchCategory === '' || searchCategory === undefined) {
-      setError3('Input field cannot be empty');
-    } else {
-      let apiRes: any = await MasterUpdateApi(loginAcessToken?.token, body);
-      if (apiRes?.data?.message?.status === 'success') {
-        toast.success('Sub-category Created');
-        dispatch(getSubCategoryData(loginAcessToken.token));
-      } else {
-        toast.error('Sub Category already exist');
-      }
-      setError1('');
-      setClientNameValue({
-        material: '',
-        material_abbr: '',
-        kundan_category: '',
-        cs_category: '',
-        ot_category: '',
-        bb_category: '',
-      });
-      setSelectDropDownReset(true);
-      setShowAddRecord(false);
-    }
-  };
-  const handleDeleteSubCategory = async (name: any) => {
-    if (name !== undefined && name !== '') {
-      const apiRes = await MasterDeleteApi(
-        loginAcessToken?.token,
-        'Sub Category',
-        name
-      );
-      if (apiRes?.status === 202) {
-        toast.success('Sub Category Deleted Successfully!');
-        dispatch(getSubCategoryData(loginAcessToken.token));
-      } else {
-        toast.error('Sub Category cannot be deleted');
-      }
-      setShowDeleteModal(false);
-    }
-  };
 
   // KunCsOt category post api
   const HandleKunCsOtChange = (e: any) => {
@@ -937,8 +716,6 @@ const useMasterHook = () => {
   };
   return {
     clientList,
-    HandleClientNameChange,
-    HandleClientSave,
     kunCategoryData,
     otCategoryData,
     csCategoryData,
@@ -967,8 +744,6 @@ const useMasterHook = () => {
     HandleCategorySubmit,
     HandleCategoryValue,
     subCategory,
-    HandleSubCategoryChange,
-    HandleSubCategorySave,
     setSearchCategory,
     searchCategory,
     showDeleteModal,
@@ -980,16 +755,12 @@ const useMasterHook = () => {
     handleShowAddRecord,
     handleCloseAddRecord,
     handleUpdateCategory,
-    handleUpdateSubCategory,
-    handleUpdateClient,
     handleUpdateClientGroup,
     handleUpdateBBCategory,
     handleUpdateKunCategory,
     handleUpdateCsCategory,
     handleUpdateOtCategory,
     handleDeleteCategory,
-    handleDeleteSubCategory,
-    handleDeleteClient,
     handleDeleteClientGroup,
     handleDeleteBBCategory,
     handleUpdateSalesGroup,

@@ -1,47 +1,83 @@
-import React, { useEffect } from 'react';
-import CurrentDate from '../../CurrentDate';
-import SearchSelectInputField from '../../InputDropdown/SearchSelectInputField';
+import AutoCompleteInput from '@/components/InputDropdown/AutoCompleteInput';
+import { get_category_data } from '@/store/slices/Master/get-category-slice';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import CurrentDate from '../../CurrentDate';
+import { get_access_token } from '@/store/slices/auth/login-slice';
+import getReadyReceiptTypeData from '@/services/api/PurchaseReceipt/get-ready-receipt-type-api';
 
 const ReadyReceiptTable = ({
-  handleRecipietChange,
-  recieptData,
   karigarData,
-  setRecipitData,
-  selectedDropdownValue,
-  setSelectedDropdownValue,
-  readyReceiptType,
   setReadyReceiptType,
   defaultKarigarData,
   setStateForDocStatus,
   readOnlyFields,
   warehouseListData,
-  selectedLocation,
-  setSelectedLocation,
-  setKunKarigarDropdownReset,
-  kunKarigarDropdownReset,
+  inputTable1Value,
+  handleTable1InputChange
 }: any) => {
   const router = useRouter();
   const { query } = useRouter();
   const pathParts = router?.asPath?.split('/');
   const lastPartOfURL = pathParts[pathParts?.length - 1];
 
-  useEffect(() => {
-    if (defaultKarigarData === undefined) {
-      setReadyReceiptType(
-        lastPartOfURL?.charAt(0)?.toUpperCase() + lastPartOfURL?.slice(1)
-      );
-    }
-  }, [router, setReadyReceiptType, defaultKarigarData, lastPartOfURL]);
+  const categoryDataFromStore: any = useSelector(get_category_data)?.data;
+  const loginAcessToken = useSelector(get_access_token);
+  const [readyReceiptTypeData, setReadyReceiptTypeData] = useState([])
 
-  let updatedKarigarData: any =
-    karigarData?.length > 0
-      ? karigarData.map((data: any) => ({ karigar_name: data?.karigar_code }))
-      : [];
+  const getReadyReceiptTypeDataFromApi: any = async () => {
+    let readyReceiptDataFromApi: any = await getReadyReceiptTypeData(loginAcessToken?.token)
+    if (readyReceiptDataFromApi?.data?.message?.status === "success") {
+      setReadyReceiptTypeData(readyReceiptDataFromApi?.data?.message?.data)
+    } else {
+      setReadyReceiptTypeData([])
+    }
+
+  }
+  useEffect(() => {
+    getReadyReceiptTypeDataFromApi()
+  }, [])
+
+  const karigarCodeData: any = {
+    fieldname: 'custom_karigar',
+    fieldtype: 'Link',
+    link_data:
+      karigarData?.length > 0
+        ? Array.from(new Set(karigarData.map((data: any) => data?.karigar_code)))
+        : [],
+  };
+  const categoryData: any = {
+    fieldname: 'custom_category',
+    fieldtype: 'Link',
+    link_data:
+      categoryDataFromStore?.length > 0
+        ? Array.from(new Set(categoryDataFromStore.map((data: any) => data?.category)))
+        : [],
+  };
+
+  const readyReceiptTypeDataFromDropdown: any = {
+    fieldname: 'custom_ready_receipt_type',
+    fieldtype: 'Link',
+    link_data:
+      readyReceiptTypeData?.length > 0
+        ? Array.from(new Set(readyReceiptTypeData.map((data: any) => data.name)))
+        : [],
+  };
+
+  const locationData: any = {
+    fieldname: 'set_warehouse',
+    fieldtype: 'Link',
+    link_data:
+      warehouseListData?.length > 0
+        ? Array.from(new Set(warehouseListData.map((data: any) => data?.location)))
+        : [],
+  };
+
 
   return (
     <div className="">
-      <table className="table table-hover table-bordered ">
+      <table className="table table-hover table-bordered mb-1">
         <thead>
           <tr>
             <th className="thead" scope="col">
@@ -54,10 +90,13 @@ const ReadyReceiptTable = ({
               Karigar <span className="text-danger">*</span>
             </th>
             <th className="thead" scope="col">
+              Category <span className="text-danger">*</span>
+            </th>
+            <th className="thead" scope="col">
               Remarks
             </th>
             <th className="thead" scope="col">
-              Ready Receipt Type
+              {query?.receipt === "return" ? "Return" : "Ready"}  Receipt Type
             </th>
             <th className="thead" scope="col">
               Location
@@ -80,34 +119,71 @@ const ReadyReceiptTable = ({
               <CurrentDate defaultKarigarData={defaultKarigarData} />
             </td>
             <td className="table_row">
-              <SearchSelectInputField
-                karigarData={updatedKarigarData}
-                defaultValue={karigarData?.karigar_name}
-                recipitData={recieptData}
-                setRecipitData={setRecipitData}
-                selectedDropdownValue={selectedDropdownValue}
-                setSelectedDropdownValue={setSelectedDropdownValue}
-                setStateForDocStatus={setStateForDocStatus}
-                placeholder={'Karigar Code'}
-                className={'form-control input-sm border border-secondary'}
+              <AutoCompleteInput
+                data={karigarCodeData}
+                handleSearchInput={(value: any, fieldName: any) =>
+                  handleTable1InputChange(value, fieldName)
+                }
+                value={inputTable1Value?.custom_karigar}
+                styleCss={{
+                  padding: "0px",
+                  border: "1px solid #6c757d",
+                  lineHeight: "20px",
+                  textAlign: "center"
+                }}
+                placeholder={"Select Karigar Code"}
                 readOnlyFields={readOnlyFields}
-                name="custom_karigar"
-                setSelectDropDownReset={setKunKarigarDropdownReset}
               />
             </td>
+            <td className="table_row">
+              <AutoCompleteInput
+                data={categoryData}
+                handleSearchInput={(value: any, fieldName: any) =>
+                  handleTable1InputChange(value, fieldName)
+                }
+                value={inputTable1Value?.custom_category}
+                styleCss={{
+                  padding: "0px",
+                  border: "1px solid #6c757d",
+                  lineHeight: "20px",
+                  textAlign: "center"
+                }}
+                placeholder={"Select Category"}
+                readOnlyFields={readOnlyFields}
+              />
+            </td>
+
             <td className="table_row">
               <input
                 className="form-control input-sm border border-secondary"
                 type="text"
                 name="remarks"
-                value={recieptData?.remarks}
-                onChange={handleRecipietChange}
                 readOnly={readOnlyFields}
+                value={inputTable1Value?.remarks}
+                onChange={(e) => {
+                  handleTable1InputChange(e.target.value, e.target.name);
+                }}
+                placeholder='remarks'
                 autoComplete="off"
               />
             </td>
             <td className="table_row">
-              <input
+              <AutoCompleteInput
+                data={readyReceiptTypeDataFromDropdown}
+                handleSearchInput={(value: any, fieldName: any) =>
+                  handleTable1InputChange(value, fieldName)
+                }
+                value={inputTable1Value?.custom_ready_receipt_type}
+                placeholder={"Select Receipt Type"}
+                styleCss={{
+                  padding: "0px",
+                  border: "1px solid #6c757d",
+                  lineHeight: "20px",
+                  textAlign: "center"
+                }}
+                readOnlyFields={readOnlyFields}
+              />
+              {/* <input
                 className="form-control input-sm border border-secondary"
                 type="text"
                 readOnly
@@ -120,27 +196,23 @@ const ReadyReceiptTable = ({
                     : '')
                 }
                 disabled
-              />
+              /> */}
             </td>
             <td className="table_row">
-              <SearchSelectInputField
-                karigarData={
-                  warehouseListData?.length > 0 &&
-                  warehouseListData !== null &&
-                  warehouseListData.map((data: any) => ({
-                    karigar_name: data.name,
-                  }))
+              <AutoCompleteInput
+                data={locationData}
+                handleSearchInput={(value: any, fieldName: any) =>
+                  handleTable1InputChange(value, fieldName)
                 }
-                defaultValue={'Mumbai'}
-                recipitData={recieptData}
-                setRecipitData={setRecipitData}
-                selectedDropdownValue={selectedLocation}
-                setSelectedDropdownValue={setSelectedLocation}
-                setStateForDocStatus={setStateForDocStatus}
-                className={'form-control input-sm border border-secondary'}
+                value={inputTable1Value?.set_warehouse}
+                styleCss={{
+                  padding: "0px",
+                  border: "1px solid #6c757d",
+                  lineHeight: "20px",
+                  textAlign: "center"
+                }}
+                placeholder={"Select Location"}
                 readOnlyFields={readOnlyFields}
-                name="store_location"
-                setSelectDropDownReset={setKunKarigarDropdownReset}
               />
             </td>
           </tr>

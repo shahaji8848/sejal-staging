@@ -18,10 +18,8 @@ const DetailPageReadyReceipt = () => {
     setReadOnlyFields,
     isLoading,
     handlePrintApi,
-    handleRecipietChange,
     handleAddRow,
     karigarData,
-    setRecipitData,
     handleFieldChange,
     tableData,
     handleDeleteRow,
@@ -34,7 +32,6 @@ const DetailPageReadyReceipt = () => {
     materialListData,
     calculateRowValue,
     handleDeleteChildTableRow,
-    recipitData,
     setMaterialWeight,
     closeModal,
     handleSaveModal,
@@ -61,35 +58,28 @@ const DetailPageReadyReceipt = () => {
     handleTabPressOnModal,
     setKunKarigarDropdownReset,
     warehouseListData,
-    selectedLocation,
-    setSelectedLocation,
     tabDisabled,
     showDeleteModal,
     handleCloseDeleteModal,
     handleShowDeleteModal,
     deleteRecord,
     specificDataFromStore,
+    inputTable1Value,
+    setInputTable1Value,
+    handleTable1InputChange
   } = useReadyReceiptDetailHook();
 
   useEffect(() => {
     if (defaultKarigarData?.length > 0 && defaultKarigarData !== null) {
       defaultKarigarData.map((data: any) => {
         setTableData(data?.items);
-        setRecipitData(data);
-        setReadyReceiptType(data?.custom_ready_receipt_type);
-        setSelectedDropdownValue(data?.custom_karigar);
-        setSelectedLocation(data?.custom_store_location);
+        setInputTable1Value(data)
       });
     }
   }, [
     defaultKarigarData,
-    setReadyReceiptType,
-    setSelectedDropdownValue,
-    setRecipitData,
     setTableData,
-    setSelectedLocation,
   ]);
-
 
   return (
     <div className="container" style={{ position: 'relative' }}>
@@ -153,21 +143,14 @@ const DetailPageReadyReceipt = () => {
 
                   <div className="table">
                     <ReadyReceiptTable
-                      handleRecipietChange={handleRecipietChange}
-                      recieptData={recipitData}
                       karigarData={karigarData}
-                      setRecipitData={setRecipitData}
-                      selectedDropdownValue={selectedDropdownValue}
-                      setSelectedDropdownValue={setSelectedDropdownValue}
                       defaultKarigarData={defaultKarigarData}
                       setReadyReceiptType={setReadyReceiptType}
                       setStateForDocStatus={setStateForDocStatus}
                       readOnlyFields={readOnlyFields}
                       setReadOnlyFields={setReadOnlyFields}
                       warehouseListData={warehouseListData}
-                      selectedLocation={selectedLocation}
-                      setSelectedLocation={setSelectedLocation}
-                      setKunKarigarDropdownReset={setKunKarigarDropdownReset}
+                      inputTable1Value={inputTable1Value}
                     />
                   </div>
                   <div className="container d-flex justify-content-end p-o">
@@ -225,8 +208,7 @@ const DetailPageReadyReceipt = () => {
                     materialListData={materialListData}
                     calculateRowValue={calculateRowValue}
                     handleDeleteChildTableRow={handleDeleteChildTableRow}
-                    setRecipitData={setRecipitData}
-                    recipitData={recipitData}
+
                     selectedDropdownValue={selectedDropdownValue}
                     setSelectedDropdownValue={setSelectedDropdownValue}
                     handleSaveModal={handleSaveModal}

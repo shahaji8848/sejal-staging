@@ -12,7 +12,8 @@ const AutoCompleteInput = ({
   labelText,
   bgColor,
   styleCss,
-  value
+  value,
+  placeholder
 }: any) => {
 
   const {
@@ -51,7 +52,7 @@ const AutoCompleteInput = ({
           type="text"
           id={data?.fieldname}
           name={data?.fieldname}
-          placeholder={data?.label}
+          placeholder={placeholder}
           onBlur={handleClientBlur}
           onChange={(e) => handleFieldChange(e, data.fieldname)}
           onClick={handleDocumentClick}

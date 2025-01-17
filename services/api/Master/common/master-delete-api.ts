@@ -1,5 +1,6 @@
 import { CONSTANTS } from '@/services/config/api-config';
-import { callDeleteAPI } from '../utils';
+import { callDeleteAPI } from '../../utils';
+
 
 const MasterDeleteApi = async (token: any, doctype: any, name: any) => {
   let response: any;

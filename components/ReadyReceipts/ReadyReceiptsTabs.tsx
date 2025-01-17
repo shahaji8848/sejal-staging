@@ -15,8 +15,8 @@ const ReadyReceiptsTabs: any = () => {
   const mangalsutraValue =
     pathcontent?.length > 0 &&
     pathcontent !== null &&
-    (pathcontent?.includes('mangalsutra') ||
-      pathcontent?.includes('Mangalsutra'));
+    (pathcontent?.includes('return') ||
+      pathcontent?.includes('return'));
 
   return (
     <div className="justify-content-center">
@@ -36,7 +36,7 @@ const ReadyReceiptsTabs: any = () => {
               </button>
             </Link>
             <Link
-              href="/readyReceipt/mangalsutra"
+              href="/readyReceipt/return"
               className="text-decoration-none btn-margin"
             >
               <button

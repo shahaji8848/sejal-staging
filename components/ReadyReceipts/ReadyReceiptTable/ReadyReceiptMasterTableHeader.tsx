@@ -13,7 +13,7 @@ const ReadyReceiptMasterTableHeader = () => {
           Product Code<span className="text-danger">*</span>
         </th>
         <th className="thead" scope="col">
-          Counter
+          Next Code
         </th>
         {/* {(query?.receipt === 'kundan' || query?.receipt === 'Kundan') && (
           <th className="thead" scope="col">
@@ -23,32 +23,30 @@ const ReadyReceiptMasterTableHeader = () => {
         <th className="thead" scope="col">
           Net Wt<span className="text-danger">*</span>
         </th>
-        {(query?.receipt === 'kundan' || query?.receipt === 'Kundan') && (
-          <th className="thead" scope="col">
-            Few Wt
-          </th>
-        )}
+        <th className="thead" scope="col">
+          Few Wt
+        </th>
         <th className="thead" scope="col">
           Mat Wt
         </th>
         <th className="thead" scope="col">
           Gross Wt
         </th>
-        {query?.receipt === 'mangalsutra' ||
+        {/* {query?.receipt === 'mangalsutra' ||
           query?.receipt === 'Mangalsutra' ? (
           <th className="thead" scope="col">
             BB Pcs
           </th>
-        ) : (
-          <th className="thead" scope="col">
-            Kun Pcs
-          </th>
-        )}
+        ) : ( */}
         <th className="thead" scope="col">
-          Other
+          Kun Pcs
+        </th>
+        {/* )} */}
+        <th className="thead" scope="col">
+          Other Amount
         </th>
         <th className="thead" scope="col">
-          Total
+          Total Amount
         </th>
         {/* <th className="thead" scope="col">
           Add Photo

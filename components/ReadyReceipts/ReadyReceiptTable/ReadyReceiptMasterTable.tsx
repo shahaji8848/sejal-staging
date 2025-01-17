@@ -1,3 +1,4 @@
+import AutoCompleteInput from '@/components/InputDropdown/AutoCompleteInput';
 import { get_sub_category_data } from '@/store/slices/Master/get-sub-category-slice';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -5,7 +6,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from '../../../styles/readyReceipts.module.css';
-import PurchaseReceiptFileUploadMaster from './ReadyReceiptFileUpload/ReadyReceiptFileUploadMaster';
 import ReadyReceiptMasterTableHeader from './ReadyReceiptMasterTableHeader';
 import TotalReadOnlyRow from './TotalReadOnlyRow';
 
@@ -19,9 +19,6 @@ const ReadyReceiptMasterTable = ({
   handleModal,
   readOnlyFields,
   setStateForDocStatus,
-  setSelectedKundanKarigarDropdownValue,
-  kunKarigarDropdownReset,
-  setKunKarigarDropdownReset,
   calculateEditTotal,
   handleClearFileUploadInput,
   handleCreate,
@@ -31,7 +28,8 @@ const ReadyReceiptMasterTable = ({
   setMatWt,
   specificDataFromStore,
   handleAmendButtonForDuplicateChitti,
-  tabDisabled
+  tabDisabled,
+  inputTable1Value
 }: any) => {
   const { query } = useRouter();
   // Access data from the store
@@ -43,10 +41,10 @@ const ReadyReceiptMasterTable = ({
       tableData?.some((data: any) => categoryData?.code === data.product_code)
     );
   const productCounter: any = getProductcode.length > 0
-    ? getProductcode.map((data: any) => data.counter)
+    ? getProductcode.map((data: any) => ({ code: data?.code, counter: data?.counter }))
     : [];
 
-  const productCounterValue = productCounter?.length > 0 && productCounter.map((counter: number) => Number(counter) + 1).join(", ");
+  const productCounterValue = productCounter?.length > 0 && productCounter.map((data: any) => data?.code + "-" + Number(Number(data?.counter) + 1)).join(", ");
 
   const [calculationRow, setCalculationRow] = useState({
     custom_net_wt: 0,
@@ -117,6 +115,22 @@ const ReadyReceiptMasterTable = ({
     return () => clearTimeout(timer);
   }, [specificDataFromStore, firstInputRef, lastInputRef, tableData?.length]);
 
+  const productData: any = subCategoryDataFromStore?.length > 0
+    ? subCategoryDataFromStore.filter((categoryData: any) =>
+      inputTable1Value?.category
+        ? categoryData.category === inputTable1Value?.category
+        : true
+    )
+    : [];
+
+  const productCodeData: any = {
+    fieldname: 'product_code',
+    fieldtype: 'Link',
+    link_data:
+      productData?.length > 0
+        ? Array.from(new Set(productData.map((data: any) => data?.code)))
+        : [],
+  };
   return (
     <div className="table responsive">
       <table className="table table-hover table-bordered">
@@ -127,53 +141,34 @@ const ReadyReceiptMasterTable = ({
               <>
                 <tr key={item.idx} className={`${styles.table_row}`}>
                   <td className="table_row">{item.idx}</td>
-                  <td className="table_row">
-                    <input
-                      className={` ${styles.input_field} text-center`}
-                      type="text"
-                      defaultValue={item?.product_code}
-                      value={item.product_code}
-                      onChange={(e) =>
-                        handleFieldChange(
-                          item.idx,
-                          'tableRow',
-                          'product_code',
-                          e.target.value
-                        )
+                  <td className="table_row" >
+                    <AutoCompleteInput
+                      data={productCodeData}
+                      handleSearchInput={(value: any, fieldName: any) =>
+                        handleFieldChange(item.idx, 'tableRow', fieldName, value)
                       }
-                      readOnly={readOnlyFields}
+                      value={item?.product_code}
+                      styleCss={{
+                        padding: "0px",
+                        marginTop: '1px',
+                        border: "1px solid #6c757d",
+                        fontSize: "10px",
+                        borderRadius: "0px",
+                        textAlign: "center",
+                        boxShadow: "none"
+                      }}
+                      // placeholder={"Select Code"}
+                      readOnlyFields={readOnlyFields}
                     />
                   </td>
-                  <td className="table_row">
+                  <td className="table_row text-center">
                     <input
-                      className={`${styles.input_field} text-end`}
-                      type="number"
-                      value={productCounterValue < 10 ? "0" + productCounterValue : productCounterValue || ""}
+                      className={`${styles.input_field} text-center`}
+                      type="text"
+                      value={productCounterValue || ""}
                       readOnly
                     />
                   </td>
-                  {/* {(query?.receipt === 'kundan' ||
-                    query?.receipt === 'Kundan') && (
-                      <td className="table_row">
-                        <SelectInputKunKarigar
-                          kundanKarigarData={kundanKarigarData}
-                          kunKarigarDropdownReset={kunKarigarDropdownReset}
-                          setKunKarigarDropdownReset={setKunKarigarDropdownReset}
-                          defaultValue={item.custom_kun_karigar}
-                          tableData={tableData}
-                          setTableData={setTableData}
-                          setSelectedKundanKarigarDropdownValue={
-                            setSelectedKundanKarigarDropdownValue
-                          }
-                          item={item}
-                          id={item.idx}
-                          setStateForDocStatus={setStateForDocStatus}
-                          readOnlyFields={readOnlyFields}
-                          fieldName={'custom_kun_karigar'}
-                        />
-                      </td>
-                    )} */}
-
                   <td className="table_row">
                     <input
                       className={`${styles.input_field} text-end`}
@@ -194,38 +189,35 @@ const ReadyReceiptMasterTable = ({
                       readOnly={readOnlyFields}
                     />
                   </td>
-                  {(query?.receipt === 'kundan' ||
-                    query?.receipt === 'Kundan') && (
-                      <td className="table_row">
-                        <input
-                          className={` ${styles.input_field} text-end`}
-                          type="number"
-                          min={0}
-                          value={item.custom_few_wt}
-                          defaultValue={
-                            item.custom_few_wt && item.custom_few_wt?.toFixed(3)
-                          }
-                          onChange={(e) =>
-                            handleFieldChange(
-                              item.idx,
-                              'tableRow',
-                              'custom_few_wt',
-                              e.target.value
-                            )
-                          }
-                          readOnly={readOnlyFields}
-                        />
-                      </td>
-                    )}
+
                   <td className="table_row">
                     <input
                       className={` ${styles.input_field} text-end`}
                       type="number"
                       min={0}
-                      // value={
-                      //   // Number(tableData[i]?.totalModalWeight) ||
-                      //   item.custom_mat_wt
-                      // }
+                      value={item.custom_few_wt}
+                      defaultValue={
+                        item.custom_few_wt && item.custom_few_wt?.toFixed(3)
+                      }
+                      onChange={(e) =>
+                        handleFieldChange(
+                          item.idx,
+                          'tableRow',
+                          'custom_few_wt',
+                          e.target.value
+                        )
+                      }
+                      onKeyDown={(e: any) => handleModal(e, item.idx, item, "few")}
+                      readOnly={readOnlyFields}
+                    />
+
+                  </td>
+
+                  <td className="table_row">
+                    <input
+                      className={` ${styles.input_field} text-end`}
+                      type="number"
+                      min={0}
                       value={item?.custom_mat_wt}
                       defaultValue={
                         item.custom_mat_wt && item.custom_mat_wt?.toFixed(3)
@@ -243,7 +235,7 @@ const ReadyReceiptMasterTable = ({
                           tableMatWt: e.target.value,
                         }));
                       }}
-                      onKeyDown={(e) => handleModal(e, item.idx, item)}
+                      onKeyDown={(e) => handleModal(e, item.idx, item, "mat")}
                     />
                   </td>
                   <td className="table_row">
@@ -254,54 +246,30 @@ const ReadyReceiptMasterTable = ({
                       readOnly
                       disabled
                       name={`sum-${i + 1}`}
-                      // value={calculateGrossWt(i)?.toFixed(3)}
                       value={
                         item.custom_gross_wt && item.custom_gross_wt?.toFixed(3)
                       }
                     />
                   </td>
-                  {query?.receipt === 'mangalsutra' ||
-                    query?.receipt === 'Mangalsutra' ? (
-                    <td className="table_row">
-                      <input
-                        className={` ${styles.input_field} text-end`}
-                        type="number"
-                        min={0}
-                        // value={item.custom_pcs}
-                        defaultValue={item?.table[0]?.pcs}
-                        value={item?.table[0]?.pcs}
-                        onChange={(e) => {
-                          handleFieldChange(
-                            item.idx,
-                            'tableRow',
-                            'custom_pcs',
-                            e.target.value
-                          );
-                        }}
-                        readOnly={readOnlyFields}
-                      />
-                    </td>
-                  ) : (
-                    <td className="table_row">
-                      <input
-                        className={` ${styles.input_field} text-end`}
-                        type="number"
-                        min={0}
-                        // value={item.custom_pcs}
-                        defaultValue={item?.table[0]?.pcs}
-                        value={item?.table[0]?.pcs}
-                        onChange={(e) => {
-                          handleFieldChange(
-                            item.idx,
-                            'tableRow',
-                            'custom_pcs',
-                            e.target.value
-                          );
-                        }}
-                        readOnly={readOnlyFields}
-                      />
-                    </td>
-                  )}
+
+                  <td className="table_row">
+                    <input
+                      className={` ${styles.input_field} text-end`}
+                      type="number"
+                      min={0}
+                      defaultValue={item?.table[0]?.pcs}
+                      value={item?.table[0]?.pcs}
+                      onChange={(e) => {
+                        handleFieldChange(
+                          item.idx,
+                          'tableRow',
+                          'custom_pcs',
+                          e.target.value
+                        );
+                      }}
+                      readOnly={readOnlyFields}
+                    />
+                  </td>
 
                   <td className="table_row">
                     <input
@@ -317,7 +285,6 @@ const ReadyReceiptMasterTable = ({
                     />
                   </td>
                   <td className="table_row">
-                    {' '}
                     <input
                       className={` ${styles.input_field} text-end`}
                       type="number"
