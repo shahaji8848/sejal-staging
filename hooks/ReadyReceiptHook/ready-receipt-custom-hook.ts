@@ -449,7 +449,7 @@ const useCustomReadyReceiptHook: any = () => {
     return itemWithoutIdx;
   };
 
-  const handleItemCodeData = async (id: any, product_code: any) => {
+  const handleItemCodeData = async (id: number, product_code: string) => {
     try {
       if (query?.receipt === "return") {
         const itemCodeData = await getItemDetailsPurchaseReturnApi(
@@ -459,37 +459,27 @@ const useCustomReadyReceiptHook: any = () => {
 
         console.log({ itemCodeData });
 
-        // Check for successful response
         if (itemCodeData?.data?.message?.status === "success") {
-          const apiData = itemCodeData?.data?.message?.data;
-          console.log({ apiData, tableData, id })
-          setTableData((prevData: any) =>
-            prevData.map((item: any) => {
-              if (item.idx === id) {
-                const matchedData = apiData.find(
-                  (apiItem: any) => apiItem.item_code === product_code
-                );
-
-                console.log({ matchedData })
-                if (matchedData) {
-                  return { ...item, ...matchedData }; // Merge the API data into the matching item
-                }
-              }
-              return item; // Keep other items unchanged
-            })
-          );
-          return product_code.toUpperCase();
+          const apiData = itemCodeData?.data?.message?.data[0]; // Assuming single row from the API
+          return {
+            product_code: apiData.product_code.toUpperCase(),
+            custom_net_wt: apiData.custom_net_wt,
+            custom_few_wt: apiData.custom_few_wt,
+            custom_gross_wt: apiData.custom_gross_wt,
+            custom_mat_wt: apiData.custom_mat_wt,
+            custom_warehouse: apiData.custom_warehouse,
+            table: apiData.table,
+            tables: apiData.tables,
+          };
         }
       } else if (query?.receipt === "kundan") {
-        return product_code.toUpperCase(); // Convert to uppercase for 'product code'
+        return { product_code: product_code.toUpperCase() };
       }
     } catch (error) {
       console.error("Error fetching item code data:", error);
-      return product_code.toUpperCase(); // Fallback to uppercase conversion
+      return { product_code: product_code.toUpperCase() }; // Fallback
     }
   };
-
-  console.log("updated", tableData)
 
   const handleFieldChange = (
     id: number,
@@ -503,24 +493,37 @@ const useCustomReadyReceiptHook: any = () => {
         const floatValue = parseFloat(value);
         return parseFloat(floatValue?.toFixed(3));
       }
-      return value; // Return the original value for non-numeric inputs
+      return value; // Return original value for non-numeric inputs
     };
 
     const updateData = async () => {
       const updatedData = await Promise.all(
         tableData.map(async (item: any) => {
           if (item.idx === id) {
-            let filePath;
-            if (fileVal instanceof File) {
-              filePath = `/files/${fileVal.name}`;
-            } else {
-              filePath = "/files/capture.jpg";
+            // Handle API response for product_code
+            if (field === "product_code" && query?.receipt === "return") {
+              const apiResponse = await handleItemCodeData(id, newValue);
+
+              // Merge API response with the existing item
+              return {
+                ...item,
+                ...apiResponse, // Updates fields returned by API
+              };
             }
-            let custom_gross_wt = 0;
+
+            // Handle field-specific updates
+            let custom_gross_wt = item.custom_gross_wt || 0;
             if (field === "custom_few_wt") {
               custom_gross_wt =
                 Number(item?.custom_net_wt) +
                 Number(item.custom_mat_wt) +
+                Number(newValue);
+            }
+
+            if (field === "custom_mat_wt") {
+              custom_gross_wt =
+                Number(item?.custom_few_wt) +
+                Number(item?.custom_net_wt) +
                 Number(newValue);
             }
 
@@ -533,14 +536,11 @@ const useCustomReadyReceiptHook: any = () => {
 
             return {
               ...item,
-              [field]:
-                field === "product_code"
-                  ? await handleItemCodeData(id, newValue)
-                  : formatInput(newValue),
+              [field]: formatInput(newValue),
               custom_gross_wt,
             };
           }
-          return item;
+          return item; // Return unmodified item for other rows
         })
       );
 
@@ -572,6 +572,7 @@ const useCustomReadyReceiptHook: any = () => {
 
     setStateForDocStatus(true);
   };
+
 
 
   const handleModalFieldChange = (

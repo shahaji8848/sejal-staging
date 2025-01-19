@@ -67,7 +67,7 @@ const ReadyReceiptMasterTable = ({
           accumulator.custom_few_wt += Number(row.custom_few_wt) || 0;
           accumulator.custom_mat_wt += Number(row.custom_mat_wt) || 0;
           accumulator.custom_gross_wt += Number(row.custom_gross_wt) || 0;
-          accumulator.custom_pcs += Number(row.table[0].pcs) || 0;
+          accumulator.custom_pcs += Number(row.custom_pcs) || 0;
           accumulator.custom_other += Number(row.custom_other) || 0;
           accumulator.custom_total += Number(row.custom_total) || 0;
           return accumulator;
@@ -270,8 +270,8 @@ const ReadyReceiptMasterTable = ({
                       className={` ${styles.input_field} text-end`}
                       type="number"
                       min={0}
-                      defaultValue={item?.table[0]?.pcs}
-                      value={item?.table[0]?.pcs}
+                      defaultValue={item?.custom_pcs}
+                      value={item?.custom_pcs}
                       onChange={(e) => {
                         handleFieldChange(
                           item.idx,

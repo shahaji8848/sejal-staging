@@ -254,16 +254,23 @@ const useReadyReceipt = () => {
     });
     const modalValue: any = updatedTableData?.map(
       ({ id, totalModalWeight, totalAmount, totalModalPcs, ...rest }: any) => {
-        if (!rest.hasOwnProperty('custom_kun_karigar')) {
-          return { ...rest, custom_kun_karigar: 'default_value' };
+        const newEntry: any = { ...rest };
+        // Add default value for `custom_kun_karigar` if missing
+        if (!rest?.hasOwnProperty("custom_kun_karigar")) {
+          newEntry.custom_kun_karigar = "default_value";
         }
-        return rest;
+        // Conditionally add `qty: -1`
+        if (query?.receipt === "return") {
+          newEntry.qty = -1;
+        }
+        return newEntry;
       }
     );
     const values = {
       version: 'v1',
       method: `${query?.receipt === "kundan" ? "create_purchase_receipt" : "create_purchase_receipt_return"}`,
       entity: `${query?.receipt === "kundan" ? "purchase_receipt" : "purchase_receipt_return"}`,
+      ...(query?.receipt === "return" && { is_return: 1 }),
       ...inputTable1Value,
       items: modalValue,
     };
@@ -333,12 +340,14 @@ const useReadyReceipt = () => {
       ...obj,
       custom_purchase_receipt_item_breakup: '',
       item_group: 'All Item Groups',
+
     }));
 
     const values = {
       version: 'v1',
       method: 'put_purchase_receipt',
       entity: 'purchase_receipt',
+      ...(query?.receipt === "return" && { is_return: 1 }),
       ...inputTable1Value,
       items: updatedMergedList,
     };
