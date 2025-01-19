@@ -1,24 +1,25 @@
+import getItemDetailsPurchaseReturnApi from '@/services/api/PurchaseReceipt/ReadyReceiptReturn/get-item-details-purchase-return-api';
 import DeletePurchaseReceiptApi from '@/services/api/PurchaseReceipt/delete-purchase-receipt';
 import getPurchasreceiptListApi from '@/services/api/PurchaseReceipt/get-purchase-recipts-list-api';
 import postUploadFile from '@/services/api/PurchaseReceipt/post-upload-file-api';
 import UpdateDocStatusApi from '@/services/api/general/update-docStatus-api';
+import { get_few_data } from '@/store/slices/Master/get-few-slice';
+import { getSubCategoryData } from '@/store/slices/Master/get-sub-category-slice';
+import { get_warehouse_list_data } from '@/store/slices/Master/get-warehouse-list-slice';
 import {
   getSpecificReceipt,
   get_specific_receipt_data,
 } from '@/store/slices/PurchaseReceipt/getSpecificPurchaseReceipt-slice';
 import { get_access_token } from '@/store/slices/auth/login-slice';
+import {
+  btnLoadingStart,
+  btnLoadingStop,
+} from '@/store/slices/btn-loading-slice';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useDeleteModal } from '../DeleteModal/delete-modal-hook';
-import {
-  btnLoadingStart,
-  btnLoadingStop,
-} from '@/store/slices/btn-loading-slice';
-import { getSubCategoryData } from '@/store/slices/Master/get-sub-category-slice';
-import { get_few_data } from '@/store/slices/Master/get-few-slice';
-import { get_warehouse_list_data } from '@/store/slices/Master/get-warehouse-list-slice';
 
 const useCustomReadyReceiptHook: any = () => {
   const {
@@ -95,7 +96,7 @@ const useCustomReadyReceiptHook: any = () => {
     totalModalWeight: 0,
     totalModalPcs: 0,
     totalAmount: 0,
-    custom_warehouse: inputTable1Value?.set_warehouse,
+    custom_warehouse: inputTable1Value?.set_warehouse ? inputTable1Value?.set_warehouse : "",
     table: [
       {
         idx: materialWeight === undefined ? materialWeight?.length : 1,
@@ -443,6 +444,53 @@ const useCustomReadyReceiptHook: any = () => {
     setMaterialWeight(updatedMaterialWeight);
   };
 
+  const removeIdxKey = (item: any) => {
+    const { idx, ...itemWithoutIdx } = item;
+    return itemWithoutIdx;
+  };
+
+  const handleItemCodeData = async (id: any, product_code: any) => {
+    try {
+      if (query?.receipt === "return") {
+        const itemCodeData = await getItemDetailsPurchaseReturnApi(
+          loginAcessToken?.token,
+          product_code
+        );
+
+        console.log({ itemCodeData });
+
+        // Check for successful response
+        if (itemCodeData?.data?.message?.status === "success") {
+          const apiData = itemCodeData?.data?.message?.data;
+          console.log({ apiData, tableData, id })
+          setTableData((prevData: any) =>
+            prevData.map((item: any) => {
+              if (item.idx === id) {
+                const matchedData = apiData.find(
+                  (apiItem: any) => apiItem.item_code === product_code
+                );
+
+                console.log({ matchedData })
+                if (matchedData) {
+                  return { ...item, ...matchedData }; // Merge the API data into the matching item
+                }
+              }
+              return item; // Keep other items unchanged
+            })
+          );
+          return product_code.toUpperCase();
+        }
+      } else if (query?.receipt === "kundan") {
+        return product_code.toUpperCase(); // Convert to uppercase for 'product code'
+      }
+    } catch (error) {
+      console.error("Error fetching item code data:", error);
+      return product_code.toUpperCase(); // Fallback to uppercase conversion
+    }
+  };
+
+  console.log("updated", tableData)
+
   const handleFieldChange = (
     id: number,
     val: any,
@@ -451,64 +499,72 @@ const useCustomReadyReceiptHook: any = () => {
     fileVal?: any
   ) => {
     const formatInput = (value: any) => {
-      if (typeof value === 'number' || !isNaN(parseFloat(value))) {
+      if (typeof value === "number" || !isNaN(parseFloat(value))) {
         const floatValue = parseFloat(value);
         return parseFloat(floatValue?.toFixed(3));
       }
       return value; // Return the original value for non-numeric inputs
     };
 
-    const updatedData = tableData?.map((item: any) => {
-      if (item.idx === id) {
-        let filePath;
-        if (fileVal instanceof File) {
-          filePath = `/files/${fileVal.name}`;
-        } else {
-          filePath = '/files/capture.jpg';
-        }
-        let custom_gross_wt = 0;
-        if (field === 'custom_few_wt') {
-          custom_gross_wt =
-            Number(item?.custom_net_wt) +
-            Number(item.custom_mat_wt) +
-            Number(newValue);
-        }
+    const updateData = async () => {
+      const updatedData = await Promise.all(
+        tableData.map(async (item: any) => {
+          if (item.idx === id) {
+            let filePath;
+            if (fileVal instanceof File) {
+              filePath = `/files/${fileVal.name}`;
+            } else {
+              filePath = "/files/capture.jpg";
+            }
+            let custom_gross_wt = 0;
+            if (field === "custom_few_wt") {
+              custom_gross_wt =
+                Number(item?.custom_net_wt) +
+                Number(item.custom_mat_wt) +
+                Number(newValue);
+            }
 
-        if (field === 'custom_net_wt') {
-          custom_gross_wt =
-            Number(item?.custom_few_wt) +
-            Number(item.custom_mat_wt) +
-            Number(newValue);
-        }
-        return {
-          ...item,
-          [field]:
-            field === 'custom_add_photo'
-              ? filePath
-              : field === 'product_code'
-                ? newValue.toUpperCase() // Convert to uppercase for 'product code'
-                : formatInput(newValue),
-          custom_gross_wt,
-        };
-      }
-      return item;
-    });
+            if (field === "custom_net_wt") {
+              custom_gross_wt =
+                Number(item?.custom_few_wt) +
+                Number(item.custom_mat_wt) +
+                Number(newValue);
+            }
 
-    setTableData(updatedData);
-    if (field === 'custom_add_photo') {
+            return {
+              ...item,
+              [field]:
+                field === "product_code"
+                  ? await handleItemCodeData(id, newValue)
+                  : formatInput(newValue),
+              custom_gross_wt,
+            };
+          }
+          return item;
+        })
+      );
+
+      setTableData(updatedData);
+    };
+
+    updateData();
+
+    if (field === "custom_add_photo") {
       handleFileUpload(id, fileVal);
     }
-    if (field === 'custom_mat_wt') {
+
+    if (field === "custom_mat_wt") {
       const numericValue =
-        typeof newValue === 'string' ? parseFloat(newValue) : newValue;
+        typeof newValue === "string" ? parseFloat(newValue) : newValue;
       if (!isNaN(numericValue)) {
         const formattedValue = numericValue.toFixed(3);
         UpdateMaterialWeight(id, formatInput(newValue));
       }
     }
-    if (field === 'custom_pcs') {
+
+    if (field === "custom_pcs") {
       const numericValue =
-        typeof newValue === 'string' ? parseFloat(newValue) : newValue;
+        typeof newValue === "string" ? parseFloat(newValue) : newValue;
       if (!isNaN(numericValue)) {
         UpdatePcsWeight(id, formatInput(newValue));
       }
@@ -516,6 +572,7 @@ const useCustomReadyReceiptHook: any = () => {
 
     setStateForDocStatus(true);
   };
+
 
   const handleModalFieldChange = (
     id: number,

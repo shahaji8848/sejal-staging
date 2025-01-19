@@ -404,8 +404,8 @@ const useReadyReceipt = () => {
       );
 
       if (amendReceiptApi?.data?.hasOwnProperty('data')) {
-        const newURL = `/readyReceipt/${readyReceiptType}/${amendReceiptApi?.data?.data?.name}`;
-        const asPath = `/readyReceipt/${readyReceiptType}/${amendReceiptApi?.data?.data?.name}`;
+        const newURL = `/readyReceipt/${query?.receipt}/${amendReceiptApi?.data?.data?.name}`;
+        const asPath = `/readyReceipt/${query?.receipt}/${amendReceiptApi?.data?.data?.name}`;
 
         // Update the URL with the required query parameter
         router.push(newURL, asPath);

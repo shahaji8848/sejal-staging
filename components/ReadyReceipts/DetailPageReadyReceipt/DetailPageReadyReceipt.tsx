@@ -83,7 +83,7 @@ const DetailPageReadyReceipt = () => {
     defaultKarigarData,
     setTableData,
   ]);
-
+  console.log({ specificDataFromStore })
   return (
     <div className="container" style={{ position: 'relative' }}>
       {isLoading ? (

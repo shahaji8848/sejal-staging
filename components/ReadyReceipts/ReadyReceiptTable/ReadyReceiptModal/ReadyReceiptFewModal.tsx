@@ -92,7 +92,7 @@ const ReadyReceiptFewModal = ({ handleModalFieldChange,
                                 {fewWeight?.length > 0 &&
                                     fewWeight?.map((element: any, i: any) => (
                                         <>
-                                            <tr key={i}>
+                                            <tr >
                                                 <td className="table_row">{i + 1}</td>
                                                 <td className="table_row">
                                                     <input

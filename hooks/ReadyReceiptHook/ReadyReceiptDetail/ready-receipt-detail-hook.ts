@@ -85,6 +85,7 @@ const UseKundanKarigarDetailHook = () => {
       const params: any = {
         token: loginAcessToken?.token,
         name: query?.receiptId,
+        query: query?.receipt
       };
       dispatch(getSpecificReceipt(params));
     }
