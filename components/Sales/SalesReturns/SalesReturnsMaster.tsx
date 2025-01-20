@@ -46,6 +46,8 @@ const SaleReturnsMaster = () => {
     handleShowDeleteModal,
     deleteRecord,
     itemDetailFunction,
+    inputTable1Value, setInputTable1Value,
+    handleTable1InputChange
   }: any = UseSalesReturnMasterHook();
 
   const {
@@ -60,8 +62,8 @@ const SaleReturnsMaster = () => {
   const salesReturnListing =
     saleReturnDeliveryNoteListing && saleReturnDeliveryNoteListing.length > 0
       ? saleReturnDeliveryNoteListing.filter((data: any) => {
-          return data.is_return === 1;
-        })
+        return data.is_return === 1;
+      })
       : [];
 
   return (
@@ -159,6 +161,8 @@ const SaleReturnsMaster = () => {
                 deliveryNoteData={deliveryNoteData}
                 itemCodeDropdownReset={itemCodeDropdownReset}
                 setItemCodeDropdownReset={setItemCodeDropdownReset}
+                handleTable1InputChange={handleTable1InputChange}
+                inputTable1Value={inputTable1Value}
               />
 
               <CustomerSalesTable

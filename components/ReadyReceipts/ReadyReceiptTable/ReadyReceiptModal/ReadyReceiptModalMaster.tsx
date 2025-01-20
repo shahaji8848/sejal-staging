@@ -191,7 +191,7 @@ const ReadyReceiptModalMaster = ({
                         <td className="table_row">
                           <button
                             className="d-flex align-items-center delete-link p-1 border-0 w-25 "
-                            onClick={() => handleDeleteChildTableRow(i)}
+                            onClick={() => handleDeleteChildTableRow(i, "mat")}
                             onKeyDown={(e) =>
                               handleTabPressOnModal(e, "modalRow")
                             }

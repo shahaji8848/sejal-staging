@@ -1,24 +1,25 @@
+import getItemDetailsPurchaseReturnApi from '@/services/api/PurchaseReceipt/ReadyReceiptReturn/get-item-details-purchase-return-api';
 import DeletePurchaseReceiptApi from '@/services/api/PurchaseReceipt/delete-purchase-receipt';
 import getPurchasreceiptListApi from '@/services/api/PurchaseReceipt/get-purchase-recipts-list-api';
 import postUploadFile from '@/services/api/PurchaseReceipt/post-upload-file-api';
 import UpdateDocStatusApi from '@/services/api/general/update-docStatus-api';
+import { get_few_data } from '@/store/slices/Master/get-few-slice';
+import { getSubCategoryData } from '@/store/slices/Master/get-sub-category-slice';
+import { get_warehouse_list_data } from '@/store/slices/Master/get-warehouse-list-slice';
 import {
   getSpecificReceipt,
   get_specific_receipt_data,
 } from '@/store/slices/PurchaseReceipt/getSpecificPurchaseReceipt-slice';
 import { get_access_token } from '@/store/slices/auth/login-slice';
+import {
+  btnLoadingStart,
+  btnLoadingStop,
+} from '@/store/slices/btn-loading-slice';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useDeleteModal } from '../DeleteModal/delete-modal-hook';
-import {
-  btnLoadingStart,
-  btnLoadingStop,
-} from '@/store/slices/btn-loading-slice';
-import { getSubCategoryData } from '@/store/slices/Master/get-sub-category-slice';
-import { get_few_data } from '@/store/slices/Master/get-few-slice';
-import { get_warehouse_list_data } from '@/store/slices/Master/get-warehouse-list-slice';
 
 const useCustomReadyReceiptHook: any = () => {
   const {
@@ -95,7 +96,7 @@ const useCustomReadyReceiptHook: any = () => {
     totalModalWeight: 0,
     totalModalPcs: 0,
     totalAmount: 0,
-    custom_warehouse: inputTable1Value?.set_warehouse,
+    custom_warehouse: inputTable1Value?.set_warehouse ? inputTable1Value?.set_warehouse : "",
     table: [
       {
         idx: materialWeight === undefined ? materialWeight?.length : 1,
@@ -334,12 +335,17 @@ const useCustomReadyReceiptHook: any = () => {
     setStateForDocStatus(true);
   };
 
-  const handleDeleteChildTableRow = (id: any) => {
-    if (materialWeight?.length > 1) {
+  const handleDeleteChildTableRow = (id: any, fieldName: any) => {
+    if (materialWeight?.length > 1 && fieldName === "mat") {
       const updatedData = materialWeight?.filter(
         (item: any, i: any) => i !== id
       );
       setMaterialWeight(updatedData);
+    } else if (fewWeight?.length > 0 && fieldName === "few") {
+      const updatedData = fewWeight?.filter(
+        (item: any, i: any) => i !== id
+      );
+      setFewWeight(updatedData);
     }
     setStateForDocStatus(true);
   };
@@ -358,8 +364,7 @@ const useCustomReadyReceiptHook: any = () => {
       if (item.idx === id && event.key === 'F2' && fieldName === "mat") {
         setShowModal(true);
         setMaterialWeight(item?.table);
-      }
-      if (item.idx === id && event.key === 'F2' && fieldName === "few") {
+      } else if (item.idx === id && event.key === 'F2' && fieldName === "few") {
         setShowFewModal(true);
         setFewWeight(item?.tables);
       }
@@ -439,6 +444,43 @@ const useCustomReadyReceiptHook: any = () => {
     setMaterialWeight(updatedMaterialWeight);
   };
 
+  const removeIdxKey = (item: any) => {
+    const { idx, ...itemWithoutIdx } = item;
+    return itemWithoutIdx;
+  };
+
+  const handleItemCodeData = async (id: number, product_code: string) => {
+    try {
+      if (query?.receipt === "return") {
+        const itemCodeData = await getItemDetailsPurchaseReturnApi(
+          loginAcessToken?.token,
+          product_code
+        );
+
+        console.log({ itemCodeData });
+
+        if (itemCodeData?.data?.message?.status === "success") {
+          const apiData = itemCodeData?.data?.message?.data[0]; // Assuming single row from the API
+          return {
+            product_code: apiData.product_code.toUpperCase(),
+            custom_net_wt: apiData.custom_net_wt,
+            custom_few_wt: apiData.custom_few_wt,
+            custom_gross_wt: apiData.custom_gross_wt,
+            custom_mat_wt: apiData.custom_mat_wt,
+            custom_warehouse: apiData.custom_warehouse,
+            table: apiData.table,
+            tables: apiData.tables,
+          };
+        }
+      } else if (query?.receipt === "kundan") {
+        return { product_code: product_code.toUpperCase() };
+      }
+    } catch (error) {
+      console.error("Error fetching item code data:", error);
+      return { product_code: product_code.toUpperCase() }; // Fallback
+    }
+  };
+
   const handleFieldChange = (
     id: number,
     val: any,
@@ -447,64 +489,82 @@ const useCustomReadyReceiptHook: any = () => {
     fileVal?: any
   ) => {
     const formatInput = (value: any) => {
-      if (typeof value === 'number' || !isNaN(parseFloat(value))) {
+      if (typeof value === "number" || !isNaN(parseFloat(value))) {
         const floatValue = parseFloat(value);
         return parseFloat(floatValue?.toFixed(3));
       }
-      return value; // Return the original value for non-numeric inputs
+      return value; // Return original value for non-numeric inputs
     };
 
-    const updatedData = tableData?.map((item: any) => {
-      if (item.idx === id) {
-        let filePath;
-        if (fileVal instanceof File) {
-          filePath = `/files/${fileVal.name}`;
-        } else {
-          filePath = '/files/capture.jpg';
-        }
-        let custom_gross_wt = 0;
-        if (field === 'custom_few_wt') {
-          custom_gross_wt =
-            Number(item?.custom_net_wt) +
-            Number(item.custom_mat_wt) +
-            Number(newValue);
-        }
+    const updateData = async () => {
+      const updatedData = await Promise.all(
+        tableData.map(async (item: any) => {
+          if (item.idx === id) {
+            // Handle API response for product_code
+            if (field === "product_code" && query?.receipt === "return") {
+              const apiResponse = await handleItemCodeData(id, newValue);
 
-        if (field === 'custom_net_wt') {
-          custom_gross_wt =
-            Number(item?.custom_few_wt) +
-            Number(item.custom_mat_wt) +
-            Number(newValue);
-        }
-        return {
-          ...item,
-          [field]:
-            field === 'custom_add_photo'
-              ? filePath
-              : field === 'product_code'
-                ? newValue.toUpperCase() // Convert to uppercase for 'product code'
-                : formatInput(newValue),
-          custom_gross_wt,
-        };
-      }
-      return item;
-    });
+              // Merge API response with the existing item
+              return {
+                ...item,
+                ...apiResponse, // Updates fields returned by API
+              };
+            }
 
-    setTableData(updatedData);
-    if (field === 'custom_add_photo') {
+            // Handle field-specific updates
+            let custom_gross_wt = item.custom_gross_wt || 0;
+            if (field === "custom_few_wt") {
+              custom_gross_wt =
+                Number(item?.custom_net_wt) +
+                Number(item.custom_mat_wt) +
+                Number(newValue);
+            }
+
+            if (field === "custom_mat_wt") {
+              custom_gross_wt =
+                Number(item?.custom_few_wt) +
+                Number(item?.custom_net_wt) +
+                Number(newValue);
+            }
+
+            if (field === "custom_net_wt") {
+              custom_gross_wt =
+                Number(item?.custom_few_wt) +
+                Number(item.custom_mat_wt) +
+                Number(newValue);
+            }
+
+            return {
+              ...item,
+              [field]: formatInput(newValue),
+              custom_gross_wt,
+            };
+          }
+          return item; // Return unmodified item for other rows
+        })
+      );
+
+      setTableData(updatedData);
+    };
+
+    updateData();
+
+    if (field === "custom_add_photo") {
       handleFileUpload(id, fileVal);
     }
-    if (field === 'custom_mat_wt') {
+
+    if (field === "custom_mat_wt") {
       const numericValue =
-        typeof newValue === 'string' ? parseFloat(newValue) : newValue;
+        typeof newValue === "string" ? parseFloat(newValue) : newValue;
       if (!isNaN(numericValue)) {
         const formattedValue = numericValue.toFixed(3);
         UpdateMaterialWeight(id, formatInput(newValue));
       }
     }
-    if (field === 'custom_pcs') {
+
+    if (field === "custom_pcs") {
       const numericValue =
-        typeof newValue === 'string' ? parseFloat(newValue) : newValue;
+        typeof newValue === "string" ? parseFloat(newValue) : newValue;
       if (!isNaN(numericValue)) {
         UpdatePcsWeight(id, formatInput(newValue));
       }
@@ -513,19 +573,22 @@ const useCustomReadyReceiptHook: any = () => {
     setStateForDocStatus(true);
   };
 
+
+
   const handleModalFieldChange = (
     id: number,
     val: any,
     field: string,
     newValue: any,
   ) => {
+
     const formatInput = (value: any, decimalPlaces: number) => {
       if (value === "") return ""; // Allow empty input
       const floatValue = parseFloat(value);
       if (!isNaN(floatValue)) {
         return parseFloat(floatValue.toFixed(decimalPlaces));
       }
-      return 0; // Default to 0 if the input is invalid
+      return 0;
     };
 
     if (val === "modalRow") {
@@ -540,26 +603,30 @@ const useCustomReadyReceiptHook: any = () => {
 
       setMaterialWeight(updatedModalData);
     } else {
+      console.log("value", id, val, field, newValue)
       const updatedFewModalData =
         fewWeight?.length > 0 &&
         fewWeight.map((item: any, i: any) => {
           if (i === id) {
-            let updatedItem = { ...item, [field]: formatInput(newValue, 3) };
+            console.log({ item })
+            let updatedItem = { ...item };
+
+            console.log({ updatedItem })
 
             if (field === "few") {
-              const fewAbbrData = fewDataFromStore.find((fewItem: any) => fewItem.few === newValue);
-              updatedItem = {
-                ...updatedItem,
-                few_abbr: fewAbbrData?.few_abbr || "",
-              };
+              if (newValue !== 0) {
+                updatedItem[field] = newValue
+
+                const fewAbbrData = fewDataFromStore.find((fewItem: any) => fewItem.few === newValue);
+                updatedItem.few_abbr = fewAbbrData?.few_abbr || "";
+              }
+            } else {
+              updatedItem[field] = field === "kundan_karigar" ? newValue : formatInput(newValue, 3);
             }
 
             const few_weight = parseFloat(updatedItem.few_weight) || 0;
             const purity = parseFloat(updatedItem.purity) || 0;
-            updatedItem = {
-              ...updatedItem,
-              new_weight: few_weight + purity,
-            };
+            updatedItem.new_weight = few_weight + purity;
 
             return updatedItem;
           }
@@ -571,6 +638,9 @@ const useCustomReadyReceiptHook: any = () => {
 
     setStateForDocStatus(true);
   };
+
+  console.log({ fewWeight })
+  console.log({ tableData })
 
   const handleAddRow = (value: any) => {
     const newRow = {
@@ -644,6 +714,7 @@ const useCustomReadyReceiptHook: any = () => {
     }
     setStateForDocStatus(true);
   };
+
 
   return {
     setKundanListing,

@@ -54,6 +54,8 @@ const DetailsPageSalesReturn = () => {
     handleShowDeleteModal,
     deleteRecord,
     itemDetailFunction,
+    inputTable1Value, setInputTable1Value,
+    handleTable1InputChange
   }: any = UseSalesReturnDetailHook();
 
   const { query }: any = useRouter();
@@ -68,7 +70,7 @@ const DetailsPageSalesReturn = () => {
       ) : (
         <>
           {DetailOfSalesReturnFromStore?.data?.length === 0 &&
-          isLoading === false ? (
+            isLoading === false ? (
             <NoRecord
               title="Sales Return"
               content="Sorry for disappointing you! We’re unable to find any relevant data"
@@ -121,6 +123,8 @@ const DetailsPageSalesReturn = () => {
                   deliveryNoteData={deliveryNoteData}
                   itemCodeDropdownReset={itemCodeDropdownReset}
                   setItemCodeDropdownReset={setItemCodeDropdownReset}
+                  handleTable1InputChange={handleTable1InputChange}
+                  inputTable1Value={inputTable1Value}
                 />
 
                 <CustomerSalesTable

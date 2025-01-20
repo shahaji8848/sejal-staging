@@ -1,10 +1,12 @@
 import getClientDetailsApi from '@/services/api/Sales/get-client-details-api';
 import { get_access_token } from '@/store/slices/auth/login-slice';
+import { get_warehouse_list_data } from '@/store/slices/Master/get-warehouse-list-slice';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const useCustomCustomerSalesHook = () => {
   const loginAcessToken = useSelector(get_access_token);
+  const [inputTable1Value, setInputTable1Value] = useState<any>({});
   const SalesTableInitialState: any = {
     idx: 1,
     custom_pr_bb_wt: '',
@@ -27,8 +29,9 @@ const useCustomCustomerSalesHook = () => {
     custom_ot_amt: 0,
     custom_other: '',
     custom_amount: 0,
-    custom_warehouse: '',
+    custom_warehouse: inputTable1Value?.custom_warehouse ? inputTable1Value?.custom_warehouse : "",
   };
+  const warehouseListData = useSelector(get_warehouse_list_data).data;
   const [kunCsOtFixedAmt, setKunCsOtFixedAmt] = useState({
     csFixedAmt: 0,
     kunFixedAmt: 0,
@@ -42,10 +45,21 @@ const useCustomCustomerSalesHook = () => {
     OtCategory: {},
   });
 
+  useEffect(() => {
+    let updatedWarehouseId: any = warehouseListData?.length > 0 && warehouseListData.filter((warehouse: any) => warehouse.location === inputTable1Value?.set_warehouse)
+
+    setSalesTableData((prevData: any) =>
+
+      prevData.map((table: any) => ({
+        ...table,
+        custom_warehouse: updatedWarehouseId?.length > 0 && updatedWarehouseId[0]?.name, // Update the custom_warehouse
+      }))
+    );
+  }, [inputTable1Value]);
+
   const [selectedItemCodeForCustomerSale, setSelectedItemCodeForCustomerSale] =
     useState<any>({ id: '', item_code: '' });
   const [clientDetails, setClientDetails] = useState<any>({})
-  const [inputTable1Value, setInputTable1Value] = useState<any>({});
 
   const [salesTableData, setSalesTableData] = useState<any>([
     SalesTableInitialState,

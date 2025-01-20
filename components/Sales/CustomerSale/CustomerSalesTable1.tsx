@@ -33,7 +33,7 @@ const CustomerSalesTable1 = ({
     fieldtype: 'Link',
     link_data:
       warehouseListData?.length > 0
-        ? Array.from(new Set(warehouseListData.map((data: any) => data?.name)))
+        ? Array.from(new Set(warehouseListData.map((data: any) => data?.location)))
         : [],
   };
 

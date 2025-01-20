@@ -8,7 +8,7 @@ export const callGetAPI = async (url: string, token: any) => {
   await axios
     .get(`${url}`, {
       ...getHeaders,
-      timeout: 5000,
+      timeout: 6000,
     })
     .then((res: any) => {
       response = res;
@@ -26,7 +26,7 @@ export const callPostAPI = async (url: string, body: any, token: any) => {
   await axios
     .post(`${url}`, body, {
       ...getHeaders,
-      timeout: 5000,
+      timeout: 6000,
     })
     .then((res: any) => {
       response = res;

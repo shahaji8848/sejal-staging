@@ -67,6 +67,8 @@ const useCustomSalesReturnHook = () => {
     useState<boolean>(false);
   const [saleReturnDeliveryNoteListing, setSaleReturnDeliveryNoteListing] =
     useState<any>();
+  const [inputTable1Value, setInputTable1Value] = useState<any>({});
+
 
   const handleSalesReturnTableFieldChange: any = (
     itemIdx: number,
@@ -97,10 +99,10 @@ const useCustomSalesReturnHook = () => {
                   ? 1 * value
                   : Number(item?.custom_kun_pc) * value
                 : fieldName === 'custom_kun_pc'
-                ? item.custom_kun === ''
-                  ? 1 * value
-                  : Number(item.custom_kun) * value
-                : item.custom_kun_amt,
+                  ? item.custom_kun === ''
+                    ? 1 * value
+                    : Number(item.custom_kun) * value
+                  : item.custom_kun_amt,
             custom_ot_amt:
               fieldName === 'custom_ot_amt'
                 ? Number(item.custom_other_wt) * value
@@ -155,7 +157,7 @@ const useCustomSalesReturnHook = () => {
     return itemWithoutIdx;
   };
   const updateSalesTableData = (data: any, id: number) => {
-    setSelectedClient(data[0]?.custom_client_name);
+    setInputTable1Value(data[0])
     setSalesReturnTableData((prevSalesTableData: any) => {
       return [...prevSalesTableData, newRowForSalesReturnTable];
     });
@@ -245,6 +247,13 @@ const useCustomSalesReturnHook = () => {
     }
   };
 
+  const handleTable1InputChange: any = (value: any, fieldName: any) => {
+    setInputTable1Value((prevValue: any) => ({
+      ...prevValue, [fieldName]: value
+    }))
+  }
+
+
   const handleDeleteSalesReturn: any = async (id: any) => {
     setShowDeleteModal(false);
     const version = 'v1';
@@ -311,9 +320,9 @@ const useCustomSalesReturnHook = () => {
             Number(name === 'otFixedAmt' ? value : item?.custom_ot_),
           custom_amount: Number(
             Number(item[i]?.custom_cs_amt) +
-              Number(item[i]?.custom_kun_amt) +
-              Number(item[i]?.custom_ot_amt) +
-              Number(item[i]?.custom_other)
+            Number(item[i]?.custom_kun_amt) +
+            Number(item[i]?.custom_ot_amt) +
+            Number(item[i]?.custom_other)
           ),
         };
       });
@@ -355,6 +364,8 @@ const useCustomSalesReturnHook = () => {
     handleShowDeleteModal,
     deleteRecord,
     updateSalesTableData,
+    inputTable1Value, setInputTable1Value,
+    handleTable1InputChange
   };
 };
 

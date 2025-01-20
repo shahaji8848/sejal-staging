@@ -66,21 +66,36 @@ const DetailPageReadyReceipt = () => {
     specificDataFromStore,
     inputTable1Value,
     setInputTable1Value,
-    handleTable1InputChange
+    handleTable1InputChange,
+    showFewModal,
+    fewWeight,
+    setFewWeight
   } = useReadyReceiptDetailHook();
 
+  console.log({ warehouseListData })
   useEffect(() => {
     if (defaultKarigarData?.length > 0 && defaultKarigarData !== null) {
       defaultKarigarData.map((data: any) => {
+
+        let updatedWarehouseId: any = warehouseListData?.length > 0 && warehouseListData.filter((warehouse: any) => warehouse.name === data?.set_warehouse)
+
+        setInputTable1Value({
+          custom_karigar: data?.custom_karigar,
+          custom_category: data?.custom_category,
+          remarks: data?.remarks,
+          custom_ready_receipt_type: data?.custom_ready_receipt_type,
+          set_warehouse: updatedWarehouseId?.length > 0 && updatedWarehouseId[0]?.location, // Update the custom_warehouse
+        });
         setTableData(data?.items);
-        setInputTable1Value(data)
+
+        // setInputTable1Value(data)
       });
     }
   }, [
     defaultKarigarData,
     setTableData,
   ]);
-
+  console.log({ specificDataFromStore })
   return (
     <div className="container" style={{ position: 'relative' }}>
       {isLoading ? (
@@ -151,6 +166,7 @@ const DetailPageReadyReceipt = () => {
                       setReadOnlyFields={setReadOnlyFields}
                       warehouseListData={warehouseListData}
                       inputTable1Value={inputTable1Value}
+                      handleTable1InputChange={handleTable1InputChange}
                     />
                   </div>
                   <div className="container d-flex justify-content-end p-o">
@@ -208,7 +224,9 @@ const DetailPageReadyReceipt = () => {
                     materialListData={materialListData}
                     calculateRowValue={calculateRowValue}
                     handleDeleteChildTableRow={handleDeleteChildTableRow}
-
+                    showFewModal={showFewModal}
+                    fewWeight={fewWeight}
+                    setFewWeight={setFewWeight}
                     selectedDropdownValue={selectedDropdownValue}
                     setSelectedDropdownValue={setSelectedDropdownValue}
                     handleSaveModal={handleSaveModal}

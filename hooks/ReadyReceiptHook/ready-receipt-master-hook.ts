@@ -67,8 +67,8 @@ const useReadyReceipt = () => {
     handleModal,
     indexVal,
     showModal,
-    setShowModal,
     showFewModal,
+    setShowModal,
     setShowFewModal,
     handleFieldChange,
     purchasRecieptListParams,
@@ -176,11 +176,12 @@ const useReadyReceipt = () => {
       });
 
       setTableData(updatedDataVal);
-    } else {
+    } else if (fieldName === "few") {
       const fewWtValue =
         fewWeight &&
         fewWeight.map(
           ({
+            idx,
             few_abbr,
             few,
             kundan_karigar,
@@ -189,6 +190,7 @@ const useReadyReceipt = () => {
             new_weight,
             ...rest
           }: any) => ({
+            idx,
             few_abbr,
             few,
             kundan_karigar,
@@ -238,7 +240,6 @@ const useReadyReceipt = () => {
       ...prevValue, [fieldName]: value
     }))
     setStateForDocStatus(true);
-
   }
 
 
@@ -253,16 +254,23 @@ const useReadyReceipt = () => {
     });
     const modalValue: any = updatedTableData?.map(
       ({ id, totalModalWeight, totalAmount, totalModalPcs, ...rest }: any) => {
-        if (!rest.hasOwnProperty('custom_kun_karigar')) {
-          return { ...rest, custom_kun_karigar: 'default_value' };
+        const newEntry: any = { ...rest };
+        // Add default value for `custom_kun_karigar` if missing
+        if (!rest?.hasOwnProperty("custom_kun_karigar")) {
+          newEntry.custom_kun_karigar = "default_value";
         }
-        return rest;
+        // Conditionally add `qty: -1`
+        if (query?.receipt === "return") {
+          newEntry.qty = -1;
+        }
+        return newEntry;
       }
     );
     const values = {
       version: 'v1',
-      method: `${query?.receipt === "kundan" ? "create_purchase_receipt" : "create_purchase_receipt_return"} `,
+      method: `${query?.receipt === "kundan" ? "create_purchase_receipt" : "create_purchase_receipt_return"}`,
       entity: `${query?.receipt === "kundan" ? "purchase_receipt" : "purchase_receipt_return"}`,
+      ...(query?.receipt === "return" && { is_return: 1 }),
       ...inputTable1Value,
       items: modalValue,
     };
@@ -332,12 +340,14 @@ const useReadyReceipt = () => {
       ...obj,
       custom_purchase_receipt_item_breakup: '',
       item_group: 'All Item Groups',
+
     }));
 
     const values = {
       version: 'v1',
       method: 'put_purchase_receipt',
       entity: 'purchase_receipt',
+      ...(query?.receipt === "return" && { is_return: 1 }),
       ...inputTable1Value,
       items: updatedMergedList,
     };
@@ -403,8 +413,8 @@ const useReadyReceipt = () => {
       );
 
       if (amendReceiptApi?.data?.hasOwnProperty('data')) {
-        const newURL = `/readyReceipt/${readyReceiptType}/${amendReceiptApi?.data?.data?.name}`;
-        const asPath = `/readyReceipt/${readyReceiptType}/${amendReceiptApi?.data?.data?.name}`;
+        const newURL = `/readyReceipt/${query?.receipt}/${amendReceiptApi?.data?.data?.name}`;
+        const asPath = `/readyReceipt/${query?.receipt}/${amendReceiptApi?.data?.data?.name}`;
 
         // Update the URL with the required query parameter
         router.push(newURL, asPath);
@@ -414,7 +424,6 @@ const useReadyReceipt = () => {
       }
     } catch (error) { }
   };
-
 
   return {
     kundanListing,
@@ -437,6 +446,7 @@ const useReadyReceipt = () => {
     closeModal,
     handleSaveModal,
     showModal,
+    showFewModal,
     lastPartOfURL,
     HandleDeleteReceipt,
     selectedDropdownValue,
@@ -477,9 +487,7 @@ const useReadyReceipt = () => {
     setInputTable1Value,
     handleTable1InputChange,
     fewWeight,
-    setFewWeight,
-    showFewModal,
-    setShowFewModal,
+    setFewWeight
   };
 };
 
