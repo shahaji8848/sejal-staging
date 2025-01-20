@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package*.json ./
 # Install dependencies
 RUN npm install
-RUN npm i sharp
+# RUN npm i sharp
 # Copy the rest of the application code
 COPY . .
 # Build the Next.js app
